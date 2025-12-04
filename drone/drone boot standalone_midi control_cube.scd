@@ -23,7 +23,7 @@ MIDIIn.connectAll;
 s.meter;
 s.freqscope;
 s.scope;
-	Tdef(\cmrc, {
+	Tdef(\drone, {
 	Buffer.freeAll;
 
 		///cube
@@ -46,7 +46,7 @@ wt = signal.asWavetable;
 		}.value;
 
 (
-SynthDef.new(\drone,{
+SynthDef.new(\synth,{
 
 	arg gain=1,low=7168,high=0,tone=0,band=1,lamdoma=1,brain=1,pan_speed=1;
 	var gold=45,silver=45,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt),room=0.8.rand,mix=0.5;
@@ -94,7 +94,7 @@ out2=VBAP.ar(8,FreeVerb.ar(sig2,mix,room,mul:1),~b.bufnum,(silver+cell_az).wrap(
 }).add;);
 
 1.wait;
-~synth=Synth.new(\drone,[\gain,1,\tone,0,\low,16256/2,\high,56,
+~synth=Synth.new(\synth,[\gain,1,\tone,0,\low,16256/2,\high,56,
 			                     \pan_speed,10,\band,0.1,\lamdoma,2,\brain,0.01]).register;//s.record
 1.wait;
 
@@ -254,7 +254,7 @@ MIDIdef.cc(\midi_switch12,{ |val, num, chan, src|
 
 )
 });
-	Tdef(\cmrc).play;
+	Tdef(\drone).play;
 }
 )
 )
