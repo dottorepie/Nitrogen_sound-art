@@ -50,8 +50,8 @@ SynthDef.new(\synth,{
 
 	arg gain=1,low=7168,high=0,tone=0,band=1,lamdoma=1,brain=1,pan_speed=1;
 	var gold=45,silver1=0,silver2=180,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt),room=0.9.rand,mix=0.3333;
-	var freq,fund,n=0,m,phase,interval,alpha,cell_az,cell_el,pulsenum=4;
-	var sig1,sig2,first=56,bank=9,out1,out2,fm,band_osc1,band_osc2,amp,ton;
+	var freq,fund,n=0,m,phase,interval,alpha,cell_az,cell_el,pulsenum=32;
+	var sig1,sig2,first=28,bank=9,out1,out2,fm,band_osc1,band_osc2,amp,ton;
 	var linex,liney,silver3=45;
 
 
@@ -92,8 +92,8 @@ out2=VBAP.ar(8,FreeVerb.ar(sig2,mix,room,mul:1),~b.bufnum,(silver2+cell_az.lag(0
 
 	//Out.ar(0,LeakDC.ar(BPF.ar(out1,band_osc1.lag(0.1),1),mul:24)*gain);
 	//Out.ar(0,LeakDC.ar(BPF.ar(out2,band_osc2.lag(0.1),1),mul:24)*gain);
-	Out.ar(0,Pan2.ar(LeakDC.ar(BPF.ar(sig1,band_osc1.lag(0.1),0.5),mul:24)*gain,linex));
-	Out.ar(0,Pan2.ar(LeakDC.ar(BPF.ar(sig2,band_osc2.lag(0.1),0.5),mul:24)*gain,liney));
+	Out.ar(0,Pan2.ar(LeakDC.ar(BPF.ar(sig1,band_osc1.lag(0.1),1),mul:24)*gain,linex));
+	Out.ar(0,Pan2.ar(LeakDC.ar(BPF.ar(sig2,band_osc2.lag(0.1),1),mul:24)*gain,liney));
 
 gold=(gold+(360-gold_r)).wrap(180.neg,180).round(0.0001);
 silver1=(silver1+(360-silver_r)).wrap(180.neg,180).round(0.0001);
@@ -103,8 +103,8 @@ silver3=(silver3+(360-silver_r)).wrap(180.neg,180).round(0.0001);
 }).add;);
 
 1.wait;
-~synth=Synth.new(\synth,[\gain,1,\tone,10000,\low,16256/2,\high,56,
-			                     \pan_speed,0.1,\band,0.001,\lamdoma,1,\brain,1]).register;//s.record
+~synth=Synth.new(\synth,[\gain,1,\tone,0,\low,16256/2,\high,28,
+			                     \pan_speed,0.1,\band,0.0001,\lamdoma,1/2,\brain,1]).register;//s.record
 1.wait;
 
 	(
