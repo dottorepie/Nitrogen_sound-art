@@ -268,7 +268,7 @@ MIDIdef.cc(\midi_switch6,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_switch7,{ |val, num, chan, src|
 		var lamdoma;
-				if(val>0,lamdoma=1/2,lamdoma=1/2);
+				if(val>0,lamdoma=1,lamdoma=1);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },20);
@@ -276,7 +276,7 @@ MIDIdef.cc(\midi_switch7,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_switch8,{ |val, num, chan, src|
 		 var lamdoma;
-				if(val>0,lamdoma=2/3,lamdoma=2/3);
+				if(val>0,lamdoma=2,lamdoma=2);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },21);
@@ -284,7 +284,7 @@ MIDIdef.cc(\midi_switch8,{ |val, num, chan, src|
 		(
 MIDIdef.cc(\midi_switch9,{ |val, num, chan, src|
 		var lamdoma;
-					if(val>0,lamdoma=1/1,lamdoma=1/1);
+					if(val>0,lamdoma=3,lamdoma=1;
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },22);
@@ -293,7 +293,7 @@ MIDIdef.cc(\midi_switch9,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_switch10,{ |val, num, chan, src|
          var lamdoma;
-				if(val>0,lamdoma=4/3,lamdoma=4/3);
+				if(val>0,lamdoma=4,lamdoma=4);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },23);
@@ -301,7 +301,7 @@ MIDIdef.cc(\midi_switch10,{ |val, num, chan, src|
 		(
 MIDIdef.cc(\midi_switch11,{ |val, num, chan, src|
 		var lamdoma;
-				if(val>0,lamdoma=3/2,lamdoma=3/2);
+				if(val>0,lamdoma=5,lamdoma=5);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },24);
@@ -309,7 +309,7 @@ MIDIdef.cc(\midi_switch11,{ |val, num, chan, src|
 					(
 MIDIdef.cc(\midi_switch12,{ |val, num, chan, src|
 		var lamdoma;
-				if(val>0,lamdoma=2/1,lamdoma=2);
+				if(val>0,lamdoma=6,lamdoma=6);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },25);
