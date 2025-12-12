@@ -67,20 +67,20 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 )
 
 ////tester
-(var m,a,b,c, beat=5, frame=32; {
+(var m,a,b,c, beat=5, frame=32.reciprocal; {
 
-m=MouseX.kr(0,1).round(1).asInteger;
-	//m=MouseX.kr(0,32400).round(1).asInteger;
-	//m=MouseX.kr(0,3).round(1).asInteger;
+//test//m=MouseX.kr(0,1).round(1).asInteger;
+	m=MouseX.kr(0,32400).round(1).asInteger;
+//tetrahedron//m=MouseX.kr(0,3).round(1).asInteger;
 	b=Spherical(beat,Select.kr(m,~az),Select.kr(m,~el)).x.round(frame);
 	c=Spherical(beat,Select.kr(m,~az),Select.kr(m,~el)).y.round(frame);
 	d=Spherical(beat,Select.kr(m,~az),Select.kr(m,~el)).z.round(frame);
 	//(2.pow(b/beat)).poll;
 	//(2.pow(c/beat)).poll;
 	//(2.pow(d/beat)).poll;
-	2.pow(b).poll;
-	2.pow(c).poll;
-	2.pow(d).poll;
+	2.pow(b).round(0.00001).poll;
+	2.pow(c).round(0.00001).poll;
+	2.pow(d).round(0.00001).poll;
 		}.play
 		)
 (
