@@ -35,7 +35,7 @@ s.meter;
 	 ~b = Buffer.loadCollection(s, ~a.getSetsAndMatrices);
 );
 /////////////osc polytope
-/*(
+(
 {
 	var az=0,el1=0,sph,n=90,iter=90,rep=360,el,silver=(1+2.sqrt),w=((1+5.sqrt)/2);
 	~az=[];~el=[];
@@ -52,8 +52,8 @@ sph=Spherical(1,az.degrad,el1.degrad).phi.round(0.000000000001);
 el1=0;n=90;
 	};
 }.value;
-);*/
-		(
+);
+		/*(
 {
 var  sph1,sph2,sph3,az1=0,el1=0,az2=0,el2=0,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt);
 var azimuth,elevation,angle=0,n=12,ellipsis=[1,1,1];
@@ -79,7 +79,7 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 		az1=0;el1=0;az2=0;el2=0;
 	}
 }.value;
-);
+);*/
 		/////check value range
 		/*(var m,a,b,c; {m=MouseX.kr(0,32400).round(1).asInteger;
 			a=Spherical(60,Select.kr(m,~az),Select.kr(m,~el)).z.abs;
@@ -125,11 +125,11 @@ wt = signal.asWavetable;
 SynthDef.new(\synth,{
 
 	arg gain=1,low=7168,high=0,tone=0,band=1,lamdoma=1,brain=1,pan_speed=1,mix=1;
-	var gold=45,silver1=0,silver2=180,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt),room=1;
+	var gold=45,silver1=0,silver2=180,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt),room=0.5;
 	var freq,fund,n=0,m,phase,interval,alpha,cell_az,cell_el;
 	var sig1,sig2,first=28,bank=7,out1,out2,fm,band_osc1,band_osc2,amp,ton;
 	var linex,liney,silver3=45,cell_l,cell_r,band_osc3,band_osc4;
-	var octahedron,sig3,out3,cell_tria,b_x,b_y,b_z,rq=0.1;
+	var octahedron,sig3,out3,cell_tria,b_x,b_y,b_z,rq=pi.reciprocal;
 	var xyz=[1,1,1].normalizeSum.sqrt,axis,q,rotor,rotation;
     var i=Quaternion(0, xyz.[0], 0, 0),j=Quaternion(0, 0, xyz.[1], 0),k=Quaternion(0, 0, 0, xyz.[2]);
 
@@ -203,13 +203,14 @@ out3=VBAP.ar(6,FreeVerb.ar(sig3,mix,room,mul:1),~b.bufnum,(silver3+cell_az.lag(0
 (silver2.wrap(90.neg,90)+cell_el.lag(0.1)).wrap(90.neg,90));
 
 
-Out.ar(2,Limiter.ar(LeakDC.ar(out1,mul:2)*gain,0.1));
-Out.ar(2,Limiter.ar(LeakDC.ar(out2,mul:2)*gain,0.1));
-Out.ar(2,Limiter.ar(LeakDC.ar(out3,mul:2)*gain,0.1));
+Out.ar(2,Limiter.ar(LeakDC.ar(out1,mul:1)*gain,room));
+Out.ar(2,Limiter.ar(LeakDC.ar(out2,mul:1)*gain,room));
+Out.ar(2,Limiter.ar(LeakDC.ar(out3,mul:1)*gain,room));
 
-Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix,room,mul:1),mul:1)*gain,0.1),(linex+cell_l.lag(0.1)).wrap(0,1)));
-Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix,room,mul:1),mul:1)*gain,0.1),(liney+cell_r.lag(0.1)).wrap(0,1.neg)));
-Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix,room,mul:1),mul:1)*gain,0.1),cell_tria.lag(0.1)));
+Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix,room,mul:1),mul:1)*gain,room),(linex+cell_l.lag(0.1)).wrap(0,1)));
+Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix,room,mul:1),mul:1)*gain,room),(liney+cell_r.lag(0.1)).wrap(0,1.neg)));
+Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix,room,mul:1),mul:1)*gain,room),
+cell_tria.lag(0.1)));
 
 
 gold=(gold+(360-gold_r)).wrap(180.neg,180).round(0.0001);
@@ -343,7 +344,7 @@ MIDIdef.cc(\midi_switch7,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_switch8,{ |val, num, chan, src|
 		 var lamdoma, n=1, a=1;
-				if(val>0,lamdoma=2,lamdoma=2);
+				if(val>0,lamdoma=5/6,lamdoma=5/6);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },21);
@@ -351,7 +352,7 @@ MIDIdef.cc(\midi_switch8,{ |val, num, chan, src|
 		(
 MIDIdef.cc(\midi_switch9,{ |val, num, chan, src|
 		var lamdoma, n=2, a=1;
-					if(val>0,lamdoma=3,lamdoma=3);
+					if(val>0,lamdoma=4/5,lamdoma=4/5);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },22);
@@ -360,7 +361,7 @@ MIDIdef.cc(\midi_switch9,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_switch10,{ |val, num, chan, src|
          var lamdoma, n=3, a=1;
-				if(val>0,lamdoma=4,lamdoma=4);
+				if(val>0,lamdoma=3/4,lamdoma=3/4);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },23);
@@ -368,7 +369,7 @@ MIDIdef.cc(\midi_switch10,{ |val, num, chan, src|
 		(
 MIDIdef.cc(\midi_switch11,{ |val, num, chan, src|
 		var lamdoma, n=4, a=1;
-				if(val>0,lamdoma=5,lamdoma=5);
+				if(val>0,lamdoma=2/3,lamdoma=2/3);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },24);
@@ -376,7 +377,7 @@ MIDIdef.cc(\midi_switch11,{ |val, num, chan, src|
 					(
 MIDIdef.cc(\midi_switch12,{ |val, num, chan, src|
 		var lamdoma, n=5, a=1;
-					if(val>0,lamdoma=6,lamdoma=6);
+					if(val>0,lamdoma=1/2,lamdoma=1/2);
 		lamdoma.postln;
 		if(~synth.isPlaying,{~synth.set(\lamdoma,lamdoma)});
 },25);
