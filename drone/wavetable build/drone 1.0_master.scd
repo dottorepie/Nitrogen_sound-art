@@ -85,9 +85,9 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 			a=Spherical(60,Select.kr(m,~az),Select.kr(m,~el)).z.abs;
 			b=Spherical(60,Select.kr(m,~az),Select.kr(m,~el)).x.abs;
 			c=Spherical(60,Select.kr(m,~az),Select.kr(m,~el)).y.abs;
-			(2.pow(a/12)/50).poll;
-			(2.pow(b/12)/50).poll;
-			(2.pow(c/12)/50).poll;
+			(2.pow(a/50).poll;
+			(2.pow(b/50).poll;
+			(2.pow(c/50).poll;
 		}.play
 		)*/
 
