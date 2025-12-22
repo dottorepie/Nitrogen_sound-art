@@ -1,9 +1,31 @@
-
+///perfect number sequence
+(
+~primes=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71];
+(
+{
+var n=1.neg;
+~ps=5.collect{n=n+1;
+	2.pow(~primes.[n]-1)*(2.pow(~primes.[n])-1);
+};
+	~ps.asInteger;
+}.value
+)
+)
 /////////////////
 ////////oscilator
+
+////musical temperament method
 (
 ~n=1.neg;~array=16256.collect{~n=~n+1;2.pow(~n/16256)};
 ~a=(0-(pi/8128)); ~ph=16256.collect{~a=~a+(pi/8128);};
+~bufferSize = 4096*8;
+~signalSize = 2048*8;
+)
+
+/////lamdoma method
+(
+~n=0;~array=512.collect{~n=~n+1;(~n+1)/~n};
+~a=(0-(pi/256)); ~ph=512.collect{~a=~a+(pi/256);};
 ~bufferSize = 4096*8;
 ~signalSize = 2048*8;
 )
@@ -23,25 +45,39 @@ signal.plot;
 
 
 (
-var freq=6*32, b=1,amp=50;
-{Out.ar(0,LPF.ar((Osc.ar(~w.bufnum,freq,phase:0.degrad).abs*SinOsc.ar(freq,phase:0.degrad)),freq,amp))}.play;
-{Out.ar(1,LPF.ar((Osc.ar(~w.bufnum,freq,phase:90.degrad).abs*SinOsc.ar(freq,phase:90.degrad)),freq,amp))}.play;
+var freq=6*32, b=1,amp=1/20;
+{Out.ar(0,LPF.ar((Osc.ar(~w.bufnum,freq,phase:0.degrad,mul:100).abs*SinOsc.ar(freq,phase:0.degrad)),freq*64,amp))}.play;
+{Out.ar(1,LPF.ar((Osc.ar(~w.bufnum,freq,phase:90.degrad,mul:100).abs*SinOsc.ar(freq,phase:90.degrad)),freq*64,amp))}.play;
 )
 
 
-///perfect number sequence
+///additive synthesis
+
 (
-~primes=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71];
-(
-{
-var n=1.neg;
-~ps=5.collect{n=n+1;
-	2.pow(~primes.[n]-1)*(2.pow(~primes.[n])-1);
-};
-	~ps.asInteger;
-}.value
+var fund=6*16, b=1,amp=1,freq,m=1,left,right,a=1,x=1,lamdoma,angle1=45;
+var silver_ratio=(1+2.sqrt),gold_ratio=((1+5.sqrt)/2),interval,angle=0,ph=0.degrad;
+
+64.do{
+
+	lamdoma=(x+a)/x;
+
+	interval=(m*lamdoma);
+	freq=fund;
+
+	amp=interval.reciprocal;
+
+	left=exp(Complex(0,1)*angle1.degrad).real.abs;
+	right=exp(Complex(0,1)*angle1.degrad).imag.abs.neg;
+
+	{Out.ar(0,Pan2.ar(LPF.ar((Osc.ar(~w.bufnum,freq,phase:0.degrad+ph,mul:100).abs*SinOsc.ar(freq,phase:0.degrad+ph)),freq*m,amp),left))}.play;
+	{Out.ar(0,Pan2.ar(LPF.ar((Osc.ar(~w.bufnum,freq,phase:90.degrad+ph,mul:100).abs*SinOsc.ar(freq,phase:90.degrad+ph)),freq*m,amp),right))}.play;
+	ph=angle.degrad;
+	m=m+1;
+	angle=(angle+(360-(360/gold_ratio))).wrap(0,360);
+	angle1=(angle1+(360-(360/silver_ratio))).wrap(0,360);
+}
 )
-)
+
 
 /*(
 ~control_seed=18.rand
