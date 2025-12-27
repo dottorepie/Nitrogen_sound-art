@@ -55,9 +55,9 @@ signal.plot;
 
 
 (
-var freq=6*32, b=1,amp=1/20;
-{Out.ar(0,LPF.ar((Osc.ar(~w.bufnum,freq,phase:0.degrad,mul:100).abs*SinOsc.ar(freq,phase:0.degrad)),freq,amp))}.play;
-{Out.ar(1,LPF.ar((Osc.ar(~w.bufnum,freq,phase:90.degrad,mul:100).abs*SinOsc.ar(freq,phase:90.degrad)),freq,amp))}.play;
+var freq=6*32, b=1,amp=1/10;
+{Out.ar(0,LPF.ar((Osc.ar(~w.bufnum,freq,phase:0.degrad,mul:100).abs*SinOsc.ar(freq,phase:0.degrad)),freq*MouseX.kr(1,64).round(1),amp))}.play;
+{Out.ar(1,LPF.ar((Osc.ar(~w.bufnum,freq,phase:90.degrad,mul:100).abs*SinOsc.ar(freq,phase:90.degrad)),freq*MouseX.kr(1,64).round(1),amp))}.play;
 )
 
 

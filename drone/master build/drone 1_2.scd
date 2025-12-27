@@ -53,35 +53,123 @@ el1=0;n=90;
 	};
 }.value;
 )*/
-		(
+	(
 {
-var  sph1,sph2,sph3,az1=0,el1=0,az2=0,el2=0,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt);
-var azimuth,elevation,angle=0,n=12,ellipsis=[1,1,1];
+var  sph1,sph2,sph3,sph4,sph5,sph6,sph7,m_x=7,m_y=7,m_z=7,qx,qy,mq=6;
+var az1=0,el1=0,az2=0,el2=0,az3=0,el3=0,mag,mag_x,mag_y,mag_z,mag_qx,mag_qy;
+var az4=0,el4=0,az5=0,el5=0,az6=0,el6=0,az7=0,el7=0;
+var azimuth,elevation,magnitudex,magnitudey,magnitudez,angle=0,n=12;
+var sphx,sphy,sphz,azx,elx,azy,ely,azz,elz,plx=1,ply=1,plz=1;
+var num=1.neg,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt);
+var ellipsis=[1,1,1],spread=1;
 var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1;
-	~az=[];~el=[];
+	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[];~qy=[];
 
-	360.do{
-azimuth=90.collect{
-			az1 = (az1+((180*2.pow(n/12))-((180*2.pow(n/12))/silver_r))).wrap((90*2.pow(n/12)).neg,(90*2.pow(n/12)));
-		   el1 = (el1+((90*2.pow(n/12))-((90*2.pow(n/12))/silver_r))).wrap((45*2.pow(n/12)).neg,(45*2.pow(n/12)));
+//	spread = if(m_z < 1) { 1 / m_z } { m_z };
+
+	64.do{
+azimuth=16.collect{
+			az1 = (az1+(360-(360/silver_r))).wrap(180.neg,180);
+		   el1 = (el1+(180-(180/silver_r))).wrap(90.neg,90);
+
+//	mag1=(mag1+(1-(1/silver_r))).wrap(0,1);
 sph1=(Spherical(mag1,(az1.degrad+angle.degrad).wrap(pi.neg,pi),(el1.degrad+angle.degrad).wrap((pi/2).neg,(pi/2)))).theta.round(0.000000000001);
+
 	};
 
-elevation=90.collect{
-				az2 = (az2+((180*2.pow(n/12))-((180*2.pow(n/12))/silver_r))).wrap((90*2.pow(n/12)).neg,(90*2.pow(n/12)));
-			el2 = (el2+((90*2.pow(n/12))-((90*2.pow(n/12))/silver_r))).wrap((45*2.pow(n/12)).neg,(45*2.pow(n/12)));
-sph2=(Spherical(mag2,(az2.degrad+angle.degrad).wrap(pi.neg,pi),(el2.degrad+angle.degrad).wrap((pi/2).neg,(pi/2)))).phi.round(0.000000000001);
+elevation=16.collect{
+				az2 = (az2+(360-(360/silver_r))).wrap(180.neg,180);
+			el2 = (el2+(180-(180/silver_r))).wrap(90.neg,90);
+
+	//mag2=(mag2+(1-(1/silver_r))).wrap(0,1);
+		sph2=(Spherical(mag2,(az2.degrad+angle.degrad).wrap(pi.neg,pi),(el2.degrad+angle.degrad).wrap((pi/2).neg,(pi/2)))).phi.round(0.000000000001);
+
 	};
 
+magnitudex=	16.collect{
+			az3 = (az3+(360-(360/silver_r))).wrap(180.neg,180);
+			el3 = (el3+(180-(180/silver_r))).wrap(90.neg,90);
 
-angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(180*2.pow(n/12)));
+	//mag3=(mag3+(1-(1/silver_r))).wrap(0,1);
+	sph3=(Spherical(mag3,(az3.degrad+angle.degrad).wrap(pi.neg,pi),(el3.degrad+angle.degrad).wrap((pi/2).neg,(pi/2))));
+
+	 mag_x=((Complex(cos((sph3.theta.round(0.000000000001)*m_x).wrap(pi.neg,pi)),cos((sph3.theta.round(0.000000000001)*m_x).wrap(pi.neg,pi))).rho/(2.sqrt)).pow(spread)*
+			(Complex(cos((sph3.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))),cos((sph3.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)).pow(spread));
+
+				};
+
+magnitudey=	16.collect{
+			az4 = (az4+(360-(360/silver_r))).wrap(180.neg,180);
+				el4 = (el4+(180-(180/silver_r))).wrap(90.neg,90);
+
+	//mag4=(mag4+(1-(1/silver_r))).wrap(0,1);
+	sph4=(Spherical(mag4,(az4.degrad+angle.degrad).wrap(pi.neg,pi),(el4.degrad+angle.degrad).wrap((pi/2).neg,(pi/2))));
+
+		 mag_y=((Complex(sin((sph4.theta.round(0.000000000001)*m_y).wrap(pi.neg,pi)),sin((sph4.theta.round(0.000000000001)*m_y).wrap(pi.neg,pi))).rho/(2.sqrt)).pow(spread)*
+		 (Complex(cos((sph4.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))),cos((sph4.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)).pow(spread));
+				};
+
+
+qx=	16.collect{
+			az5 = (az5+(360-(360/silver_r))).wrap(180.neg,180);
+			el5 = (el5+(180-(180/silver_r))).wrap(90.neg,90);
+
+		//mag5=(mag5+(1-(1/silver_r))).wrap(0,1);
+	sph5=(Spherical(mag5,(az5.degrad+angle.degrad).wrap(pi.neg,pi),(el5.degrad+angle.degrad).wrap((pi/2).neg,(pi/2))));
+
+
+mag_qx=((((Complex(cos(((sph5.theta.round(0.000000000001))*mq).wrap(pi.neg,pi)),
+cos(((sph5.theta.round(0.000000000001))*mq).wrap(pi.neg,pi))))*
+(Complex(sin((sph5.phi.round(0.000000000001)*(mq-1)).wrap((pi/2).neg,(pi/2))),
+sin((sph5.phi.round(0.000000000001)*(mq-1)).wrap((pi/2).neg,(pi/2)))))*
+(Complex(cos((sph5.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))),
+cos((sph5.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).pow(spread);
+				};
+
+
+qy=	16.collect{
+			az6 = (az6+(360-(360/silver_r))).wrap(180.neg,180);
+			el6 = (el6+(180-(180/silver_r))).wrap(90.neg,90);
+
+	//mag6=(mag6+(1-(1/silver_r))).wrap(0,1);
+	sph6=(Spherical(mag6,(az6.degrad+angle.degrad).wrap(pi.neg,pi),(el6.degrad+angle.degrad).wrap((pi/2).neg,(pi/2))));
+
+ mag_qy=((((Complex(sin(((sph6.theta.round(0.000000000001))*mq).wrap(pi.neg,pi)),
+sin(((sph6.theta.round(0.000000000001))*mq).wrap(pi.neg,pi))))*
+(Complex(sin((sph6.phi.round(0.000000000001)*(mq-1)).wrap((pi/2).neg,(pi/2))),
+sin((sph6.phi.round(0.000000000001)*(mq-1)).wrap((pi/2).neg,(pi/2)))))*
+(Complex(cos((sph6.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))),
+cos((sph6.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).pow(spread);
+				};
+
+
+magnitudez=	16.collect{
+			az7 = (az7+(360-(360/silver_r))).wrap(180.neg,180);
+			el7 = (el7+(180-(180/silver_r))).wrap(90.neg,90);
+
+//mag7=(mag7+(1-(1/silver_r))).wrap(0,1);
+sph7=(Spherical(mag7,(az7.degrad+angle.degrad).wrap(pi.neg,pi),(el7.degrad+angle.degrad).wrap((pi/2).neg,(pi/2))));
+
+//if(
+//m_z.even,
+mag_z=(Complex(sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/2).neg,(pi/2))),sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)).pow(spread)
+			//,
+//mag_z=(Complex(sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/2).neg,(pi/2))),sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/2).neg,(pi/2)))).rho(2.sqrt)).pow(spread);
+			//);
+////z axis   ambi..  sin for odd numbers, cos for even
+				};
+
+angle=(angle+(360-(360/silver_r))).wrap(0,360);
 ~az=~az++azimuth;~el=~el++elevation;
-		az1=0;el1=0;az2=0;el2=0;
+~magx=~magx++magnitudex;~magy=~magy++magnitudey;~magz=~magz++magnitudez;
+~qx=~qx++qx;~qy=~qy++qy;
+		az1=0;el1=0;az2=0;el2=0;az3=0;el3=0;
+		az4=0;el4=0;az5=0;el5=0;az6=0;el6=0;az7=0;el7=0;
 	}
 }.value;
 );
 		/////check value range
-		/*(var m,a,b,c; {m=MouseX.kr(0,32400).round(1).asInteger;
+		/*(var m,a,b,c; {m=MouseX.kr(0,1023).round(1).asInteger;
 			a=Spherical(60,Select.kr(m,~az),Select.kr(m,~el)).z.abs;
 			b=Spherical(60,Select.kr(m,~az),Select.kr(m,~el)).x.abs;
 			c=Spherical(60,Select.kr(m,~az),Select.kr(m,~el)).y.abs;
@@ -130,15 +218,17 @@ wt = signal.asWavetable;
 SynthDef.new(\synth,{
 
 	arg gain=1,low=992,high=0,tone=0,band=1,lamdoma=1,brain=1,pan_speed=1;
-	var gold=45,silver1=0,silver2=180,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt),room=1,mix=1;
+	var gold=45,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt),room=1,mix=1;
 	var freq1,freq2,freq3,fund,phase1,phase2,phase3,amp1,amp2,amp3,alpha,cell_az,cell_el;
-	var sig1,sig2,first=32*(9/8),bank=3,out1,out2,fm,band_osc1,band_osc2,ton,freq;
-	var linex,liney,silver3=45,cell_l,cell_r,band_osc3,band_osc4,band_osc5,band_osc6;
-	var octahedron,sig3,out3,cell_tria,b_x,b_y,b_z,rq=0.1;
-	var xyz=[1,1,1].normalizeSum.sqrt,axis,q,rotor,rotation;
-    var i=Quaternion(0, xyz.[0], 0, 0),j=Quaternion(0, 0, xyz.[1], 0),k=Quaternion(0, 0, 0, xyz.[2]);
+	var sig1,sig2,first=32*(9/8),bank=4,out1,out2,fm,band_osc1,band_osc2,ton,freq;
+	var linex,liney,cell_l,cell_r,band_osc3,band_osc4,band_osc5,band_osc6;
+	var octahedron,sig3,out3,cell_tria,b_x,b_y,b_z,rq=0.1,tetrahedron;
+	//var xyz=[1,1,1].normalizeSum.sqrt,axis,q,rotor,rotation;
+  //  var i=Quaternion(0, xyz.[0], 0, 0),j=Quaternion(0, 0, xyz.[1], 0),k=Quaternion(0, 0, 0, xyz.[2]);
 
-axis=i+j+k;
+//axis=i+j+k;
+
+	mix=high.lag(0.01);
 
 octahedron=Spherical(lamdoma.lag(0.01).reciprocal,Select.kr(brain.lag(0.01),~az),Select.kr(brain.lag(0.01),~el));
 
@@ -147,9 +237,12 @@ b_x=octahedron.x;
 b_y=octahedron.y;
 b_z=octahedron.z;
 
-	mix=high.lag(0.01);
-
 bank.do{
+
+tetrahedron=Spherical(1,Select.kr(brain.lag(0.01).rand,~az),Select.kr(brain.lag(0.01).rand,~el));
+
+linex=Complex(tetrahedron.theta.linlin(180.neg.degrad,180.degrad,1.neg,1),tetrahedron.phi.linlin(90.neg.degrad,90.degrad,1.neg,1)).real.abs;
+liney=Complex(tetrahedron.theta.linlin(180.neg.degrad,180.degrad,1.neg,1),tetrahedron.phi.linlin(90.neg.degrad,90.degrad,1.neg,1)).imag.abs.neg;
 
 ton=2.pow((tone.lag(0.01))/992).round(0.0001);
 
@@ -178,9 +271,6 @@ band_osc4=SinOsc.kr(b_x*2.pow(band.lag(0.01)/992),phase:180.degrad).range(496,16
 band_osc5=SinOsc.kr(b_y*2.pow(band.lag(0.01)/992),phase:90.degrad.neg).range(496,16256);
 band_osc6=SinOsc.kr(b_z*2.pow(band.lag(0.01)/992),phase:45.degrad.neg).range(496,16256);
 
-linex=exp(Complex(0,1)*silver3.degrad).real.abs;
-liney=exp(Complex(0,1)*silver3.degrad).imag.abs.neg;
-
 sig1=BPF.ar(BRF.ar(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phase1,mul:100).abs*SinOsc.ar(freq1,phase:phase1)),freq1*2.pow(low.lag(0.01)/992),amp1),
 	band_osc1.lag(0.1),rq),band_osc4.lag(0.1),rq);
 sig2=BPF.ar(BRF.ar(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phase2,mul:100).abs*SinOsc.ar(freq2,phase:phase2)),freq2*2.pow(low.lag(0.01)/992),amp2),
@@ -195,14 +285,14 @@ cell_l=SinOsc.kr(2.pow(pan_speed.lag(0.01)/992),phase:0.degrad).range(0,1);
 cell_r=SinOsc.kr(2.pow(pan_speed.lag(0.01)/992),phase:90.degrad).range(0,1.neg);
 cell_tria=(2.pow(pan_speed.lag(0.01)/992)).wrap(1,1.neg);
 
-out1=VBAP.ar(6,FreeVerb.ar(sig1,mix,room,mul:1),~b.bufnum,(silver1+cell_az.lag(0.01)).wrap(0,360),
-(silver1.wrap(90.neg,90)+cell_el.lag(0.01)).wrap(90.neg,90));
+out1=VBAP.ar(6,FreeVerb.ar(sig1,mix,room,mul:1),~b.bufnum,(tetrahedron.theta.rand+cell_az.lag(0.01)).wrap(0,360),
+(tetrahedron.phi.rand+cell_el.lag(0.01)).wrap(90.neg,90));
 
-out2=VBAP.ar(6,FreeVerb.ar(sig2,mix,room,mul:1),~b.bufnum,(silver2+cell_az.lag(0.01)).wrap(0,360),
-(silver2.wrap(90.neg,90)+cell_el.lag(0.01)).wrap(90.neg,90));
+out2=VBAP.ar(6,FreeVerb.ar(sig2,mix,room,mul:1),~b.bufnum,(tetrahedron.theta.rand+cell_az.lag(0.01)).wrap(0,360),
+(tetrahedron.phi.rand+cell_el.lag(0.01)).wrap(90.neg,90));
 
-out3=VBAP.ar(6,FreeVerb.ar(sig3,mix,room,mul:1),~b.bufnum,(silver3+cell_az.lag(0.01)).wrap(0,360),
-(silver2.wrap(90.neg,90)+cell_el.lag(0.01)).wrap(90.neg,90));
+out3=VBAP.ar(6,FreeVerb.ar(sig3,mix,room,mul:1),~b.bufnum,(tetrahedron.theta.rand+cell_az.lag(0.01)).wrap(0,360),
+(tetrahedron.phi.rand+cell_el.lag(0.01)).wrap(90.neg,90));
 
 
 Out.ar(2,Limiter.ar(LeakDC.ar(out1,mul:1)*gain,room));
@@ -215,9 +305,6 @@ Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix,room,mul:1),mul:1)*ga
 
 
 gold=(gold+(360-(360/gold_r))).wrap(0,360).round(0.0001);
-silver1=(silver1+(360-(360/silver_r))).wrap(0,360).round(0.0001);
-silver2=(silver2+(360-(360/silver_r))).wrap(0,360).round(0.0001);
-silver3=(silver3+(360-(360/silver_r))).wrap(0,360).round(0.0001);
 			}
 }).add;);
 
@@ -285,7 +372,7 @@ MIDIdef.cc(\midi_pot6,{ |val, num, chan, src|
 		(
 MIDIdef.cc(\midi_switch1,{ |val, num, chan, src|
 		var brain;
-					if(val>0,brain=32400.rand,brain=32400.rand);
+					if(val>0,brain=1024.rand,brain=1024.rand);
 		brain.postln;
 		if(~synth.isPlaying,{~synth.set(\brain,brain)});
 },14);
@@ -293,7 +380,7 @@ MIDIdef.cc(\midi_switch1,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_switch2,{ |val, num, chan, src|
 		 var brain;
-					if(val>0,brain=32400.rand,brain=32400.rand);
+					if(val>0,brain=1024.rand,brain=1024.rand);
 		brain.postln;
 		if(~synth.isPlaying,{~synth.set(\brain,brain)});
 },15);
@@ -301,7 +388,7 @@ MIDIdef.cc(\midi_switch2,{ |val, num, chan, src|
 		(
 MIDIdef.cc(\midi_switch3,{ |val, num, chan, src|
 		var brain;
-					if(val>0,brain=32400.rand,brain=32400.rand);
+					if(val>0,brain=1024.rand,brain=1024.rand);
 
 		brain.postln;
 		if(~synth.isPlaying,{~synth.set(\brain,brain)});
@@ -311,7 +398,7 @@ MIDIdef.cc(\midi_switch3,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_switch4,{ |val, num, chan, src|
          var brain;
-					if(val>0,brain=32400.rand,brain=32400.rand);
+					if(val>0,brain=1024.rand,brain=1024.rand);
 		brain.postln;
 		if(~synth.isPlaying,{~synth.set(\brain,brain)});
 },17);
@@ -319,7 +406,7 @@ MIDIdef.cc(\midi_switch4,{ |val, num, chan, src|
 		(
 MIDIdef.cc(\midi_switch5,{ |val, num, chan, src|
 		var brain;
-				if(val>0,brain=32400.rand,brain=32400.rand);
+				if(val>0,brain=1024.rand,brain=1024.rand);
 
 		brain.postln;
 		if(~synth.isPlaying,{~synth.set(\brain,brain)});
@@ -328,7 +415,7 @@ MIDIdef.cc(\midi_switch5,{ |val, num, chan, src|
 					(
 MIDIdef.cc(\midi_switch6,{ |val, num, chan, src|
 		var brain;
-				if(val>0,brain=32400.rand,brain=32400.rand);
+				if(val>0,brain=1024.rand,brain=1024.rand);
 		brain.postln;
 		if(~synth.isPlaying,{~synth.set(\brain,brain)});
 },19);
