@@ -84,10 +84,10 @@ data = (32*8).collect{
 	az=~az.[pl];
 	el=~el.[pl];
 	//mag=1000;
-	 mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt))+(Cartesian(~qx.[pl],~qy.[pl],~magz.[pl]).rho/(2.sqrt));
+	// mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt))+(Cartesian(~qx.[pl],~qy.[pl],~magz.[pl]).rho/(2.sqrt));
 		//mag=(Cartesian(~magx.[pl],0,0).rho/(2.sqrt));
 		//mag=(Cartesian(~qx.[pl],0,0).rho/(2.sqrt));
-			//	 mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt));
+				 mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt));
 		// mag=~magz.[pl];
 	pl=pl+1;
 			//mk=(mk+((size*2.pow(n/12))-((size*2.pow(n/12))/silver_r))).wrap(0,size*2.pow(n/12));
@@ -125,7 +125,7 @@ Pen.translate(400,400);
 /////////////
 (
 {
-var  sph1,sph2,sph3,sph4,sph5,sph6,sph7,m_x=9,m_y=9,m_z=9,qx,qy,mq=8;
+var  sph1,sph2,sph3,sph4,sph5,sph6,sph7,m_x=1,m_y=1,m_z=1,qx,qy,mq=0;
 var az1=0,el1=0,az2=0,el2=0,az3=0,el3=0,mag,mag_x,mag_y,mag_z,mag_qx,mag_qy;
 var az4=0,el4=0,az5=0,el5=0,az6=0,el6=0,az7=0,el7=0;
 var azimuth,elevation,magnitudex,magnitudey,magnitudez,angle=0,n=12;
@@ -137,8 +137,8 @@ var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1;
 
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
 
-	32.do{
-azimuth=8.collect{
+	8.do{
+azimuth=32.collect{
 			az1 = (az1+(360-(360/silver_r))).wrap(180.neg,180);
 		   el1 = (el1+(180-(180/silver_r))).wrap(90.neg,90);
 
@@ -147,7 +147,7 @@ sph1=(Spherical(mag1,(az1.degrad+angle.degrad).wrap(pi.neg,pi),(el1.degrad+angle
 
 	};
 
-elevation=8.collect{
+elevation=32.collect{
 				az2 = (az2+(360-(360/silver_r))).wrap(180.neg,180);
 			el2 = (el2+(180-(180/silver_r))).wrap(90.neg,90);
 
@@ -156,7 +156,7 @@ elevation=8.collect{
 
 	};
 
-magnitudex=	8.collect{
+magnitudex=	32.collect{
 			az3 = (az3+(360-(360/silver_r))).wrap(180.neg,180);
 			el3 = (el3+(180-(180/silver_r))).wrap(90.neg,90);
 
@@ -168,7 +168,7 @@ magnitudex=	8.collect{
 
 				};
 
-magnitudey=	8.collect{
+magnitudey=	32.collect{
 			az4 = (az4+(360-(360/silver_r))).wrap(180.neg,180);
 				el4 = (el4+(180-(180/silver_r))).wrap(90.neg,90);
 
@@ -180,7 +180,7 @@ magnitudey=	8.collect{
 				};
 
 
-qx=	8.collect{
+qx=	32.collect{
 			az5 = (az5+(360-(360/silver_r))).wrap(180.neg,180);
 			el5 = (el5+(180-(180/silver_r))).wrap(90.neg,90);
 
@@ -197,7 +197,7 @@ cos((sph5.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).
 				};
 
 
-qy=	8.collect{
+qy=	32.collect{
 			az6 = (az6+(360-(360/silver_r))).wrap(180.neg,180);
 			el6 = (el6+(180-(180/silver_r))).wrap(90.neg,90);
 
@@ -213,7 +213,7 @@ cos((sph6.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).
 				};
 
 
-magnitudez=	8.collect{
+magnitudez=	32.collect{
 			az7 = (az7+(360-(360/silver_r))).wrap(180.neg,180);
 			el7 = (el7+(180-(180/silver_r))).wrap(90.neg,90);
 
