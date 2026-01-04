@@ -63,10 +63,15 @@ SynthDef.new(\re_im, {
 	var sig1ir,sig2ir,sig3ir,sig4ir,sig5ir,sig6ir,sig7ir,sig8ir;
 	var frames=~frames,sig1,sig2,silver=45,golden=45,l,r,g=((1+5.sqrt)/2),s=(1+2.sqrt);
 
-    in1 = PlayBuf.ar(1, ~r1.bufnum, BufRateScale.kr(~r1.bufnum), loop: 1, doneAction:0);
-	in2 = PlayBuf.ar(1, ~r2.bufnum, BufRateScale.kr(~r2.bufnum), loop: 1, doneAction:0);
-    in3 = PlayBuf.ar(1, ~i3.bufnum, BufRateScale.kr(~i3.bufnum), loop: 1, doneAction:0);
-	in4 = PlayBuf.ar(1, ~i4.bufnum, BufRateScale.kr(~i4.bufnum), loop: 1, doneAction:0);
+
+    in1 = PlayBuf.ar(1, ~r1.bufnum, BufRateScale.kr(~r1.bufnum), loop: 0, doneAction:0);
+	in2 = PlayBuf.ar(1, ~r2.bufnum, BufRateScale.kr(~r2.bufnum), loop: 0, doneAction:0);
+	//in1 = SoundIn.ar(0);
+	//in2 = SoundIn.ar(1);
+    in3 = PlayBuf.ar(1, ~i3.bufnum, BufRateScale.kr(~i3.bufnum), loop: 0, doneAction:0);
+	in4 = PlayBuf.ar(1, ~i4.bufnum, BufRateScale.kr(~i4.bufnum), loop: 0, doneAction:0);
+	//in3 = SoundIn.ar(0);
+	//in4 = SoundIn.ar(1);
 	chain1 = FFT(LocalBuf(frames), in1);	chain3 = FFT(LocalBuf(frames), in3);
 	chain2 = FFT(LocalBuf(frames), in2);	chain4 = FFT(LocalBuf(frames), in4);
 

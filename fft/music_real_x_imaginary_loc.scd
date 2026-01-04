@@ -84,8 +84,12 @@ SynthDef.new(\re_im, {
 
     in1 = PlayBuf.ar(1, ~r1.bufnum, BufRateScale.kr(~r1.bufnum), loop: 0, doneAction:0);
 	in2 = PlayBuf.ar(1, ~r2.bufnum, BufRateScale.kr(~r2.bufnum), loop: 0, doneAction:0);
+	//in1 = SoundIn.ar(0);
+	//in2 = SoundIn.ar(1);
     in3 = PlayBuf.ar(1, ~i3.bufnum, BufRateScale.kr(~i3.bufnum), loop: 0, doneAction:0);
 	in4 = PlayBuf.ar(1, ~i4.bufnum, BufRateScale.kr(~i4.bufnum), loop: 0, doneAction:0);
+	//in3 = SoundIn.ar(0);
+	//in4 = SoundIn.ar(1);
 	chain1 = FFT(LocalBuf(frames), in1);	chain3 = FFT(LocalBuf(frames), in3);
 	chain2 = FFT(LocalBuf(frames), in2);	chain4 = FFT(LocalBuf(frames), in4);
 
