@@ -333,32 +333,34 @@ Synth(\kick);
 
 	/////solid
 (
-~az=[45.degrad,135.neg.degrad,45.neg.degrad,135.degrad];
-~el=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad];
+~az=[0.degrad,0.degrad,90.degrad,180.degrad,90.neg.degrad,0.degrad];
+~el=[90.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,90.degrad];
 );
 //////////patterns
 
-	({var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c, beat=1/2, frame=16.reciprocal,n=0,bank=4;
+	({var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c, beat=1, frame=32.reciprocal,n=0,bank=6;
 
-~durs=[];
+		~durk=[];~durs=[];~durh=[];
 
-~x2=bank.collect{
+~x=bank.collect{
 m1=m1+1;
 	b=Spherical(beat,~az.[m1],~el.[m1]).rotate(0.degrad).x.round(frame);
 	2.pow(b).round(0.00001);
 };
-~y2=bank.collect{
+~y=bank.collect{
 m2=m2+1;
 	c=Spherical(beat,~az.[m2],~el.[m2]).rotate(0.degrad).y.round(frame);
 	2.pow(c).round(0.00001);
 };
-~z2=bank.collect{
+~z=bank.collect{
 m3=m3+1;
 	d=Spherical(beat,~az.[m3],~el.[m3]).rotate(0.degrad).z.round(frame);
 	2.pow(d).round(0.00001);
 };
-		bank.do{ ~durs=~durs
-			++~x2.[n]++~x2.[n+1]++~x2.[n+2]++~x2.[n+3]++~y2.[n]++~y2.[n+1]++~y2.[n+2]++~y2.[n+3]++~z2.[n]++~z2.[n+1]++~z2.[n+2]++~z2.[n+3]};
+		bank.do{ ~durk=~durk++~x.[n];n=n+1;};n=0;
+		bank.do{ ~durs=~durs++~y.[n];n=n+1;};n=0;
+		bank.do{ ~durh=~durh++~z.[n];n=n+1;};n=0;
+	//	bank.do{~durs=~durs++~x.[n]++~y.[n]++~z.[n];n=n+1;}
 //	~dur = ~duri.collect { |x|
   //  if (x == 0) { Rest(2) } { x }
 //	}
@@ -367,7 +369,7 @@ m3=m3+1;
 (
 	(
 		~kick=Pdef(\1, Pbind(\instrument, \kick,
-			\dur,Pseq(~durs*2,inf),
+			\dur,Pseq(~durk,inf),
 		))
 );
 
@@ -403,7 +405,7 @@ m3=m3+1;
 
 
 
-TempoClock.default.tempo_(2);
+TempoClock.default.tempo_(4);
 
 (
 ~kick.play;
