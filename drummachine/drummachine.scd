@@ -1,19 +1,43 @@
+///compression notes
+//	slopeAbove:
+//4" → 0.35–0.45
+//5" → 0.45–0.60
+//8" → 0.60–0.80
+		///the larger the speaker cone the more relax time is possible and less difference between slopes, also less threshhold//Relax time ≈ 5–10× the attack time
+//clampTime (attack)
+//Fast attack → kills transients → fewer high-frequency spikes
+//Slow attack → transients pass → brighter sound
+//relaxTime (release)
+//Fast release → pumping, rhythmic spectral motion
+//Slow release → smoother, denser spectrum
+//Relax too short (< 80 ms)
+//Bass “breathes”
+//Mids wobble
+//Small speakers sound cheap
+//Relax too long (> 300 ms)
+//Bass dominates gain control
+//Mix sounds flat, distant
+//Quiet detail doesn’t recover fast enough
+//tanh saturation mul less as speaker size increase
+
+(
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=6;
+s.options.numOutputBusChannels=2;
 s.options.numInputBusChannels=0;
 s.options.memSize = 8192*4;
 s.options.blockSize = 64;
 s.options.maxNodes = 1024 * 2;
 //s.makeGui(w);
-//s.options.sampleRate= 44100;
+s.options.sampleRate= 44100;
 //s.recHeaderFormat="aiff";
 //s.recSampleFormat ="int16";
 //s.recChannels = 8;
 //s.boot;
 );
-
-
+(
+s.waitForBoot{
+(
 (
 ~n=1.neg;~array=992.collect{~n=~n+1;2.pow(~n/992)};
 ~a=(0-(pi/496)); ~ph=992.collect{~a=~a+(pi/496);};
@@ -21,36 +45,49 @@ s.options.maxNodes = 1024 * 2;
 ~signalSize = 2048*8;
 );
 (
+~w1= Buffer.alloc(s,~bufferSize);
+		{
+	var signal,wt;
+	signal=Signal.sineFill(~signalSize,~array,~ph);
+
+wt = signal.asWavetable;
+~w1.loadCollection(wt);
+//signal.plot;
+		}.value;
+);
+);
 //////kick
 (
 SynthDef(\kick, {
-    var env,silver=45,bank=9,linex=0,liney=0,sig;
-	var phs,golden=90,ton=2,freq,decay=2;
+	var amp=2,fund=28,ton=5,angle=45,low=0;
+    var env,silver=45,linex,liney,sig;
+	var phase,freq,decay=1.25;
 
-	freq = EnvGen.kr(Env([56*ton, 28],  [0.5], curve: -4)); // pitch drop
-	env= EnvGen.kr(Env.perc(0.01, decay, curve: -4),doneAction:2,levelScale:1/4);
-	//sig = SinOsc.ar(freq,freq/56) * env;
+	freq = EnvGen.kr(Env([fund*ton, fund], [decay/8], curve: -4)); // pitch drop
+	env= EnvGen.kr(Env.perc(0.01, decay, curve: -4),doneAction:2,levelScale:amp);
 
-	bank.do{
 
-linex=exp(Complex(0,1)*silver.degrad).real.round(0.00001).abs;
-liney=exp(Complex(0,1)*silver.degrad).imag.round(0.00001).abs.neg;
-phs=golden.degrad;
+linex=exp(Complex(0,1)*angle.degrad).real.round(0.00001).abs;
+liney=exp(Complex(0,1)*angle.degrad).real.round(0.00001).abs.neg;
 
-		sig=(LPF.ar(Pulse.ar((freq),width:0.5,mul:freq/56).abs,56*4)*SinOsc.ar(freq/2,phs,freq/56))*env;
+phase=angle.degrad;
 
-sig = sig + (sig * BrownNoise.ar(0.0001)); // add slight noise for punch
+		sig=(LPF.ar((Osc.ar(~w1.bufnum,freq,phase:phase,mul:100).abs*SinOsc.ar(freq,phase:phase)),freq*2.pow(low.lag(0.01)/992)));
 
-		Out.ar(0, Pan2.ar(sig,linex));
-		Out.ar(0, Pan2.ar(sig,liney));
+sig = sig + (sig * WhiteNoise.ar(0.001)); // add slight noise for punch
 
-silver=(silver+(360-(360/(1+2.sqrt)))).wrap(180.neg,180).round(0.00001);
-golden=(golden+(360-(360/((1+5.sqrt)/2)))).wrap(180.neg,180).round(0.0001);
+		sig=HPF.ar(sig,50);
+			sig = LPF.ar(sig, 2000);
+		sig=Compander.ar(sig,sig,-12.dbamp,1,0.3,0.015,0.3);
+		sig=tanh(sig*1.8);
+		sig=Limiter.ar(sig,1,0.01);
 
-	};
-}).add;
-);
-//Synth(\kick);
+		Out.ar(0, Pan2.ar(sig,linex,env));
+			Out.ar(0, Pan2.ar(sig,liney,env));
+
+}).add;);
+}))
+Synth(\kick);
 /////snare
 (
 SynthDef(\snare, {
@@ -120,25 +157,26 @@ Synth(\kick);
 (
 	(
 		~kick=Pdef(\1, Pbind(\instrument, \kick,
-			\dur,Pseq(~dur1,inf),
+			\dur,Pseq(~dur,inf),
 		))
 );
 
 (
 		~snare=Pdef(\2, Pbind(\instrument, \snare,
-			\dur,Pseq(~dur1.reverse,inf),
+			\dur,Pseq(~dur,inf),
 		))
 );
 (
 		~hihat=Pdef(\3, Pbind(\instrument, \hihat,
-			\dur,Pseq(~dur1.reverse/4,inf),
+			\dur,Pseq(~dur,inf),
 		))
 )
 )
 
 
 
-TempoClock.default.tempo_(120/152);
+
+TempoClock.default.tempo_(4);
 
 (
 ~kick.play;
@@ -152,7 +190,7 @@ TempoClock.default.tempo_(120/152);
 
 
 
-(var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c, beat=1, frame=32.reciprocal,n=0,bank=(1*5);
+(var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c, beat=1, frame=32.reciprocal,n=0,bank=6;
 
 ~dur=[];
 
@@ -172,6 +210,7 @@ m3=m3+1;
 	2.pow(d).round(0.00001);
 };
 bank.do{ ~dur=~dur++~x.[n]++~y.[n]++~z.[n]; n=n+1;};
+)
 
 
 
