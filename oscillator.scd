@@ -27,22 +27,23 @@ var n=1.neg,c;
 ////exp temperament method
 
 (
+(
 			{
-var steps = 64;
+var steps = 256;
 
 ~nVals = steps.collect { |i|
     i.linexp(0, steps-1, 1, 64)
 };
 			~nVals;
 			}.value;
-		)
+		);
 (
-~n=1.neg;~array=64.collect{~n=~n+1;~nVals.[~n]};
-~a=(0-(pi/64)); ~ph=64.collect{~a=~a+(pi/64);};
+~n=1.neg;~array=256.collect{~n=~n+1;~nVals.[~n]};
+~a=(0-(pi/256)); ~ph=256.collect{~a=~a+(pi/256);};
 ~bufferSize = 4096*8;
 ~signalSize = 2048*8;
 )
-
+)
 
 /////lamdoma method
 (
