@@ -31,10 +31,10 @@ s.meter;
 	Buffer.freeAll;
 
 (
-~r1 = Buffer.readChannel(s,,channels:0 );
-~r2 = Buffer.readChannel(s,,channels:1 );
-~i3 = Buffer.readChannel(s,,channels:0 );
-~i4 = Buffer.readChannel(s,,channels:1 );
+~r1 = Buffer.readChannel(s,"/Users/amimid/Documents/Art/Sound art/experimental projects/samples/m.wav",channels:0 );
+~r2 = Buffer.readChannel(s,"/Users/amimid/Documents/Art/Sound art/experimental projects/samples/m.wav",channels:1 );
+~i3 = Buffer.readChannel(s,"/Users/amimid/Documents/Art/Sound art/experimental projects/samples/Surorile Osoianu.wav",channels:0 );
+~i4 = Buffer.readChannel(s,"/Users/amimid/Documents/Art/Sound art/experimental projects/samples/Surorile Osoianu.wav",channels:1 );
 		);
 
 		(
@@ -48,10 +48,17 @@ var steps = 8;
 			}.value;
 		);
 
+		//////cube tensor locations
+(
+~az=[45.degrad,135.degrad,45.neg.degrad,135.neg.degrad,45.degrad,135.degrad,45.neg.degrad,135.neg.degrad];
+~el=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad];
+)
+
 (
 SynthDef.new(\re_im, {
 
-	arg amp1=1,amp2=1,amp3=1,amp4=1,amp5=1,amp6=1,amp7=1,amp8=1,amp1a=1,amp2a=1,amp3a=1,amp4a=1,amp5a=1,amp6a=1,amp7a=1,amp8a=1;
+	arg az=0,el=1,re=0,i=0,pan=0.2;
+	var amp1=1,amp2=1,amp3=1,amp4=1,amp5=1,amp6=1,amp7=1,amp8=1,amp1a=1,amp2a=1,amp3a=1,amp4a=1,amp5a=1,amp6a=1,amp7a=1,amp8a=1;
     var in1,in2,in3,in4,chain1,chain2,chain3,chain4,n=0;
 	var chain1rl,chain2rl,chain3rl,chain4rl,chain5rl,chain6rl,chain7rl,chain8rl;
 	var chain1rr,chain2rr,chain3rr,chain4rr,chain5rr,chain6rr,chain7rr,chain8rr;
@@ -62,14 +69,17 @@ SynthDef.new(\re_im, {
     var sig1il,sig2il,sig3il,sig4il,sig5il,sig6il,sig7il,sig8il;
 	var sig1ir,sig2ir,sig3ir,sig4ir,sig5ir,sig6ir,sig7ir,sig8ir;
 	var frames=~frames,sig1,sig2,silver=45,golden=45,l=1,r=1.neg,g=((1+5.sqrt)/2),s=(1+2.sqrt);
+	var loc1,loc2,loc3,loc4,loc5,loc6,loc7,loc8,tensor,index_i,index_re;
 
+				az=MouseX.kr(pi.neg,pi);
+				el=MouseY.kr((pi/2).neg,(pi/2));
 
     in1 = PlayBuf.ar(1, ~r1.bufnum, BufRateScale.kr(~r1.bufnum), loop: 0, doneAction:0);
 	in2 = PlayBuf.ar(1, ~r2.bufnum, BufRateScale.kr(~r2.bufnum), loop: 0, doneAction:0);
 	//in1 = SoundIn.ar(0);
 	//in2 = SoundIn.ar(1);
-    in3 = PlayBuf.ar(1, ~i3.bufnum, BufRateScale.kr(~i3.bufnum), loop: 0, doneAction:0);
-	in4 = PlayBuf.ar(1, ~i4.bufnum, BufRateScale.kr(~i4.bufnum), loop: 0, doneAction:0);
+    in3 = PlayBuf.ar(1, ~i3.bufnum, BufRateScale.kr(~i3.bufnum), loop: 0, doneAction:0)*0.3;
+	in4 = PlayBuf.ar(1, ~i4.bufnum, BufRateScale.kr(~i4.bufnum), loop: 0, doneAction:0)*0.3;
 	//in3 = SoundIn.ar(0);
 	//in4 = SoundIn.ar(1);
 	chain1 = FFT(LocalBuf(frames), in1);	chain3 = FFT(LocalBuf(frames), in3);
@@ -146,8 +156,8 @@ chain8ir = chain4.pvcollect(frames,
 			{|mag, phase, index| [mag, (phase)]; }, frombin: ~nVals.[6]+1, tobin: ~nVals.[7], zeroothers: 1);
 
 
-l=exp(Complex(0,1)*silver.degrad).real.round(0.0001).abs;
-r=exp(Complex(0,1)*silver.degrad).imag.round(0.0001).abs.neg;
+//l=exp(Complex(0,1)*silver.degrad).real.round(0.0001).abs;
+//r=exp(Complex(0,1)*silver.degrad).imag.round(0.0001).abs.neg;
 
 	//	silver=(silver+(360-(360/s))).wrap(0,360).round(0.0001);
 	//	golden=(golden+(360-(360/g))).wrap(180.neg,180).round(0.0001);
@@ -164,24 +174,95 @@ sig5il=IFFT(chain5il);sig6il=IFFT(chain6il);sig7il=IFFT(chain7il);sig8il=IFFT(ch
 sig1ir=IFFT(chain1ir);sig2ir=IFFT(chain2ir);sig3ir=IFFT(chain3ir);sig4ir=IFFT(chain4ir);
 sig5ir=IFFT(chain5ir);sig6ir=IFFT(chain6ir);sig7ir=IFFT(chain7ir);sig8ir=IFFT(chain8ir);
 
-/*(
-amp1=SinOsc.kr(0.023219954648526,0.degrad,0.2);
-amp2=SinOsc.kr(0.023219954648526,45.degrad,0.2);
-amp3=SinOsc.kr(0.023219954648526,90.degrad,0.2);
-amp4=SinOsc.kr(0.023219954648526,(90+45).degrad,0.2);
-amp5=SinOsc.kr(0.023219954648526,180.degrad,0.2);
-amp6=SinOsc.kr(0.023219954648526,(180+45).degrad,0.2);
-amp7=SinOsc.kr(0.023219954648526,(180+90).degrad,0.2);
-amp8=SinOsc.kr(0.023219954648526,360.degrad,0.2);
-amp1a=SinOsc.kr(0.023219954648526,90.degrad);
-amp2a=SinOsc.kr(0.023219954648526,(90+45).degrad);
-amp3a=SinOsc.kr(0.023219954648526,(90+90).degrad);
-amp4a=SinOsc.kr(0.023219954648526,(90+90+45).degrad);
-amp5a=SinOsc.kr(0.023219954648526,(90+180).degrad);
-amp6a=SinOsc.kr(0.023219954648526,(90+180+45).degrad);
-amp7a=SinOsc.kr(0.023219954648526,(90+180+90).degrad);
-amp8a=SinOsc.kr(0.023219954648526,90.degrad);
-				)*/
+
+loc1=Spherical(1,~az.[0],~el.[0]);loc2=Spherical(1,~az.[1],~el.[1]);loc3=Spherical(1,~az.[2],~el.[2]);loc4=Spherical(1,~az.[3],~el.[3]);
+loc5=Spherical(1,~az.[4],~el.[4]);loc6=Spherical(1,~az.[5],~el.[5]);loc7=Spherical(1,~az.[6],~el.[6]);loc8=Spherical(1,~az.[7],~el.[7]);
+
+tensor=Spherical(1,az,el);
+index_re=re; index_i=i;
+
+amp1=Select.ar(index_re,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc1.theta).real,exp(Complex(0,1)*loc1.phi).real).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).real).theta).imag
+).theta),DC.ar(1)]);
+amp2=Select.ar(index_re,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc2.theta).real,exp(Complex(0,1)*loc2.phi).real).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).real).theta).imag
+).theta),DC.ar(1)]);
+amp3=Select.ar(index_re,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc3.theta).real,exp(Complex(0,1)*loc3.phi).real).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).real).theta).imag
+).theta),DC.ar(1)]);
+amp4=Select.ar(index_re,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc4.theta).real,exp(Complex(0,1)*loc4.phi).real).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).real).theta).imag
+).theta),DC.ar(1)]);
+amp5=Select.ar(index_re,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc5.theta).real,exp(Complex(0,1)*loc5.phi).real).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).real).theta).imag
+).theta),DC.ar(1)]);
+amp6=Select.ar(index_re,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc6.theta).real,exp(Complex(0,1)*loc6.phi).real).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).real).theta).imag
+).theta),DC.ar(1)]);
+amp7=Select.ar(index_re,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc7.theta).real,exp(Complex(0,1)*loc7.phi).real).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).real).theta).imag
+).theta),DC.ar(1)]);
+amp8=Select.ar(index_re,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc8.theta).real,exp(Complex(0,1)*loc8.phi).real).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).real).theta).imag
+).theta),DC.ar(1)]);
+amp1a=Select.ar(index_i,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc1.theta).real,exp(Complex(0,1)*loc1.phi).imag).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).imag).theta).imag
+).theta),DC.ar(1)]);
+amp2a=Select.ar(index_i,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc2.theta).real,exp(Complex(0,1)*loc2.phi).imag).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).imag).theta).imag
+).theta),DC.ar(1)]);
+amp3a=Select.ar(index_i,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc3.theta).real,exp(Complex(0,1)*loc3.phi).imag).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).imag).theta).imag
+).theta),DC.ar(1)]);
+amp4a=Select.ar(index_i,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc4.theta).real,exp(Complex(0,1)*loc4.phi).imag).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).imag).theta).imag
+).theta),DC.ar(1)]);
+amp5a=Select.ar(index_i,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc5.theta).real,exp(Complex(0,1)*loc5.phi).imag).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).imag).theta).imag
+).theta),DC.ar(1)]);
+amp6a=Select.ar(index_i,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc6.theta).real,exp(Complex(0,1)*loc6.phi).imag).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).imag).theta).imag
+).theta),DC.ar(1)]);
+amp7a=Select.ar(index_i,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc7.theta).real,exp(Complex(0,1)*loc7.phi).imag).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).imag).theta).imag
+).theta),DC.ar(1)]);
+amp8a=Select.ar(index_i,[SinOsc.ar(pan,
+Complex(
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*loc8.theta).real,exp(Complex(0,1)*loc8.phi).imag).theta).real,
+exp(Complex(0,1)*Complex(exp(Complex(0,1)*tensor.theta).real,exp(Complex(0,1)*tensor.phi).imag).theta).imag
+).theta),DC.ar(1)]);
+
+
 
 Out.ar(0,Pan2.ar(sig1rl,l,amp1));Out.ar(0,Pan2.ar(sig2rl,l,amp2));Out.ar(0,Pan2.ar(sig3rl,l,amp3));Out.ar(0,Pan2.ar(sig4rl,l,amp4));
 Out.ar(0,Pan2.ar(sig5rl,l,amp5));Out.ar(0,Pan2.ar(sig6rl,l,amp6));Out.ar(0,Pan2.ar(sig7rl,l,amp7));Out.ar(0,Pan2.ar(sig8rl,l,amp8));
@@ -198,146 +279,95 @@ Out.ar(0,Pan2.ar(sig5ir,r,amp5a));Out.ar(0,Pan2.ar(sig6ir,r,amp6a));Out.ar(0,Pan
 
 
 5.wait;
-~synth=Synth.new(\re_im,[\amp1,0.33,\amp2,0.5,\amp3,0.2,\amp4,0.1,\amp5,1,\amp6,0.6,\amp7,0.3,\amp8,0.4,
-		\amp1a,1,\amp2a,0.333,\amp3a,1,\amp4a,0.7,\amp5a,0.1,\amp6a,0.8,\amp7a,1,\amp8a,0.7]).register;//s.record
+~synth=Synth.new(\re_im,[\az,pi.rand,\el,(pi/2),\re,0,\i,0,\pan,1]).register;//s.record
 	//	~synth=Synth.new(\re_im);
 2.wait;
 (
 MIDIClient.init;
 MIDIIn.connectAll;
 		(
-MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
+MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|y
 		var a1;
 
-	a1=val.linlin(0,127,0,1).round(0.000001);
+	a1=val.linlin(0,127,pi.neg,pi).round(0.000001);
 		a1.postln;
-		if(~synth.isPlaying,{~synth.set(\amp1,a1)});
-},20);
+		if(~synth.isPlaying,{~synth.set(\az,a1)});
+},26);
 				);
 	(
 MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
 		var a2;
-		a2=val.linlin(0,127,0,1).round(0.000001);
+		a2=val.linlin(0,127,(pi/2).neg,(pi/2)).round(0.000001);
 		a2.postln;
-		if(~synth.isPlaying,{~synth.set(\amp2,a2)});
-},21);
-	);
-		(
-MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
-		var a3;
-	a3=val.linlin(0,127,0,1).round(0.000001);
-		a3.postln;
-		if(~synth.isPlaying,{~synth.set(\amp3,a3)});
-},22);
-	);
-		(
-MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
-		var a4;
-	a4=val.linlin(0,127,0,1).round(0.000001);
-		a4.postln;
-		if(~synth.isPlaying,{~synth.set(\amp4,a4)});
-},23);
-	);
-
-			(
-MIDIdef.cc(\midi_pot5,{ |val, num, chan, src|
-		var a5;
-	a5=val.linlin(0,127,0,1).round(0.000001);
-		a5.postln;
-		if(~synth.isPlaying,{~synth.(\amp5,a5)});
-},24);
-	);
-
-	(
-MIDIdef.cc(\midi_pot6,{ |val, num, chan, src|
-		 var a6;
-	a6=val.linlin(0,127,0,1).round(0.00001);
-		a6.postln;
-		if(~synth.isPlaying,{~synth.set(\amp6,a6)});
-},25);
-	);
-
-				(
-MIDIdef.cc(\midi_pot7,{ |val, num, chan, src|
-		var a7;
-	a7=val.linlin(0,127,0,1).round(0.000001);
-		a7.postln;
-		if(~synth.isPlaying,{~synth.set(\amp7,a7)});
-},26);
-	);
-
-	(
-MIDIdef.cc(\midi_pot8,{ |val, num, chan, src|
-         var a8;
-		a8=val.linlin(0,127,0,1).round(0.000001);
-		a8.postln;
-		if(~synth.isPlaying,{~synth.set(\amp1a,a8)});
+		if(~synth.isPlaying,{~synth.set(\el,a2)});
 },27);
 	);
 
 		(
-MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
-		var a9;
-	a9=val.linlin(0,127,0,1).round(0.000001);
-		a9.postln;
-		if(~synth.isPlaying,{~synth.set(\amp2a,a9)});
-},28);
+MIDIdef.cc(\midi_switch1,{ |val, num, chan, src|
+		var b;
+					if(val>0,b=1,b=0);
+		b.postln;
+		if(~synth.isPlaying,{~synth.set(\re,b)});
+},14);
+	);
+	(
+MIDIdef.cc(\midi_switch2,{ |val, num, chan, src|
+		 var b;
+					if(val>0,b=1,b=0);
+		b.postln;
+		if(~synth.isPlaying,{~synth.set(\i,b)});
+},15);
+	);
+
+				(
+MIDIdef.cc(\midi_switch7,{ |val, num, chan, src|
+		var p;
+				if(val>0,p=1);
+		p.postln;
+		if(~synth.isPlaying,{~synth.set(\pan,p)});
+},20);
+	);
+	(
+MIDIdef.cc(\midi_switch8,{ |val, num, chan, src|
+		 var p;
+				if(val>0,p=1/2);
+		p.postln;
+		if(~synth.isPlaying,{~synth.set(\pan,p)});
+},21);
+	);
+			(
+MIDIdef.cc(\midi_switch9,{ |val, num, chan, src|
+		var p, n=2, a=1;
+					if(val>0,p=1/3);
+		p.postln;
+		if(~synth.isPlaying,{~synth.set(\pan,p)});
+},22);
+	);
+
+	(
+MIDIdef.cc(\midi_switch10,{ |val, num, chan, src|
+         var p, n=3, a=1;
+				if(val>0,p=1/4);
+		p.postln;
+		if(~synth.isPlaying,{~synth.set(\pan,p)});
+},23);
+	);
+		(
+MIDIdef.cc(\midi_switch11,{ |val, num, chan, src|
+		var p, n=4, a=1;
+				if(val>0,p=1/5);
+		p.postln;
+		if(~synth.isPlaying,{~synth.set(\pan,p)});
+},24);
 	);
 					(
-MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
-		var a10;
-		a10=val.linlin(0,127,0,1).round(0.000001);
-		a10.postln;
-		if(~synth.isPlaying,{~synth.set(\amp3a,a10)});
-},29);
-	);
-								(
-MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
-		var a11;
-		a11=val.linlin(0,127,0,1).round(0.000001);
-		a11.postln;
-		if(~synth.isPlaying,{~synth.set(\amp4a,a11)});
-},30);
-	);
-					(
-MIDIdef.cc(\midi_pot12,{ |val, num, chan, src|
-		var a12;
-		a12=val.linlin(0,127,0,1).round(0.000001);
-		a12.postln;
-		if(~synth.isPlaying,{~synth.set(\amp5a,a12)});
-},31);
-	);
-								(
-MIDIdef.cc(\midi_pot13,{ |val, num, chan, src|
-		var a13;
-		a13=val.linlin(0,127,0,1).round(0.000001);
-		a13.postln;
-		if(~synth.isPlaying,{~synth.set(\amp6a,a13)});
-},32);
-	);
-								(
-MIDIdef.cc(\midi_pot14,{ |val, num, chan, src|
-		var a14;
-		a14=val.linlin(0,127,0,1).round(0.000001);
-		a14.postln;
-		if(~synth.isPlaying,{~synth.set(\amp7a,a14)});
-},33);
-	);
-											(
-MIDIdef.cc(\midi_pot15,{ |val, num, chan, src|
-		var a15;
-		a15=val.linlin(0,127,0,1).round(0.000001);
-		a15.postln;
-		if(~synth.isPlaying,{~synth.set(\amp8a,a15)});
-},34);
-	);
-											(
-MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
-		var a16;
-		a16=val.linlin(0,127,0,1).round(0.000001);
-		a16.postln;
-		if(~synth.isPlaying,{~synth.set(\amp8a,a16)});
-},35);
+MIDIdef.cc(\midi_switch12,{ |val, num, chan, src|
+		var p, n=5, a=1;
+					if(val>0,p=1/6);
+		p.postln;
+		if(~synth.isPlaying,{~synth.set(\pan,p)});
+},25);
 	);
 
 
@@ -349,3 +379,196 @@ MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
 )
 )
 s.record(numchannels:2,duration:(4*60));
+
+
+/*(///location arrays
+
+diffusion polytope
+(
+{
+var  sph1,sph2,sph3,sph4,sph5,sph6,sph7,m_x=9,m_y=9,m_z=9,qx,qy,mq=m_x-1;
+var az1=0,el1=0,az2=0,el2=0,az3=0,el3=0,mag,mag_x,mag_y,mag_z,mag_qx,mag_qy;
+var az4=0,el4=0,az5=0,el5=0,az6=0,el6=0,az7=0,el7=0;
+var azimuth,elevation,magnitudex,magnitudey,magnitudez,angle=0,n=12;
+var sphx,sphy,sphz,azx,elx,azy,ely,azz,elz,plx=1,ply=1,plz=1;
+var ellipsis=[1,1,1],spread=1,silver_r=(1+2.sqrt);
+var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1;
+	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[];~qy=[];
+
+//	spread = if(m_z < 1) { 1 / m_z } { m_z };
+
+	16.do{
+azimuth=32.collect{
+			az1 = (az1+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+		   el1 = (el1+(pi-(pi/silver_r))).wrap((pi/2).neg,(pi/2));
+
+//	mag1=(mag1+(1-(1/1.6180339887499))).wrap(0,1);
+sph1=(Spherical(mag1,(az1+angle).wrap(pi.neg,pi),(el1+angle).wrap((pi/2).neg,(pi/2)))).theta.round(0.000000000001);
+
+	};
+
+elevation=32.collect{
+				az2 = (az2+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+			el2 = (el2+(pi-(pi/silver_r))).wrap((pi/2).neg,(pi/2));
+
+	//mag2=(mag2+(1-(1/1.6180339887499))).wrap(0,1);
+		sph2=(Spherical(mag2,(az2+angle).wrap(pi.neg,pi),(el2+angle).wrap((pi/2).neg,(pi/2)))).phi.round(0.000000000001);
+
+	};
+
+magnitudex=	32.collect{
+			az3 = (az3+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+			el3 = (el3+(pi-(pi/silver_r))).wrap((pi/2).neg,(pi/2));
+
+	//mag3=(mag3+(1-(1/1.6180339887499))).wrap(0,1);
+	sph3=(Spherical(mag3,(az3+angle).wrap(pi.neg,pi),(el3+angle).wrap((pi/2).neg,(pi/2))));
+
+	 mag_x=((Complex(cos((sph3.theta.round(0.000000000001)*m_x).wrap(pi.neg,pi)),cos((sph3.theta.round(0.000000000001)*m_x).wrap(pi.neg,pi))).rho/(2.sqrt)).pow(spread)*
+			(Complex(cos((sph3.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))),cos((sph3.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)).pow(spread));
+
+				};
+
+magnitudey=	32.collect{
+			az4 = (az4+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+				el4 = (el4+(pi-(pi/silver_r))).wrap((pi/2).neg,(pi/2));
+
+	//mag4=(mag4+(1-(1/1.6180339887499))).wrap(0,1);
+	sph4=(Spherical(mag4,(az4+angle).wrap(pi.neg,pi),(el4+angle).wrap((pi/2).neg,(pi/2))));
+
+		 mag_y=((Complex(sin((sph4.theta.round(0.000000000001)*m_y).wrap(pi.neg,pi)),sin((sph4.theta.round(0.000000000001)*m_y).wrap(pi.neg,pi))).rho/(2.sqrt)).pow(spread)*
+		 (Complex(cos((sph4.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))),cos((sph4.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)).pow(spread));
+				};
+
+
+qx=	32.collect{
+			az5 = (az5+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+			el5 = (el5+(pi-(pi/silver_r))).wrap((pi/2).neg,(pi/2));
+
+		//mag5=(mag5+(1-(1/1.6180339887499))).wrap(0,1);
+	sph5=(Spherical(mag5,(az5+angle).wrap(pi.neg,pi),(el5+angle).wrap((pi/2).neg,(pi/2))));
+
+
+mag_qx=((((Complex(cos(((sph5.theta.round(0.000000000001))*mq).wrap(pi.neg,pi)),
+cos(((sph5.theta.round(0.000000000001))*mq).wrap(pi.neg,pi))))*
+(Complex(sin((sph5.phi.round(0.000000000001)*(mq-1)).wrap((pi/2).neg,(pi/2))),
+sin((sph5.phi.round(0.000000000001)*(mq-1)).wrap((pi/2).neg,(pi/2)))))*
+(Complex(cos((sph5.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))),
+cos((sph5.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).pow(spread);
+				};
+
+
+qy=	32.collect{
+			az6 = (az6+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+			el6 = (el6+(pi-(pi/silver_r))).wrap((pi/2).neg,(pi/2));
+
+	//mag6=(mag6+(1-(1/1.6180339887499))).wrap(0,1);
+	sph6=(Spherical(mag6,(az6+angle).wrap(pi.neg,pi),(el6+angle).wrap((pi/2).neg,(pi/2))));
+
+ mag_qy=((((Complex(sin(((sph6.theta.round(0.000000000001))*mq).wrap(pi.neg,pi)),
+sin(((sph6.theta.round(0.000000000001))*mq).wrap(pi.neg,pi))))*
+(Complex(sin((sph6.phi.round(0.000000000001)*(mq-1)).wrap((pi/2).neg,(pi/2))),
+sin((sph6.phi.round(0.000000000001)*(mq-1)).wrap((pi/2).neg,(pi/2)))))*
+(Complex(cos((sph6.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))),
+cos((sph6.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).pow(spread);
+				};
+
+
+magnitudez=	32.collect{
+			az7 = (az7+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+			el7 = (el7+(pi-(pi/silver_r))).wrap((pi/2).neg,(pi/2));
+
+//mag7=(mag7+(1-(1/1.6180339887499))).wrap(0,1);
+sph7=(Spherical(mag7,(az7+angle).wrap(pi.neg,pi),(el7+angle).wrap((pi/2).neg,(pi/2))));
+
+//if(
+//m_z.even,
+mag_z=(Complex(sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/2).neg,(pi/2))),sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)).pow(spread)
+			//,
+//mag_z=(Complex(sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/2).neg,(pi/2))),sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/2).neg,(pi/2)))).rho(2.sqrt)).pow(spread);
+			//);
+////z axis   ambi..  sin for odd numbers, cos for even
+				};
+
+angle=(angle+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+~az=~az++azimuth;~el=~el++elevation;
+~magx=~magx++magnitudex;~magy=~magy++magnitudey;~magz=~magz++magnitudez;
+~qx=~qx++qx;~qy=~qy++qy;
+		az1=0;el1=0;az2=0;el2=0;az3=0;el3=0;
+		az4=0;el4=0;az5=0;el5=0;az6=0;el6=0;az7=0;el7=0;
+	}
+}.value;
+)
+	///tetrahedron
+(
+~az=[45.degrad,135.neg.degrad,45.neg.degrad,135.degrad];
+~el=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad];
+);
+//////cube
+(
+~az=[45.degrad,135.degrad,45.neg.degrad,135.neg.degrad,45.degrad,135.degrad,45.neg.degrad,135.neg.degrad];
+~el=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad];
+)
+
+/////octahedron
+
+(
+~az=[0.degrad,0.degrad,90.degrad,180.degrad,90.neg.degrad,0.degrad];
+~el=[90.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,90.degrad];
+)
+
+//////icosahedron
+(
+~az=[90.degrad,90.neg.degrad,0.degrad,180.degrad,58.28.degrad,121.72.degrad,121.72.neg.degrad,58.neg.degrad,90.degrad,90.neg.degrad,0.degrad,180.degrad];
+~el=[58.28.neg.degrad,58.28.neg.degrad,31.72.neg.degrad,31.72.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,58.28.degrad,58.28.degrad,31.72.degrad,31.72.degrad];
+)
+
+/////dodecahedron
+
+(
+~az=[45.degrad,135.neg.degrad,135.degrad,45.neg.degrad,90.degrad,90.neg.degrad,0.degrad,180.degrad,45.degrad,135.neg.degrad,135.degrad,45.neg.degrad,90.degrad,
+	90.neg.degrad,69.09.degrad,110.91.degrad,110.91.neg.degrad,69.09.neg.degrad,0.degrad,180.degrad];
+
+~el=[35.26.neg.degrad,35.26.neg.degrad,35.26.neg.degrad,35.26.neg.degrad,69.09.neg.degrad,69.09.neg.degrad,20.91.neg.degrad,20.91.neg.degrad,
+	35.26.degrad,35.26.degrad,35.26.degrad,35.26.degrad,69.09.degrad,69.09.degrad,0.degrad,0.degrad,0.degrad,0.degrad,20.91.degrad,20.91.degrad]
+)
+
+/////Rhombic dodecahedron//// hull
+
+(
+~az=[0.degrad,45.degrad,135.neg.degrad,135.degrad,45.neg.degrad,0.degrad,180.degrad,90.degrad,90.neg.degrad,0.degrad,
+	45.degrad,135.neg.degrad,135.degrad,45.neg.degrad];
+~el=[90.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,0.degrad
+	,0.degrad,0.degrad,0.degrad,90.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad];
+)
+
+/////cuboctahedron//// core
+
+(
+~az=[0.degrad,90.degrad,180.degrad,90.neg.degrad,45.degrad,135.degrad,45.neg.degrad,135.neg.degrad,
+	0.degrad,90.degrad,180.degrad,90.neg.degrad];
+~el=[45.neg.degrad,45.neg.degrad,45.neg.degrad,45.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,
+	45.degrad,45.degrad,45.degrad,45.degrad];
+)
+
+
+///////////////Rhombic Triacontahedron//// hull
+(
+~az=[0.degrad,0.degrad,72.degrad,144.degrad,144.neg.degrad,72.neg.degrad,36.degrad,108.degrad,180.degrad,108.neg.degrad,36.neg.degrad,
+	0.degrad,72.degrad,144.degrad,144.neg.degrad,72.neg.degrad,36.degrad,108.degrad,180.degrad,108.neg.degrad,36.neg.degrad,
+	0.degrad,72.degrad,144.degrad,144.neg.degrad,72.neg.degrad,36.degrad,108.degrad,180.degrad,108.neg.degrad,36.neg.degrad,0.degrad];
+
+~el=[90.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,52.6.degrad,52.6.degrad,52.6.degrad,52.6.degrad,52.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,10.8.degrad,10.8.degrad,10.8.degrad,10.8.degrad,10.8.degrad,90.degrad];
+
+)
+
+///////icosidodecahedron//// core
+(
+~az=[18.degrad,90.degrad,162.degrad,126.neg.degrad,54.neg.degrad,54.degrad,126.degrad,162.neg.degrad,90.neg.degrad,18.neg.degrad,
+	0.degrad,36.degrad,72.degrad,108.degrad,144.degrad,180.degrad,144.neg.degrad,108.neg.degrad,72.neg.degrad,36.neg.degrad,
+	54.degrad,126.degrad,162.neg.degrad,90.neg.degrad,18.neg.degrad,18.degrad,90.degrad,162.degrad,126.neg.degrad,54.neg.degrad];
+
+~el=[58.283.degrad,58.283.degrad,58.283.degrad,58.283.degrad,58.283.degrad,58.283.neg.degrad,58.283.neg.degrad,58.283.neg.degrad,58.283.neg.degrad,58.283.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,
+37.717.degrad,37.717.degrad,37.717.degrad,37.717.degrad,37.717.degrad,37.717.neg.degrad,37.717.neg.degrad,37.717.neg.degrad,37.717.neg.degrad,37.717.neg.degrad];
+
+)
+)*/
