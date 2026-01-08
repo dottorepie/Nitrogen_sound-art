@@ -162,53 +162,65 @@ s.waitForBoot{
 ~bufferSize = 4096*8;
 ~signalSize = 2048*8;
 );
+
+	/*(
+(
+			{
+var steps = 256;
+
+~nVals = steps.collect { |i|
+    i.linexp(0, steps-1, 1, 64)
+};
+			~nVals;
+			}.value;
+		);
+(
+~n=1.neg;~array=256.collect{~n=~n+1;~nVals.[~n]};
+~a=(0-(pi/256)); ~ph=256.collect{~a=~a+(pi/256);};
+~bufferSize = 4096*8;
+~signalSize = 2048*8;
+)
+)*/
 	(
 Buffer.freeAll;
 ~w= Buffer.alloc(s,~bufferSize);
 		{
 	var signal,wt;
-	signal=Signal.sineFill(~signalSize,~array,~ph);
+	signal=Signal.sineFill(~signalSize,~array);
 
 wt = signal.asWavetable;
 ~w.loadCollection(wt);
 //signal.plot;
 		}.value;
 );
-(
-~az1=[45.degrad,135.neg.degrad,45.neg.degrad,135.degrad];
-~el1=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad];
-);
-/////tetrahedron2
-(
-~az2=[45.degrad,135.neg.degrad,45.neg.degrad,135.degrad];
-~el2=[35.264390.degrad,35.264390.degrad,35.264390.neg.degrad,35.264390.neg.degrad];
-);
-
-
-
 
 ({
 var sig,out1,out2,pan1,pan2,phase1,phase2,equlibrium,p_amp1=1,p_amp2=1,coordinate=0,angle,pan_az,pan_el;
-var pos1,pos2,sph,phase,freq=220,f=1,amp=1,sph1,sph2,angle1,angle2,az,el;
+var pos1,pos2,sph,phase,freq=220,f=1,amp=1,sph1,sph2,angle1x,angle2x,angle1y,angle2y,anglex,angley,az,el;
 
 equlibrium=pi;
-phase1=0.degrad; phase2=(equlibrium-90.degrad).wrap2(pi);
+		phase1=0.degrad; phase2=equlibrium.linlin(0,pi,0,pi/2);
 pan1=SinOsc.ar(0.1,phase:phase1,mul:p_amp1);
 pan2=SinOsc.ar(0.1,phase:phase2,mul:p_amp2);
 
 		az=SinOsc.ar(1/2,0.degrad,pi);
-		el=SinOsc.ar(1/4,90.degrad,pi/2);
+		el=SinOsc.ar(1/3,90.degrad,pi/2);
 
 //sph1=Spherical(1,(~az1.[coordinate]+az).wrap(pi.neg,pi),(~el1.[coordinate]+el).wrap((pi/2).neg,(pi/2)));
-//sph2=Spherical(1,(~az2.[coordinate]+az).wrap(pi.neg,pi),(~el2.[coordinate]+el).wrap((pi/2).neg,(pi/2)));
+//sph2=Sphericalz(1,(~az2.[coordinate]+az).wrap(pi.neg,pi),(~el2.[coordinate]+el).wrap((pi/2).neg,(pi/2)));
 
 sph1=Spherical(1,(az),(el));
-sph2=Spherical(1,(az),(el+equlibrium).wrap2((pi/2)));
+sph2=Spherical(1,(az),((el-equlibrium).wrap2((pi/2))));
 
-angle1=Complex(exp(Complex(0,1)*sph1.theta).real,exp(Complex(0,1)*sph1.phi).imag).theta;
-angle2=Complex(exp(Complex(0,1)*sph2.theta).real,exp(Complex(0,1)*sph2.phi).imag).theta;
+angle1x=Complex(exp(Complex(0,1)*sph1.theta).real,exp(Complex(0,1)*sph1.phi).real).theta;
+angle1y=Complex(exp(Complex(0,1)*sph1.theta).real,exp(Complex(0,1)*sph1.phi).imag).theta;
+angle2x=Complex(exp(Complex(0,1)*sph2.theta).real,exp(Complex(0,1)*sph2.phi).real).theta;
+angle2y=Complex(exp(Complex(0,1)*sph2.theta).real,exp(Complex(0,1)*sph2.phi).imag).theta;
 
-angle=Complex(exp(Complex(0,1)*angle1).real,exp(Complex(0,1)*angle2).imag).theta;
+anglex=Complex(exp(Complex(0,1)*angle1x).real,exp(Complex(0,1)*angle1y).imag).theta;
+angley=Complex(exp(Complex(0,1)*angle2x).real,exp(Complex(0,1)*angle2y).imag).theta;
+
+angle=Complex(exp(Complex(0,1)*anglex).real,exp(Complex(0,1)*angley).imag).theta;
 
 pos1=exp(Complex(0,1)*angle).real;
 pos2=exp(Complex(0,1)*angle).imag;
