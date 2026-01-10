@@ -265,7 +265,7 @@ sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3+b,phase:angle,mul:100).abs*SinOsc.ar(freq3
 	sig3=Select.ar(band.linlin((992*4).neg,((992*4).neg+1),0,1).round(1).asInteger,
 						[sig3,BPF.ar(BRF.ar(sig3,band_osc3.lag(0.1),rq),band_osc6.lag(0.1),rq)]);
 
-threshold=(4900.reciprocal.ampdb/2.sqrt).dbamp;
+threshold=(((343/0.07)/20).reciprocal.ampdb/2.sqrt).dbamp;
 
 		sig1=HPF.ar(sig1,50); sig2=HPF.ar(sig1, 50);sig3=HPF.ar(sig1, 50);
 		sig1=Compander.ar(sig1,control1,threshold,1.2,1/3,0.03,0.15);
