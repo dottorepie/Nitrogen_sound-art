@@ -3,7 +3,7 @@
 (
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=6;
+s.options.numOutputBusChannels=2;
 s.options.numInputBusChannels=0;
 s.options.memSize = 8192*4;
 s.options.blockSize = 64;
@@ -265,12 +265,12 @@ sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3+b,phase:angle,mul:100).abs*SinOsc.ar(freq3
 	sig3=Select.ar(band.linlin((992*4).neg,((992*4).neg+1),0,1).round(1).asInteger,
 						[sig3,BPF.ar(BRF.ar(sig3,band_osc3.lag(0.1),rq),band_osc6.lag(0.1),rq)]);
 
-
+threshold=(4900.reciprocal.ampdb/2.sqrt).dbamp;
 
 		sig1=HPF.ar(sig1,50); sig2=HPF.ar(sig1, 50);sig3=HPF.ar(sig1, 50);
-		sig1=Compander.ar(sig1,control1,1905.5555555556.reciprocal,1.2,1/3,0.03,0.15);
-		sig2=Compander.ar(sig2,control2,1905.5555555556.reciprocal,1.2,1/3,0.03,0.15);
-		sig3=Compander.ar(sig3,control3,1905.5555555556.reciprocal,1.2,1/3,0.03,0.15);
+		sig1=Compander.ar(sig1,control1,threshold,1.2,1/3,0.03,0.15);
+		sig2=Compander.ar(sig2,control2,threshold,1.2,1/3,0.03,0.15);
+		sig3=Compander.ar(sig3,control3,threshold,1.2,1/3,0.03,0.15);
 		sig1=tanh(sig1*2);sig2=tanh(sig2*2);sig3=tanh(sig2*2);
 
 	Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain)),0.8,0.01),pos1)*pan1);
