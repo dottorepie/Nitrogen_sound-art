@@ -62,13 +62,67 @@ signal.plot;
 
 (
 {
-var sig,freq=220,low=1;
+	var sig,freq=220,low=8,control;
 
-sig=(LPF.ar((Osc.ar(~w1.bufnum,freq,phase:0,mul:100).abs*SinOsc.ar(freq,phase:0)),freq*low))!2;
+	sig=(LPF.ar((Osc.ar(~w1.bufnum,freq,phase:0,mul:100).abs*SinOsc.ar(freq,phase:0)),freq*low))!2;
+	control=SinOsc.ar(220);
 
+	sig=HPF.ar(sig,1);
+	sig=Compander.ar(sig,control,-78.dbamp,10,0,0.01,0.3);
+	sig=tanh(sig*1.8);
+	sig=Limiter.ar(sig,1/2,0.01);
+}.play)
+
+
+
+(
+{
+	var sig,sig1,sig2,freq=110,low=2,control,out1,out2;
+
+	//sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq,phase:0,mul:100).abs*SinOsc.ar(freq,phase:0)),freq*low));
+   // sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq*32,phase:0,mul:100).abs*SinOsc.ar(freq,phase:0)),freq*low,1/32));
+	sig1=BrownNoise.ar(1);
+	//control=SinOsc.ar(freq,mul:1);
+	control=BrownNoise.ar(1);
+
+	sig1=HPF.ar(sig1,120);
+	//sig2=HPF.ar(sig2,50);
+	sig1=Compander.ar(control,control,-30.dbamp,1.2,1/3,0.001,0.15);
+	//sig2=Compander.ar(sig1,control,-24.dbamp,1.2,0.25,0.03,0.15);
+	sig1=tanh(sig1*1.8);
+	//sig2=tanh(sig2*1);
+	//sig1=Limiter.ar(sig1,0.9,0.01);
+	//sig2=Limiter.ar(sig2,0.9,0.01);
+
+	out1=Out.ar(0,sig1);
+	out2=Out.ar(1,control);
+}.play)
+
+
+
+
+///freqsweep
+(
+{
+var m=MouseX.kr(10,10000);
+	SinOsc.ar((2*m).poll,mul:m.reciprocal)*10}.play
+)
+
+/////////////compressor example low carrier 343/0.18
+(
+{
+	var sig,freq=55,low=1,control,out;
+
+	sig=((LPF.ar((Osc.ar(~w1.bufnum,freq,phase:0,mul:100).abs*SinOsc.ar(freq,phase:0)),freq*low))+(LPF.ar((Osc.ar(~w1.bufnum,freq*32,phase:0,mul:100).abs*SinOsc.ar(freq*16,phase:0)),(freq*16)*low,1/16)));
+	//control=SinOsc.ar(freq,mul:1);
+	control=sig;
 
 sig=HPF.ar(sig,50);
-sig=Compander.ar(sig,sig,-24.dbamp,1,0.3,0.015,0.3);
-sig=tanh(sig*1);
-sig=Limiter.ar(sig,1,0.01);
+
+	sig=Compander.ar(sig,control,1905.5555555556.reciprocal,1,1/3,0.03,0.15);
+	sig=tanh(sig*1.8)*10;
+
+
+	out=Out.ar(0,sig!2);
+
 }.play)
