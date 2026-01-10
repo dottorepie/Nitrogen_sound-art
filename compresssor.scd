@@ -119,7 +119,7 @@ var m=MouseX.kr(10,10000);
 
 sig=HPF.ar(sig,50);
 
-	threshold=(4900.reciprocal.ampdb/2.sqrt).dbamp;
+	threshold=(((343/0.07)/20).reciprocal.ampdb/2.sqrt).dbamp;
 	sig=Compander.ar(sig,control,threshold,1.2,1/3,0.03,0.15);
 	sig=tanh(sig*1.8)*10;
 
@@ -127,3 +127,10 @@ sig=HPF.ar(sig,50);
 	out=Out.ar(0,sig!2);
 
 }.play)
+
+
+(((speed of sound / speaker size)/20Hz).reciprocal.ampdb/2.sqrt).dbamp;
+
+
+
+
