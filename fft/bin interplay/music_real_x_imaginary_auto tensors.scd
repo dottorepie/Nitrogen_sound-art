@@ -31,10 +31,10 @@ s.meter;
 	Buffer.freeAll;
 
 (
-~r1 = Buffer.readChannel(s,"/Users/amimid/Documents/Art/Sound art/experimental projects/samples/m.wav",channels:0 );
-~r2 = Buffer.readChannel(s,"/Users/amimid/Documents/Art/Sound art/experimental projects/samples/m.wav",channels:1 );
-~i3 = Buffer.readChannel(s,"/Users/amimid/Documents/Art/Sound art/experimental projects/samples/Surorile Osoianu.wav",channels:0 );
-~i4 = Buffer.readChannel(s,"/Users/amimid/Documents/Art/Sound art/experimental projects/samples/Surorile Osoianu.wav",channels:1 );
+~r1 = Buffer.readChannel(s,,channels:0 );
+~r2 = Buffer.readChannel(s,,channels:1 );
+~i3 = Buffer.readChannel(s,,channels:0 );
+~i4 = Buffer.readChannel(s,,channels:1 );
 		);
 
 
