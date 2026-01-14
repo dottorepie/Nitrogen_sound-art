@@ -76,13 +76,16 @@ wt = signal.asWavetable;
 //////kick
  (
 SynthDef(\kick, {
-	arg amp=20,n=12,pan=0.5,low=0,noise=0.001,decay=1,az=pi,el=pi/2,m=1;
+	arg amp=20,n=12,pan=1,low=0,noise=0.001,decay=1,m=1;
     var env,sig,freq,anglex,angley,anglez,mod_anglex,mod_angley,mod_anglez,fund=28,mx,my,mz,magx,magz,magy;
-	var sph,control,phase,threshold=(((343/0.14)/20).reciprocal.ampdb/2.sqrt).dbamp,ton=2.pow(n/12);
+	var sph,control,phase,threshold=(((343/0.14)/20).reciprocal.ampdb/2.sqrt).dbamp,ton=2.pow(n/12),az=pi,el=pi/2;
 
 	freq = EnvGen.kr(Env([fund*ton, fund], [decay/8], curve: -4)); // pitch drop
 	env= EnvGen.kr(Env.perc(0.01, decay, curve: -4),doneAction:2,levelScale:amp);
 
+
+					az=SinOsc.ar(pan/2,0).range(pi,pi.neg);
+			el=SinOsc.ar(pan/2,pi/2,pan.reciprocal).range((pi/2),(pi/2).neg);
 
 		sph=Spherical(1,(az.lag(0.01)),(el.lag(0.01)));
 
@@ -129,12 +132,15 @@ Synth(\kick);
 /////snare
 (
 SynthDef(\snare, {
-	arg amp=1,n=48,pan=0.5,low=0,noise=0.1,decay=1,az=pi,el=pi/2,m=1,snare=8;
+	arg amp=1,n=48,pan=0.5,low=0,noise=0.1,decay=1,m=1,snare=8;
     var env,sig,freq,anglex,angley,anglez,mod_anglex,mod_angley,mod_anglez,fund=28,mx,my,mz,magx,magz,magy;
-	var sph,control,phase,threshold=(((343/0.14)/20).reciprocal.ampdb/2.sqrt).dbamp,ton=2.pow(n/12);
+	var sph,control,phase,threshold=(((343/0.14)/20).reciprocal.ampdb/2.sqrt).dbamp,ton=2.pow(n/12),az=pi,el=pi/2;
 
 	freq = EnvGen.kr(Env([fund*ton, fund], [decay/2], curve: -4));
 	env= EnvGen.kr(Env.perc(0.01, decay),doneAction:2,levelScale:amp);
+
+					az=SinOsc.ar(pan,0).range(pi,pi.neg);
+			el=SinOsc.ar(pan,pi/2,pan.reciprocal).range((pi/2),(pi/2).neg);
 
 sph=Spherical(1,(az.lag(0.01)),(el.lag(0.01)));
 
@@ -179,26 +185,36 @@ Synth(\snare);
 ////hihat
 (
 SynthDef(\hihat, {
-	arg noise=0.1,decay=1,ton=56;
-    var env,silver=45,bank=21,linex,liney,sig,fund=56,freq;
+	arg amp=0.1,noise=0.1,decay=1,ton=56,pan=10;
+    var env,silver=pi/4,bank=21,s1,s2,s3,sig,fund=56,freq;
+	var sph,anglex,angley,anglez,az,el;
 
 freq=fund*ton;
-	env= EnvGen.kr(Env.perc(0.001, decay,-8),doneAction:2,levelScale:1/200);
+	env= EnvGen.kr(Env.perc(0.001, decay,-8),doneAction:2,levelScale:amp);
 	noise = PinkNoise.ar(env);
 	sig = BPF.ar(noise, freq, 1);
 	sig = HPF.ar(sig, freq);
 
-	bank.do{
+			az=SinOsc.ar(pan,0).range(pi,pi.neg);
+			el=SinOsc.ar(pan,pi/2,pan.reciprocal).range((pi/2),(pi/2).neg);
 
-linex=exp(Complex(0,1)*silver.degrad).real.round(0.00001).abs;
-liney=exp(Complex(0,1)*silver.degrad).imag.round(0.00001).abs.neg;
+sph=Spherical(1,(az.lag(0.01)),(el.lag(0.01)));
+
+anglex=exp(Complex(0,1)*sph.theta).real*exp(Complex(0,1)*sph.phi).real;
+angley=exp(Complex(0,1)*sph.theta).imag*exp(Complex(0,1)*sph.phi).real;
+anglez=exp(Complex(0,1)*sph.phi).imag;
+
+			s1=silver-anglex; s2=silver-angley; s3=silver-anglez;
+
+	bank.do{
 
 		sig = sig + (sig * BrownNoise.ar(noise)); // add slight noise for punch
 
-		Out.ar(0, Pan2.ar(sig,linex,bank.reciprocal));
-		Out.ar(0, Pan2.ar(sig,liney,bank.reciprocal));
+		Out.ar(0, Pan2.ar(sig,s1,bank.reciprocal));
+		Out.ar(0, Pan2.ar(sig,s2,bank.reciprocal));
+		Out.ar(0, Pan2.ar(sig,s3,bank.reciprocal));
 
-silver=(silver+(360-(360/(1+2.sqrt)))).wrap(180.neg,180).round(0.00001);
+silver=(silver+(2pi-(2pi/(1+2.sqrt)))).wrap(pi.neg,pi).round(0.00001);
 
 	};
 }).add;
