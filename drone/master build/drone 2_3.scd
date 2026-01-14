@@ -143,7 +143,7 @@ wt = signal.asWavetable;
 (
 SynthDef.new(\synth,{
 
-	arg gain=1,low=992,mix=1,room=1,tone=0,band=1,x=1,a=1,brain=1,m=4,rq=0.1,b=1,pan=1;
+	arg gain=1,low=992,mix=1,room=1,tone=0,band=1,x=1,a=1,brain=1,rq=0.1,b=1,pan=1,m=2;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
 	var sig1,sig2,first=32*(9/8),bank=4,out1,out2,fm,band_osc1,band_osc2,ton,threshold1,threshold2,threshold3;
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope;
