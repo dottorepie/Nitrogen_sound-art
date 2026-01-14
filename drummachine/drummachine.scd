@@ -64,9 +64,9 @@ wt = signal.asWavetable;
 //////kick
  (
 SynthDef(\kick, {
-	arg amp=20,n=12,pan=1,low=0,noise=0.001,decay=1,m=1,attack=0.01;
+	arg amp=20,n=12,pan=1,low=0,noise=0.001,decay=1,attack=0.01;
     var env,freq,anglex,angley,anglez,mod_anglex,mod_angley,mod_anglez,fund=28,mx,my,mz,magx,magz,magy;
-	var sph,phase,threshold,ton=2.pow(n/12),az=pi,el=pi/2;
+	var sph,phase,threshold,ton=2.pow(n/12),az=pi,el=pi/2,m=2;
 	var sig1,sig2,sig3,phasex,phasey,phasez,control1,control2,control3;
 
 	freq = EnvGen.kr(Env([freq, fund], [decay/8], curve: -4)); // pitch drop
@@ -132,9 +132,9 @@ sig1 = sig1 + (sig1 * BrownNoise.ar(noise)); sig2 = sig2 + (sig2 * BrownNoise.ar
 /////snare
 (
 SynthDef(\snare, {
-	arg amp=1,n=48,pan=0.5,low=0,noise=0.1,decay=1,m=1,snare=8;
+	arg amp=1,n=48,pan=0.5,low=0,noise=0.1,decay=1,snare=8;
     var env,freq,anglex,angley,anglez,mod_anglex,mod_angley,mod_anglez,fund=28,mx,my,mz,magx,magz,magy;
-	var sph,phase,threshold,ton=2.pow(n/12),az=pi,el=pi/2;
+	var sph,phase,threshold,ton=2.pow(n/12),az=pi,el=pi/2,m=2;
 	var sig1,sig2,sig3,phasex,phasey,phasez,control1,control2,control3;
 
 	freq = EnvGen.kr(Env([freq, fund], [decay/2], curve: -4));
@@ -313,7 +313,11 @@ silver=(silver+(2pi-(2pi/(1+2.sqrt)))).wrap(pi.neg,pi).round(0.00001);
 
 	(
 SynthDef(\crash, {
-    var env,silver=45,bank=21,linex=0,liney=0,sig,noise,decay=0.2;
+  	arg amp=0.2,decay=4,attack=0.01,ton=8,pan=1,az=pi/2,el=pi/4;
+    var env,silver=45,bank=8,sig,wash,ping,noise;
+	var sph,anglex,angley,anglez,control,freq;
+	var s1,s2,s3,fund=56,threshold,bell1,bell2,bell3;
+	var sig1,sig2,sig3,phasex,phasey,phasez,control1,control2,control3;
 
 
 	env= EnvGen.kr(Env.perc(0.001, decay),doneAction:2,levelScale:1/200);
