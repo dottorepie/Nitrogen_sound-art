@@ -93,7 +93,7 @@ SynthDef.new(\re_dif, {
 
 				az=MouseX.kr(pi.neg,pi).lag(0.1);
 				el=MouseY.kr((pi/2).neg,(pi/2)).lag(0.1);
-    in = PlayBuf.ar(1, ~b.bufnum, BufRateScale.kr(~b.bufnum), loop: 0, doneAction:0);
+    in = PlayBuf.ar(1, ~b.bufnum, BufRateScale.kr(~b.bufnum), loop: 1, doneAction:0);
 
 chain = FFT(LocalBuf(frames), in);
 
@@ -131,11 +131,11 @@ out2=Out.ar(0,Pan2.ar(sig,pos2)*pan);
 );
 
 
-40.wait;
+120.wait;
 		(
 ~synth=Synth.new(\re_dif,[\az,0,\el,pi/5,\stasis,0,\pan_lfo, 0.042105263157895]).register;
 		);
-		~synth=Synth.new(\re_im);
+	//	s.record(duration:(2*60)+59);
 
 2.wait;
 (
@@ -174,11 +174,9 @@ MIDIdef.cc(\midi_switch1,{ |val, num, chan, src|
 },14);
 	);
 
-s.record(numchannels:2,duration:(2*60)+59);
 )
 });
 	Tdef(\drone).play;
 }
 )
 )
-s.record(numchannels:2,duration:(4*60));

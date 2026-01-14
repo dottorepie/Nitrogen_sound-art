@@ -18,11 +18,7 @@ s.boot;
 ~frames=1024;
 );
 
-(
-{Out.ar(0,SoundIn.ar(0))}.play;
-{Out.ar(1,SoundIn.ar(1))}.play;
-s.record;
-)
+
 //
 (
 s.waitForBoot{
@@ -134,7 +130,7 @@ chain8il = chain3.pvcollect(frames,
 
 	/*az=SinOsc.ar(azimuth,elevation).theta;
 				el=SinOsc.ar(azimuth,elevation).phi;*/
-		sph=SinOsc.ar(1,az,el);
+		sph=Spherical.ar(1,az,el);
 
 
 anglex=exp(Complex(0,1)*sph.theta).real*exp(Complex(0,1)*sph.phi).real;
@@ -175,6 +171,7 @@ amp8a=SinOsc.kr(0.023219954648526,90.degrad);
 
 Out.ar(0,Pan2.ar(sig1rl,anglex,amp1));Out.ar(0,Pan2.ar(sig2rl,anglex,amp2));Out.ar(0,Pan2.ar(sig3rl,anglex,amp3));Out.ar(0,Pan2.ar(sig4rl,anglex,amp4));
 Out.ar(0,Pan2.ar(sig5rl,anglex,amp5));Out.ar(0,Pan2.ar(sig6rl,anglex,amp6));Out.ar(0,Pan2.ar(sig7rl,anglex,amp7));Out.ar(0,Pan2.ar(sig8rl,anglex,amp8));
+
 Out.ar(0,Pan2.ar(sig1rr,angley,amp1a));Out.ar(0,Pan2.ar(sig2rr,angley,amp2a));Out.ar(0,Pan2.ar(sig3rr,angley,amp3a));Out.ar(0,Pan2.ar(sig4rr,angley,amp4a));
 Out.ar(0,Pan2.ar(sig5rr,angley,amp5a));Out.ar(0,Pan2.ar(sig6rr,angley,amp6a));Out.ar(0,Pan2.ar(sig7rr,angley,amp7a));Out.ar(0,Pan2.ar(sig8rr,angley,amp8a));
 
