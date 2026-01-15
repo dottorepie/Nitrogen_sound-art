@@ -236,9 +236,9 @@ control1=SinOsc.ar(freq1+b,phase:phasex,mul:amp1);
 control2=SinOsc.ar(freq2+b,phase:phasey,mul:amp2);
 control3=SinOsc.ar(freq3+b,phase:phasez,mul:amp3);
 
-sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1+b,phase:phasex,mul:100).abs*SinOsc.ar(freq1+b,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1));
-sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2+b,phase:phasey,mul:100).abs*SinOsc.ar(freq2+b,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2));
-sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3+b,phase:phasez,mul:100).abs*SinOsc.ar(freq3+b,phase:phasez)),freq3*2.pow(low.lag(0.01)/992),amp3));
+sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1+b,phase:phasex,mul:1000).abs*SinOsc.ar(freq1+b,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1));
+sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2+b,phase:phasey,mul:1000).abs*SinOsc.ar(freq2+b,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2));
+sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3+b,phase:phasez,mul:1000).abs*SinOsc.ar(freq3+b,phase:phasez)),freq3*2.pow(low.lag(0.01)/992),amp3));
 
 	sig1=Select.ar(band.linlin((992*4).neg,((992*4).neg+1),0,1).round(1).asInteger,
 						[sig1,BPF.ar(BRF.ar(sig1,band_osc1.lag(0.1),rq),band_osc4.lag(0.1),rq)]);
