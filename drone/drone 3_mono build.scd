@@ -126,10 +126,21 @@ wt = signal.asWavetable;
 		}.value;
 );
 
+				////hit delay physical
+		/*(
+{
+    var t, sf;
+    sf = K2A.ar(MouseX.kr > 0.5) > 0;
+    t = TBall.ar(sf, MouseY.kr(0.01, 1.0, 1), 0.01);
+    Pan2.ar(Ringz.ar(t * 10, 1200, 0.1), MouseX.kr(-1, 1));
+}.play;
+)*/
+
+
 (
 SynthDef.new(\synth,{
 
-	arg gain=1,low=992,tone=0,band=1,x=1,a=1,brain=1,rq=0.1,pan=1,m=2;
+	arg gain=1,low=992,tone=0,band=1,x=1,a=1,brain=1,rq=0.1,pan=1,m=2,mix=1,room=1;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
 	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,ton,threshold1,threshold2,threshold3;
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope;
@@ -243,16 +254,16 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 		sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15);
 		sig1=tanh(sig1*1.5);sig2=tanh(sig2*1.5);sig3=tanh(sig3*1.5);
 
-					Out.ar(0,Limiter.ar(LeakDC.ar(sig1,mul:mx*gain),0.9,0.01));
-					Out.ar(0,Limiter.ar(LeakDC.ar(sig2,mul:my*gain),0.9,0.01));
-					Out.ar(0,Limiter.ar(LeakDC.ar(sig3,mul:mz*gain),0.9,0.01));
+					Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain),mul:mx),0.9,0.01));
+					Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain),mul:mx),0.9,0.01));
+					Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain),mul:mx),0.9,0.01));
 
 
 			}
 }).add;);
 
 3.wait;
-~synth=Synth.new(\synth,[\gain,10,\tone,992*4,\low,1,\a,1,\pan,(992*4).neg,\band,(992*4).neg,\x,2,\brain,0,\m,2,\rq,1]).register;//s.record
+~synth=Synth.new(\synth,[\gain,10,\tone,992*4,\low,1,\a,1,\pan,(992*4).neg,\band,(992*4).neg,\x,2,\brain,0,\m,2,\rq,1,\mix,1,\room,0.5]).register;//s.record
 2.wait;
 (
 MIDIClient.init;
