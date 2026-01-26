@@ -40,7 +40,18 @@ wt = signal.asWavetable;
 		}.value;
 );
 );
-
+/////mallet
+		/*(
+{
+    var inforce, outforce, freq, k, d;
+    inforce = K2A.ar(MouseButton.kr(0, 1, 0)) > 0;
+    k = MouseY.kr(0.01, 100, 1);///low long decay, high short decay
+    d = MouseX.kr(0.00001, 0.1, 1);//harmonics in decay
+    outforce = Spring.ar(inforce, k, d);
+    freq = outforce * 440; // modulate frequency with the force
+	LeakDC.ar(SinOsc.ar(freq, 0, 0.5))
+}.play;
+)*/
 
 //////kick
 		///////////////set midi sequencer steps as gate on/of for synthdefs, some pots are for synth arguments,
