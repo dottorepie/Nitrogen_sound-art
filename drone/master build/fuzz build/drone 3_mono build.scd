@@ -274,7 +274,8 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 }).add;);
 
 3.wait;
-~synth=Synth.new(\synth,[\gain,10,\tone,992*2,\low,(992*2),\a,1,\pan,(992*1),\band,(992*1),\x,6,\brain,5776,\m,2,\rq,1,\mix,1,\room,0.5]).register;//s.record
+~synth=Synth.new(\synth,[\gain,10,\tone,992*2,\low,(992*2),\a,1,\pan,(992*1),\band,(992*1),\x,6,\brain,5776,\m,2,\rq,1,\mix,0,\room,0]).register;//s.record
+		///if a and x are button then rest are 8 midi pots, reverb external on amp or pedal, if a is pot then 8 pots plus slider for gain
 2.wait;
 (
 MIDIClient.init;
