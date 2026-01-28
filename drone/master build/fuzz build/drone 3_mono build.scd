@@ -142,9 +142,9 @@ SynthDef.new(\synth,{
 
 	arg gain=1,low=992,tone=0,band=1,x=1,a=1,brain=1,rq=0.1,pan=1,m=2,mix=1,room=1;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
-	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,ton,threshold1,threshold2,threshold3,rq_scalar1,rq_scalar2,rq_scalar3;
+	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,ton,threshold1,threshold2,threshold3;
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope,gain1,gain2,gain3;
-	var magx,magy,magz,magqx,magqy,mod_anglex,anglex,angley,anglez,phasex,phasey,phasez;
+	var magx,magy,magz,magqx,magqy,mod_anglex,anglex,angley,anglez,phasex,phasey,phasez,rq1,rq2,rq3,rq4,rq5,rq6;
 	var mod_angley,mod_anglez,mx,my,mz,mqx,mqy,mag,magq,spread=1,mq=(m-1),choice,nn=0,lfo;
 
 fund=32*(9/8);
@@ -218,16 +218,25 @@ amp2=ton.reciprocal*b_y.reciprocal;
 amp3=ton.reciprocal*b_z.reciprocal;
 
 
-band_osc1=SinOsc.kr(b_x*2.pow(band.lag(0.01)/992),phase:0.degrad).range(496,16256);
-band_osc2=SinOsc.kr(b_y*2.pow(band.lag(0.01)/992),phase:90.degrad).range(496,16256);
-band_osc3=SinOsc.kr(b_z*2.pow(band.lag(0.01)/992),phase:45.degrad).range(496,16256);
-band_osc4=SinOsc.kr(b_x*2.pow(band.lag(0.01)/992),phase:180.degrad).range(496,16256);
-band_osc5=SinOsc.kr(b_y*2.pow(band.lag(0.01)/992),phase:90.degrad.neg).range(496,16256);
-band_osc6=SinOsc.kr(b_z*2.pow(band.lag(0.01)/992),phase:45.degrad.neg).range(496,16256);
+band_osc1=SinOsc.kr(b_x*2.pow(band.lag(0.01)/992),phase:phasex).exprange(496,16256);
+band_osc2=SinOsc.kr(b_y*2.pow(band.lag(0.01)/992),phase:phasey).exprange(496,16256);
+band_osc3=SinOsc.kr(b_z*2.pow(band.lag(0.01)/992),phase:phasez).exprange(496,16256);
+band_osc4=SinOsc.kr(b_x*2.pow(band.lag(0.01)/992),phase:phasex.neg).exprange(496,16256);
+band_osc5=SinOsc.kr(b_y*2.pow(band.lag(0.01)/992),phase:phasey.neg).exprange(496,16256);
+band_osc6=SinOsc.kr(b_z*2.pow(band.lag(0.01)/992),phase:phasez.neg).exprange(496,16256);
 
-rq_scalar1=[(2.pow(12.neg/12)*2.pow((992*4).neg/992)),(b_x*2.pow(band.lag(0.01)/992))].normalizeSum.[1]*rq;
-rq_scalar2=[(2.pow(12.neg/12)*2.pow((992*4).neg/992)),(b_y*2.pow(band.lag(0.01)/992))].normalizeSum.[1]*rq;
-rq_scalar3=[(2.pow(12.neg/12)*2.pow((992*4).neg/992)),(b_z*2.pow(band.lag(0.01)/992))].normalizeSum.[1]*rq;
+rq1=Select.kr(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
+			[DC.ar(rq),SinOsc.kr(b_x*2.pow(band.lag(0.01)/992),phase:phasex,mul:rq).exprange(rq,1)]);
+rq2=Select.kr(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
+			[DC.ar(rq),SinOsc.kr(b_y*2.pow(band.lag(0.01)/992),phase:phasey,mul:rq).exprange(rq,1)]);
+rq3=Select.kr(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
+			[DC.ar(rq),SinOsc.kr(b_z*2.pow(band.lag(0.01)/992),phase:phasez,mul:rq).exprange(rq,1)]);
+rq4=Select.kr(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
+			[DC.ar(rq),SinOsc.kr(b_x*2.pow(band.lag(0.01)/992),phase:phasex.neg,mul:rq).exprange(rq,1)]);
+rq5=Select.kr(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
+			[DC.ar(rq),SinOsc.kr(b_y*2.pow(band.lag(0.01)/992),phase:phasey.neg,mul:rq).exprange(rq,1)]);
+rq6=Select.kr(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
+			[DC.ar(rq),SinOsc.kr(b_z*2.pow(band.lag(0.01)/992),phase:phasez.neg,mul:rq).exprange(rq,1)]);
 
 
 control1=SinOsc.ar(freq1,phase:phasex,mul:amp1);
@@ -238,12 +247,12 @@ sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:100).abs*SinOsc.ar(freq1,
 sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:100).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2));
 sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:100).abs*SinOsc.ar(freq3,phase:phasez)),freq3*2.pow(low.lag(0.01)/992),amp3));
 
-	sig1=Select.ar(band.linlin((992*4).neg,((992*4).neg+1),0,1).round(1).asInteger,
-						[sig1,BPF.ar(BRF.ar(sig1,band_osc1.lag(0.1),rq_scalar1),band_osc4.lag(0.1),rq_scalar1)]);
-	sig2=Select.ar(band.linlin((992*4).neg,((992*4).neg+1),0,1).round(1).asInteger,
-						[sig2,BPF.ar(BRF.ar(sig2,band_osc2.lag(0.1),rq_scalar2),band_osc5.lag(0.1),rq_scalar2)]);
-	sig3=Select.ar(band.linlin((992*4).neg,((992*4).neg+1),0,1).round(1).asInteger,
-						[sig3,BPF.ar(BRF.ar(sig3,band_osc3.lag(0.1),rq_scalar3),band_osc6.lag(0.1),rq_scalar3)]);
+	sig1=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
+						[sig1,BPF.ar(BRF.ar(sig1,band_osc1.lag(0.1),rq1),band_osc4.lag(0.1),rq4)]);
+	sig2=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
+						[sig2,BPF.ar(BRF.ar(sig2,band_osc2.lag(0.1),rq2),band_osc5.lag(0.1),rq5)]);
+	sig3=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
+						[sig3,BPF.ar(BRF.ar(sig3,band_osc3.lag(0.1),rq3),band_osc6.lag(0.1),rq6)]);
 
 threshold1=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 threshold2=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
@@ -257,9 +266,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 		sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15);
 		sig1=tanh(sig1*1.5);sig2=tanh(sig2*1.5);sig3=tanh(sig3*1.5);
 
-					gain1=gain*(rq_scalar1/(2.sqrt)).reciprocal;
-					gain2=gain*(rq_scalar2/(2.sqrt)).reciprocal;
-					gain3=gain*(rq_scalar3/(2.sqrt)).reciprocal;
+					gain1=gain*rq1.sqrt.reciprocal;
+					gain2=gain*rq2.sqrt.reciprocal;
+					gain3=gain*rq3.sqrt.reciprocal;
 
 					Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1),mul:mx),0.9,0.01));
 					Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2),mul:mx),0.9,0.01));
@@ -274,7 +283,7 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 }).add;);
 
 3.wait;
-~synth=Synth.new(\synth,[\gain,10,\tone,992*2,\low,(992*2),\a,1,\pan,(992*1),\band,(992*1),\x,6,\brain,5776,\m,2,\rq,1,\mix,0,\room,0]).register;//s.record
+~synth=Synth.new(\synth,[\gain,10,\tone,992*2,\low,0,\a,1,\pan,0,\band,(992*2).neg,\x,1,\brain,576,\m,1,\rq,0.001,\mix,0,\room,0]).register;//s.record
 		///if a and x are button then rest are 8 midi pots, reverb external on amp or pedal, if a is pot then 8 pots plus slider for gain
 2.wait;
 (
@@ -284,7 +293,7 @@ MIDIIn.connectAll;
 MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 		var gain;
 	//[val, num, chan, src].postln;
-	gain=val.linlin(0,127,0,10).round(0.000001);
+	gain=val.linlin(0,127,0,100).round(0.000001);
 
 		gain.postln;
 		if(~synth.isPlaying,{~synth.set(\gain,gain)});
