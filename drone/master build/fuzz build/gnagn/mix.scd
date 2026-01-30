@@ -31,9 +31,9 @@ s.meter;
 	Buffer.freeAll;
 
 (
-~r1 = Buffer.readChannel(s,"/Users/amimid/Desktop/SC_260130_021639.wav",channels:0 );
-~r2 = Buffer.readChannel(s,"/Users/amimid/Desktop/SC_260130_021639.wav",channels:1 );
-~i3 = Buffer.readChannel(s,"/Users/amimid/Desktop/FS.wav",channels:0 );
+~r1 = Buffer.readChannel(s,,channels:0 );
+~r2 = Buffer.readChannel(s,,channels:1 );
+~i3 = Buffer.readChannel(s,channels:0 );
 		);
 
 		(
@@ -64,8 +64,8 @@ SynthDef.new(\re_im, {
 	var frames=~frames,silver=45,golden=45,l=1,r=1.neg,g=((1+5.sqrt)/2),s=(1+2.sqrt);
 
 
-    in1 = PlayBuf.ar(1, ~r1.bufnum, BufRateScale.kr(~r1.bufnum), loop: 0, doneAction:2);
-	in2 = PlayBuf.ar(1, ~r2.bufnum, BufRateScale.kr(~r2.bufnum), loop: 0, doneAction:2);
+    in1 = PlayBuf.ar(1, ~r1.bufnum, BufRateScale.kr(~r1.bufnum), loop: 0, doneAction:0);
+	in2 = PlayBuf.ar(1, ~r2.bufnum, BufRateScale.kr(~r2.bufnum), loop: 0, doneAction:0);
 	//in1 = SoundIn.ar(0);
 	//in2 = SoundIn.ar(1);
     in3 = PlayBuf.ar(1, ~i3.bufnum, BufRateScale.kr(~i3.bufnum), loop: 1, doneAction:0);
