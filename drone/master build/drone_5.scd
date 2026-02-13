@@ -60,14 +60,15 @@ wt = signal.asWavetable;
 (
 SynthDef.new(\synth,{
 
-	arg gain=1,low=992,tone=0,band=1,x=1,a=1,rq=1,pan=1,m=2,mix=1,room=1,attack,decay,curve,
-				az1=0,el1=0,az2=0,el2=0,az3=0,el3=0,temp_mag1=56,temp_mag2=56,temp_mag3=56,core=0.0999,azx=0,azy=0,elx=0,ely=0;
-	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3,cloud=1,az=0,el=0;
+	arg gain=1,low=992,tone=0,band=1,x=1,pan=1;
+	var a=1,rq,m=3,mix=0.5,room=0.5,attack,decay,curve;
+	var az1=0,el1=0,az2=0,el2=0,az3=0,el3=0,temp_mag1,temp_mag2,temp_mag3,core=0.00999,azx=0,azy=0,elx=0,ely=0;
+	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3,cloud=8,az=0,el=0;
 	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,ton,threshold1,threshold2,threshold3,phase1,phase2,phase3;
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope,gain1,gain2,gain3,env,azimuth,elevation;
 	var magx,magy,magz,magqx,magqy,mod_anglex,anglex,angley,anglez,phasex,phasey,phasez,rq1,rq2,rq3,rq4,rq5,rq6;
 	var mod_angley,mod_anglez,mx,my,mz,mqx,mqy,mag,magq,spread=1,mq=(m-1),lfo,sph1,loc1,loc2,loc3,axis1,axis2,axis3,g=((1+5.sqrt)/2),s=(1+2.sqrt);
-	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3;
+	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,pan_amp;
 
 							//x=~controlBus_1.getSynchronous;
 			//	gain=~controlBus_2.getSynchronous;
@@ -91,9 +92,22 @@ lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 
 				cloud.do{
 
+							lfo=2.pow(pan/992);
+				pan_amp=lfo.reciprocal;
 
 			az = (az+(2pi-(2pi/g))).wrap(pi.neg,pi);
 		   el = (el+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
+
+					temp_mag1=lfo*fund;
+					temp_mag2=lfo*fund;
+					temp_mag3=lfo*fund;
+
+					az1=LFNoise1.ar(lfo,pan_amp).range(pi,pi.neg);
+					el1=LFNoise1.ar(lfo,pan_amp).range((pi/2),(pi/2).neg);
+					az2=LFNoise1.ar(lfo,pan_amp).range(pi,pi.neg);
+					el2=LFNoise1.ar(lfo,pan_amp).range((pi/2),(pi/2).neg);
+					az3=LFNoise1.ar(lfo,pan_amp).range(pi,pi.neg);
+					el3=LFNoise1.ar(lfo,pan_amp).range((pi/2),(pi/2).neg);
 
 				axis1=Spherical(core.rand+temp_mag1,(az1.lag(0.01)+az).wrap(pi,pi.neg),  (el1.lag(0.01)+el).wrap((pi/2),(pi/2).neg));
 					axis2=Spherical(core.rand+temp_mag2,(az2.lag(0.01)+az).wrap(pi,pi.neg), (el2.lag(0.01)+el).wrap((pi/2),(pi/2).neg));
@@ -114,11 +128,10 @@ phase1=Complex(0,anglex).theta;
 phase2=Complex(0,angley).theta;
 phase3=Complex(0,anglez).theta;
 
-				lfo=2.pow(pan/992);
 
-mod_anglex=SinOsc.ar(lfo,phase1).range(pi.neg,pi);
-mod_angley=SinOsc.ar(lfo,phase2).range(pi.neg,pi);
-mod_anglez=SinOsc.ar(lfo,phase3).range((pi/2).neg,(pi/2));
+mod_anglex=SinOsc.ar(lfo,phase1,pan_amp).range(pi.neg,pi);
+mod_angley=SinOsc.ar(lfo,phase2,pan_amp).range(pi.neg,pi);
+mod_anglez=SinOsc.ar(lfo,phase3,pan_amp).range((pi/2).neg,(pi/2));
 
 					(
 		magx=((Complex(cos(((polytope.theta+mod_anglex).round(0.00001)*m).wrap(pi.neg,pi)),cos((((polytope.theta+mod_anglex).round(0.00001)*m)).wrap(pi.neg,pi))).rho/(2.sqrt))*(Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt));
@@ -174,6 +187,8 @@ amp1=ton.reciprocal*b_x.reciprocal*lamdoma.reciprocal;
 amp2=ton.reciprocal*b_y.reciprocal*lamdoma.reciprocal;
 amp3=ton.reciprocal*b_z.reciprocal*lamdoma.reciprocal;
 
+					band=pan;
+					rq=pan_amp;
 
 band_osc1=SinOsc.kr(b_x*2.pow(band.lag(0.01)/992),phase:phasex).exprange(496,16256);
 band_osc2=SinOsc.kr(b_y*2.pow(band.lag(0.01)/992),phase:phasey).exprange(496,16256);
@@ -223,9 +238,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 		sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15);
 		sig1=tanh(sig1*1.5);sig2=tanh(sig2*1.5);sig3=tanh(sig3*1.5);
 
-					gain1=gain*rq1.sqrt.reciprocal;
-					gain2=gain*rq2.sqrt.reciprocal;
-					gain3=gain*rq3.sqrt.reciprocal;
+					gain1=gain*rq1.sqrt.reciprocal*pan_amp;
+					gain2=gain*rq2.sqrt.reciprocal*pan_amp;
+					gain3=gain*rq3.sqrt.reciprocal*pan_amp;
 
 				//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01));
 				//	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01));
@@ -252,9 +267,7 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 3.wait;
 
-		~synth=Synth.new(\synth,[\gain,1,\tone,992*2,\low,496,\a,1,\pan,992,\band,(992*16).neg,\x,1,\m,2,\rq,1,
-			\az1,(pi/2).rand,\el1,(pi/2).rand,\az2,(pi/2).rand,\el2,(pi/2).rand,\az3,(pi/2).rand,\el3,(pi/2).rand,\core,0.0999.rand,
-			\temp_mag1,56,\temp_mag2,56,\temp_mag3,56,\azx,0,\azy,pi/2,\elx,pi/4,\ely,pi/4]).register;//s.record
+		~synth=Synth.new(\synth,[\gain,1,\tone,992*2,\low,496,\pan,992,\band,(992*16).neg,\x,1]).register;//s.record
 
 (
 
@@ -292,10 +305,10 @@ MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 
 									(
 MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
-		var el;
-					el=val.linlin(0,127,(pi/2).neg,(pi/2));
-		el.postln;
-		if(~synth.isPlaying,{~synth.set(\el,el)});
+		var pan;
+							pan=val.linlin(0,127,(992*16).neg,(992*16));
+		pan.postln;
+		if(~synth.isPlaying,{~synth.set(\pan,pan)});
 },29);
 	);
 
