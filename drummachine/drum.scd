@@ -67,13 +67,14 @@ wt = signal.asWavetable;
 	(
  (
 SynthDef(\kick, {
-	arg amp=1/8,n=12,pan=1,low=0,noise=0.001,decay=1/2,attack=0.001,az=0,el=0,m=1,fund=32,az1=0,el1=0,az2=0,el2=0,az3=0,el3=0,temp_mag1=56,temp_mag2=56,temp_mag3=56;
+	arg amp=1/8,n=12,pan=1,low=0,noise=0.001,decay=1/2,attack=0.001,az=0,el=0,m=1,az1=0,el1=0,az2=0,el2=0,az3=0,el3=0,temp_mag1=56,temp_mag2=56,temp_mag3=56;
     var env,freq,anglex,angley,anglez,mod_anglex,mod_angley,mod_anglez,mx,my,mz,magx,magz,magy;
-	var sph,phase,threshold,ton,phase1,phase2,phase3,sph1,loc1,loc2,loc3,mag;
+	var sph,phase,threshold,ton,phase1,phase2,phase3,sph1,loc1,loc2,loc3,mag,fund;
 	var sig1,sig2,sig3,phasex,phasey,phasez,control1,control2,control3,axis1,axis2,axis3;
 
-			ton=2.pow(n/56);
-	freq = EnvGen.kr(Env([fund*ton, fund], [decay], curve: -4)); // pitch drop
+			ton=2.pow(n/992);
+					fund=32*(9/8);
+	freq = fund*ton;
 	env= EnvGen.kr(Env.perc(attack, decay, curve: -4),doneAction:2,levelScale:amp*ton.reciprocal);
 
 			threshold=(((343/0.3)/freq).reciprocal.ampdb/2.sqrt).dbamp;
@@ -124,10 +125,10 @@ control1=SinOsc.ar(freq,phasex,ton.reciprocal);
 control2=SinOsc.ar(freq,phasey,ton.reciprocal);
 control3=SinOsc.ar(freq,phasez,ton.reciprocal);
 
-sig1 = sig1 + (sig1 * BrownNoise.ar(noise)); sig2 = sig2 + (sig2 * BrownNoise.ar(noise)); sig3 = sig3 + (sig3 * BrownNoise.ar(noise));
+sig1 = sig1 + (sig1 * BrownNoise.ar(noise*loc1)); sig2 = sig2 + (sig2 * BrownNoise.ar(noise*loc2)); sig3 = sig3 + (sig3 * BrownNoise.ar(noise*loc3));
 
 
-		sig1=HPF.ar(sig1,50); sig2=HPF.ar(sig1, 50);sig3=HPF.ar(sig1, 50);
+		sig1=HPF.ar(sig1,50); sig2=HPF.ar(sig2, 50);sig3=HPF.ar(sig3, 50);
 		sig1=Compander.ar(sig1,control1,threshold,1.2,1/3,0.03,0.15);
 		sig2=Compander.ar(sig2,control2,threshold,1.2,1/3,0.03,0.15);
 		sig3=Compander.ar(sig3,control3,threshold,1.2,1/3,0.03,0.15);
@@ -135,12 +136,12 @@ sig1 = sig1 + (sig1 * BrownNoise.ar(noise)); sig2 = sig2 + (sig2 * BrownNoise.ar
 
 
 		Out.ar(0, sig1*env*loc1.abs);
-		Out.ar(1, sig2*env*loc1.abs);
-		Out.ar(2, sig3*env*loc1.abs);
+		Out.ar(1, sig2*env*loc2.abs);
+		Out.ar(2, sig3*env*loc3.abs);
 
 }).add;);
 
-Synth(\kick);
+//Synth(\kick);
 
 );
 	10.wait;
@@ -227,23 +228,23 @@ m3=m3+1;
 	(
 		~a=Pdef(\1, Pbind(\instrument, \kick,
 			\dur,Pseq(~dur1,inf),
-				\amp,5,
-				\n,28,
-				\pan,10,
+				\amp,7,
+				\n,0,
+				\pan,5,
 					\m,1,
 			\low,0,
 				\noise,0.001,
-					\az1,(pi/2).rand,
-					\el1,(pi/2).rand,
-					\az2,(pi/2).rand,
-					\el2,(pi/2).rand,
-					\az3,(pi/2).rand,
-					\el3,(pi/2).rand,
-			\temp_mag1,(pi/2).rand,
-					\temp_mag2,(pi/2).rand,
-					\temp_mag3,(pi/2).rand,
-				\decay,2,
-				\attack,0.001;
+					\az1,Pexprand(0.0001,(pi/2),inf),
+					\el1,Pexprand(0.0001,(pi/2),inf),
+					\az2,Pexprand(0.0001,(pi/2),inf),
+					\el2,Pexprand(0.0001,(pi/2),inf),
+					\az3,Pexprand(0.0001,(pi/2),inf),
+					\el3,Pexprand(0.0001,(pi/2),inf),
+			\temp_mag1,Pexprand(0.0001,(pi/2),inf),
+					\temp_mag2,Pexprand(0.0001,(pi/2),inf),
+					\temp_mag3,Pexprand(0.0001,(pi/2),inf),
+				\decay,1,
+				\attack,0.01;
 		))
 );
 
@@ -263,7 +264,7 @@ m3=m3+1;
 
 
 
-TempoClock.default.tempo_(2);
+TempoClock.default.tempo_(4);
 
 (
 ~a.play;
