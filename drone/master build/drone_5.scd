@@ -243,9 +243,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 				out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z, [azx, azy], [elx,ely],4 ));
 
 
-			//	Out.kr(~controlBus_1.index,A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*10));
-			//	Out.kr(~controlBus_2.index,A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*10));
-			//	Out.kr(~controlBus_3.index,A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*10));
+			Out.kr(~controlBus_1.index,A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*1000));
+			Out.kr(~controlBus_2.index,A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*1000));
+			Out.kr(~controlBus_3.index,A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*1000));
 				};
 
 }).add;);
