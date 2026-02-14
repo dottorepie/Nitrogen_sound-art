@@ -1,23 +1,23 @@
 (
-var data,run = true,w,b,xx,yy,zz,r,a;
-var ot=0.degrad,sph,d=500,sc=56;
+var data,run = true,w,b,x1,y1,z1,x2,y2,z2,x3,y3,z3,r,a;
+var ot=0.degrad,sph,d=1000,sc=56,x,y,z;
 
 
 ~data = [];
 ~data1 = [];
 
 
-w = Window.new("3D Scatterplot", Rect(40,40, 800, 800)).front;
+w = Window.new("3D Scatterplot", Rect(40,40, 1200, 1200)).front;
 
-~v = UserView.new(w,Rect(0,0,800,800)).background_(Color.black);
+~v = UserView.new(w,Rect(0,0,1200,1200)).background_(Color.black);
 
-a = ScatterView3d(~v, Rect(0,0, 800,800), ~data, [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
+a = ScatterView3d(~v, Rect(0,0, 1200,1200), ~data, [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
 a.drawMethod = \fillOval;
 a.symbolSize = 4;
 a.symbolColor = Color.blue;
 a.background = Color.black;
 
-b = ScatterView3d(~v, Rect(0,0, 800,800), ~data1, [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
+b = ScatterView3d(~v, Rect(0,0, 1200,1200), ~data1, [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
 b.drawMethod = \fillOval;
 b.symbolSize = 6;
 b.symbolColor = Color.red;
@@ -27,17 +27,15 @@ b.background = Color.clear;
 ~v.drawFunc ={
 Pen.translate(400,400);
 
+	x=~controlBus_x.getSynchronous;
+	y=~controlBus_y.getSynchronous;
+	z=~controlBus_z.getSynchronous;
 
-	//ot=	Cartesian(~controlBus_1.getSynchronous*sc,~controlBus_2.getSynchronous*sc,~controlBus_3.getSynchronous*sc);
-
-	b.rot(ot,ot,ot);
-
-	a.rot(ot,ot,ot);
+		b.rot(x,y,z);
+	a.rot(x,y,z);
 
 
-//	b.rot(ot.theta,ot.theta,ot.theta);
     ~v.refresh;
-	ot=ot+(2pi/(32*(9/8)));
 
 };
 
@@ -45,17 +43,24 @@ Pen.translate(400,400);
 
   r= Routine({loop{
 
-	//sph=(Cartesian(d,d,d)+Cartesian(xx,yy,zz)).asSpherical;
 
-	xx=~controlBus_1.getSynchronous*sc;
-	yy=~controlBus_2.getSynchronous*sc;
-	zz=~controlBus_3.getSynchronous*sc;
+	x1=~controlBus_1a.getSynchronous*sc;
+	y1=~controlBus_2b.getSynchronous*sc;
+	z1=~controlBus_3c.getSynchronous*sc;
+
+		x2=~controlBus_1a.getSynchronous*sc;
+	y2=~controlBus_2b.getSynchronous*sc;
+	z2=~controlBus_3c.getSynchronous*sc;
+
+		x3=~controlBus_1a.getSynchronous*sc;
+	y3=~controlBus_2b.getSynchronous*sc;
+	z3=~controlBus_3c.getSynchronous*sc;
 
 	//~data=[[sph.x,sph.y,sph.z]];
 	//~data1=[[sph.x+10,sph.y+10,sph.z+10]];
 
-	~data=[[xx,yy,zz]];
-	~data1=[[xx+20,yy+20,zz+20]];
+	~data=[ [x1,y1,z1], [x2,y2,z2], [x3,y3,z3] ];
+	~data1=[ [x1+20,y1+20,z1+20], [x1+20,y2+20,z2+20], [x3+20,y3+20,z3+20] ];
 
 
  	b.data = ~data;            // Update ScatterView3d
