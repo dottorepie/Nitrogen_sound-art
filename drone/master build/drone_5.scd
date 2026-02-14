@@ -293,16 +293,16 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 					amb_y=amb_sig2;
 					amb_z=amb_sig3;
 
-				out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z, [azx, azy], [elx,ely], 2 ));
+				out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z, [azx+azf, azy+azf], [elx+elf,ely+elf], 2 ));
 
 			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01),panx,width:spread));
 			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01),pany,width:spread));
 			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01),panz,width:spread));
 
 
-			Out.kr(control_ch, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*440));
-			Out.kr(control_ch+1, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01)*440));
-			Out.kr(control_ch+2, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01)*440));
+			Out.kr(control_ch, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*800));
+			Out.kr(control_ch+1, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01)*800));
+			Out.kr(control_ch+2, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01)*800));
 
 			Out.kr(~controlBus_x, mod_anglex*0.5);
 			Out.kr(~controlBus_y, mod_angley*0.5);
@@ -315,7 +315,7 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 3.wait;
 
-		~synth=Synth.new(\synth,[\gain,50,\tone,0,\low,0,\pan,496,\x,1,\cloud,3,\a,1,\oct1,1,\oct2,2,\oct3,1,\az,0,\el,0,\angle,pi/2,\panx,1,\pany,1,\panz,1]).register;//s.record
+		~synth=Synth.new(\synth,[\gain,100,\tone,0,\low,0,\pan,496,\x,1,\cloud,3,\a,1,\oct1,1,\oct2,2,\oct3,1,\az,0,\el,0,\angle,pi/2,\panx,1,\pany,1,\panz,1]).register;//s.record
 
 
 2.wait;
