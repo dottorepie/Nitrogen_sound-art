@@ -91,15 +91,15 @@ wt = signal.asWavetable;
 (
 SynthDef.new(\synth,{
 
-	arg gain=1,low=992,tone=0,x=1,pan=1,mix=1,cloud=3,a=1,oct1=1,oct2=1,oct3=1,angle=0,panx=1,pany=1,panz=1;
-	var rq=1,m=2,room=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,spread,sq1,sq2,sq3,rotationx,rotationy,rotationz,c;
+	arg gain=1,low=992,tone=0,x=1,pan=1,mix=1,a=1,oct1=1,oct2=1,oct3=1,angle=0,panx=1,pany=1,panz=1;
+	var rq=1,m=2,room=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,spread,sq1,sq2,sq3,rotationx,rotationy,rotationz,c,cloud=3;
 	var az1,el1,az2,el2,az3,el3,temp_mag1,temp_mag2,temp_mag3,core=(9/8).rand,azx=pi-(pi/4),azy=pi/4,elx=pi/4,ely=pi/4;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
 	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,ton,threshold1,threshold2,threshold3,phase1,phase2,phase3;
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope,gain1,gain2,gain3,env,azimuth,elevation;
 	var magx,magy,magz,magqx,magqy,mod_anglex,anglex,angley,anglez,phasex,phasey,phasez,rq1,rq2,rq3,rq4,rq5,rq6;
 	var mod_angley,mod_anglez,mx,my,mz,mqx,mqy,mag,magq,mq=(m-1),lfo,sph1,loc1,loc2,loc3,axis1,axis2,axis3,g=((1+5.sqrt)/2),s=(1+2.sqrt);
-	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,control_ch=0,az,el,axis=[1,1,1].normalizeSum.sqrt;
+	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,control_ch1=0,control_ch2=3,control_ch3=6,az,el,axis=[1,1,1].normalizeSum.sqrt;
 	var axis_x=[1,0,0].normalizeSum.sqrt,axis_y=[0,1,0].normalizeSum.sqrt,axis_z=[0,0,1].normalizeSum.sqrt;
 	var i1=Quaternion(0, axis_x.[0], 0, 0),j1=Quaternion(0, 0, axis_x.[1], 0),k1=Quaternion(0, 0, 0, axis_x.[2]);
     var i2=Quaternion(0, axis_y.[0], 0, 0),j2=Quaternion(0, 0, axis_y.[1], 0),k2=Quaternion(0, 0, 0, axis_y.[2]);
@@ -147,7 +147,7 @@ sq3= Cartesian(rotationz.b,rotationz.c,rotationz.d);
 					az3=sq3.theta;
 					el3=sq3.phi;
 
-				cloud.do{
+				3.do{
 
 				axis1=Spherical(core+temp_mag1,(az1.lag(0.01)+azf).wrap(pi,pi.neg),  (el1.lag(0.01)+elf).wrap((pi/2),(pi/2).neg));
 					axis2=Spherical(core+temp_mag2,(az2.lag(0.01)+azf).wrap(pi,pi.neg), (el2.lag(0.01)+elf).wrap((pi/2),(pi/2).neg));
@@ -276,9 +276,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 		sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15);
 		sig1=tanh(sig1*1.5);sig2=tanh(sig2*1.5);sig3=tanh(sig3*1.5);
 
-					gain1=gain*rq1.sqrt.reciprocal;
-					gain2=gain*rq2.sqrt.reciprocal;
-					gain3=gain*rq3.sqrt.reciprocal;
+					gain1=gain*rq1.sqrt.reciprocal*lfo;
+					gain2=gain*rq2.sqrt.reciprocal*lfo;
+					gain3=gain*rq3.sqrt.reciprocal*lfo;
 
 				//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01));
 				//	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01));
@@ -300,22 +300,24 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01),panz,width:spread));
 
 
-			Out.kr(control_ch, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*800));
-			Out.kr(control_ch+1, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01)*800));
-			Out.kr(control_ch+2, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01)*800));
+			Out.kr(control_ch1, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*800));
+			Out.kr(control_ch2, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01)*800));
+			Out.kr(control_ch3, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01)*800));
 
-			Out.kr(~controlBus_x, mod_anglex*0.5);
-			Out.kr(~controlBus_y, mod_angley*0.5);
-			Out.kr(~controlBus_z, mod_anglez*0.5);
+			Out.kr(~controlBus_x, mod_anglex);
+			Out.kr(~controlBus_y, mod_angley);
+			Out.kr(~controlBus_z, mod_anglez);
 
-					control_ch=control_ch+1;
+					control_ch1=control_ch1+1;
+					control_ch2=control_ch2+1;
+					control_ch3=control_ch3+1;
 				};
 
 }).add;);
 
 3.wait;
 
-		~synth=Synth.new(\synth,[\gain,100,\tone,0,\low,0,\pan,496,\x,1,\cloud,3,\a,1,\oct1,1,\oct2,2,\oct3,1,\az,0,\el,0,\angle,pi/2,\panx,1,\pany,1,\panz,1]).register;//s.record
+		~synth=Synth.new(\synth,[\gain,1000,\tone,0,\low,0,\pan,(992*16).neg,\x,1,\a,1,\oct1,1,\oct2,2,\oct3,1,\az,0,\el,0,\angle,pi/2,\panx,1,\pany,1,\panz,1]).register;//s.record
 
 
 2.wait;
@@ -326,7 +328,7 @@ MIDIIn.connectAll;
 MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 		var gain;
 	//[val, num, chan, src].postln;
-	gain=val.linlin(0,127,0,100).round(0.000001);
+	gain=val.linlin(0,127,0,1000).round(0.000001);
 
 		gain.postln;
 		if(~synth.isPlaying,{~synth.set(\gain,gain)});
