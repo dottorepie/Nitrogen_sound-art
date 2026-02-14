@@ -147,9 +147,14 @@ sig1 = sig1 + (sig1 * BrownNoise.ar(noise*loc1)); sig2 = sig2 + (sig2 * BrownNoi
 					amb_z=amb_sig3;
 
 					out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z, [azx, azy], [elx,ely],4 ));
-						//		Out.kr(~controlBus_1.index,A2K.kr(sig1*env*loc1.abs*1000));
+			// Out.kr(~controlBus_1.index,A2K.kr(sig1*env*loc1.abs*1000));
 			//	Out.kr(~controlBus_2.index,A2K.kr(sig2*env*loc1.abs*1000));
 			//	Out.kr(~controlBus_3.index,A2K.kr(sig3*env*loc1.abs*1000));
+
+			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(sig1),0.9,0.01),panx,width:spread));
+			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(sig2),0.9,0.01),pany,width:spread));
+			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(sig3),0.9,0.01),panz,width:spread));
+
 
 }).add;);
 
