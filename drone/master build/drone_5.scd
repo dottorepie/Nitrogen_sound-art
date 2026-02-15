@@ -32,33 +32,33 @@ s.meter;
 		~controlBus_2a = Bus.control(s, 1);
 		~controlBus_3a = Bus.control(s, 1);
 
-		~controlBus_1b = Bus.control(s, 1);
-		~controlBus_2b = Bus.control(s, 1);
-		~controlBus_3b = Bus.control(s, 1);
+	//	~controlBus_1b = Bus.control(s, 1);
+	//	~controlBus_2b = Bus.control(s, 1);
+	//	~controlBus_3b = Bus.control(s, 1);
 
-		~controlBus_1c = Bus.control(s, 1);
-		~controlBus_2c = Bus.control(s, 1);
-		~controlBus_3c = Bus.control(s, 1);
+	//	~controlBus_1c = Bus.control(s, 1);
+	//	~controlBus_2c = Bus.control(s, 1);
+		//~controlBus_3c = Bus.control(s, 1);
 
-		~controlBus_1d = Bus.control(s, 1);
-		~controlBus_2d = Bus.control(s, 1);
-		~controlBus_3d = Bus.control(s, 1);
+	//	~controlBus_1d = Bus.control(s, 1);
+	//	~controlBus_2d = Bus.control(s, 1);
+	//	~controlBus_3d = Bus.control(s, 1);
 
-		~controlBus_1e = Bus.control(s, 1);
-		~controlBus_2e = Bus.control(s, 1);
-		~controlBus_3e = Bus.control(s, 1);
+	//	~controlBus_1e = Bus.control(s, 1);
+	//	~controlBus_2e = Bus.control(s, 1);
+	//	~controlBus_3e = Bus.control(s, 1);
 
-		~controlBus_1f = Bus.control(s, 1);
-		~controlBus_2f = Bus.control(s, 1);
-		~controlBus_3f = Bus.control(s, 1);
+	//	~controlBus_1f = Bus.control(s, 1);
+	//	~controlBus_2f = Bus.control(s, 1);
+	//	~controlBus_3f = Bus.control(s, 1);
 
-		~controlBus_1g = Bus.control(s, 1);
-		~controlBus_2g = Bus.control(s, 1);
-		~controlBus_3g = Bus.control(s, 1);
+	//	~controlBus_1g = Bus.control(s, 1);
+	//	~controlBus_2g = Bus.control(s, 1);
+	//	~controlBus_3g = Bus.control(s, 1);
 
-		~controlBus_1k = Bus.control(s, 1);
-		~controlBus_2k = Bus.control(s, 1);
-		~controlBus_3k = Bus.control(s, 1);
+	//	~controlBus_1k = Bus.control(s, 1);
+	//	~controlBus_2k = Bus.control(s, 1);
+	//	~controlBus_3k = Bus.control(s, 1);
 
 		~controlBus_x = Bus.control(s, 1);
 		~controlBus_y = Bus.control(s, 1);
@@ -90,7 +90,7 @@ wt = signal.asWavetable;
 SynthDef.new(\synth,{
 
 	arg gain=1,low=992,tone=0,x=1,pan=1,mix=1,a=1,oct1=1,oct2=1,oct3=1,angle=0,panx=1,pany=1,panz=1;
-	var rq=1,m=2,room=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,spread,sq1,sq2,sq3,rotationx,rotationy,rotationz,c,cloud=3;
+	var rq=1,m=2,room=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,spread,sq1,sq2,sq3,rotationx,rotationy,rotationz,c,cloud=1;
 	var az1,el1,az2,el2,az3,el3,temp_mag1,temp_mag2,temp_mag3,core=(9/8).rand,azx=pi-(pi/4),azy=pi/4,elx=pi/4,ely=pi/4;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
 	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,ton,threshold1,threshold2,threshold3,phase1,phase2,phase3;
@@ -145,11 +145,11 @@ sq3= Cartesian(rotationz.b,rotationz.c,rotationz.d);
 					az3=sq3.theta;
 					el3=sq3.phi;
 
-				3.do{
+				cloud.do{
 
-				axis1=Spherical(core+temp_mag1,(az1.lag(0.01)+azf).wrap(pi,pi.neg),  (el1.lag(0.01)+elf).wrap((pi/2),(pi/2).neg));
-					axis2=Spherical(core+temp_mag2,(az2.lag(0.01)+azf).wrap(pi,pi.neg), (el2.lag(0.01)+elf).wrap((pi/2),(pi/2).neg));
-					axis3=Spherical(core+temp_mag3,(az3.lag(0.01)+azf).wrap(pi,pi.neg), (el3.lag(0.01)+elf).wrap((pi/2),(pi/2).neg));
+				axis1=Spherical(temp_mag1,(az1.lag(0.01)+azf).wrap(pi,pi.neg),  (el1.lag(0.01)+elf).wrap((pi/2),(pi/2).neg));
+					axis2=Spherical(temp_mag2,(az2.lag(0.01)+azf).wrap(pi,pi.neg), (el2.lag(0.01)+elf).wrap((pi/2),(pi/2).neg));
+					axis3=Spherical(temp_mag3,(az3.lag(0.01)+azf).wrap(pi,pi.neg), (el3.lag(0.01)+elf).wrap((pi/2),(pi/2).neg));
 
 				polytope=Cartesian(axis1.x,axis2.y,axis3.z);
 
@@ -162,9 +162,9 @@ anglex=(exp(Complex(0,1)*polytope.theta.lag(0.01)).real*exp(Complex(0,1)*polytop
 angley=(exp(Complex(0,1)*polytope.theta.lag(0.01)).imag*exp(Complex(0,1)*polytope.phi.lag(0.01)).real).round(0.00001);
 anglez=(exp(Complex(0,1)*polytope.phi.lag(0.01)).imag).round(0.00001);
 
-phase1=Complex(0,anglex).theta;
-phase2=Complex(0,angley).theta;
-phase3=Complex(0,anglez).theta;
+phase1=Complex(1,anglex).theta;
+phase2=Complex(1,angley).theta;
+phase3=Complex(1,anglez).theta;
 
 
 mod_anglex=SinOsc.ar(lfo,phase1).range(pi.neg,pi);
@@ -210,9 +210,9 @@ cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).pow
 			loc2=sph1.y;
 			loc3=sph1.z;
 
-				phasex=Complex(0,mx.value).theta;
-phasey=Complex(0,my.value).theta;
-phasez=Complex(0,mz.value).theta;
+phasex=Complex(1,mx.value).theta;
+phasey=Complex(1,my.value).theta;
+phasez=Complex(1,mz.value).theta;
 
 
 ton=2.pow((tone.lag(0.01))/56).round(0.0001);
@@ -310,9 +310,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01),panz,width:spread));
 
 
-			Out.kr(control_ch1, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*800));
-			Out.kr(control_ch2, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01)*800));
-			Out.kr(control_ch3, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01)*800));
+			Out.kr(~controlBus_1a, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*100));
+			Out.kr(~controlBus_2a, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01)*100));
+			Out.kr(~controlBus_3a, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01)*100));
 
 			Out.kr(~controlBus_x, mod_anglex);
 			Out.kr(~controlBus_y, mod_angley);
@@ -325,9 +325,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 }).add;);
 
-3.wait;
+5.wait;
 
-		~synth=Synth.new(\synth,[\gain,1,\tone,56,\low,0,\pan,(992*16).neg,\x,1,\a,1,\oct1,1,\oct2,1,\oct3,1,\az,0,\el,0,\angle,pi/2,\panx,1,\pany,1,\panz,1]).register;//s.record
+		~synth=Synth.new(\synth,[\gain,5,\tone,0,\low,992,\pan,(992*16).neg,\x,1,\a,1,\oct1,1,\oct2,1,\oct3,1,\az,pi/16,\el,pi/2,\angle,pi/2,\panx,1,\pany,1,\panz,1]).register;//s.record
 
 
 2.wait;
