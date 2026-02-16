@@ -17,8 +17,8 @@ s.boot;
 
 Buffer.freeAll
 (
-~c1 = Buffer.readChannel(s,,channels:0 );
-~c2 = Buffer.readChannel(s,,channels:1 );
+~c1 = Buffer.readChannel(s,"/Users/amimid/Desktop/My Movie.wav",channels:0 );
+~c2 = Buffer.readChannel(s,"/Users/amimid/Desktop/My Movie.wav",channels:1 );
 )
 
 ////speaker setup
@@ -51,7 +51,7 @@ SynthDef.new(\re, {
 	var sig1rr,sig2rr,sig3rr,sig4rr,sig5rr,sig6rr,sig7rr,sig8rr;
 	var sph, anglex,angley,anglez;
 	var frames=~frames,silver=45,golden=45,g=((1+5.sqrt)/2),s=(1+2.sqrt);
-	var in1,in2,az,el,pan;
+	var in1,in2,az,el,pan,chain1,chain2;
 
      in1 = PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 0, doneAction:2);
 	in2 = PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 0, doneAction:2);
@@ -103,7 +103,7 @@ sig5rr=IFFT(chain5rr);sig6rr=IFFT(chain6rr);sig7rr=IFFT(chain7rr);sig8rr=IFFT(ch
 	az=LFNoise1.ar(0.1).range(pi,pi.neg);
 	el=LFNoise1.ar(0.1).range((pi/2),(pi/2).neg);
 
-			sph=Spherical.ar(1,az,el);
+			sph=Spherical(1,az,el);
 
 
 anglex=exp(Complex(0,1)*sph.theta).real*exp(Complex(0,1)*sph.phi).real;
@@ -113,23 +113,23 @@ anglez=exp(Complex(0,1)*sph.phi).imag;
 		pan=Cartesian(anglex,angley,anglez);
 
 
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig1rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig2rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig3rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig4rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig5rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig6rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig7rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig8rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig1rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig2rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig3rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig4rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig5rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig6rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig7rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig8rl),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
 
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig1rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig2rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig3rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig4rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig5rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig6rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig7rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
-Out.ar(0,VBAP.ar(8,LeakDC.ar(sig8rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg);
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig1rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig2rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig3rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig4rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig5rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig6rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig7rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
+Out.ar(0,VBAP.ar(8,LeakDC.ar(sig8rr),~b.bufnum,pan.theta.raddeg,pan.phi.raddeg));
 
 }).add;
 )
