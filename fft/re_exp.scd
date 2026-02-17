@@ -11,10 +11,9 @@ s.options.maxNodes = 1024 * 4;
 //s.recSampleFormat ="int16";
 //s.recChannels = 8;
 s.boot;
-~frames=256;
+~frames=512;
 )
 
-(4410/256)*64
 Buffer.freeAll
 (
 ~c1 = Buffer.readChannel(s,"/Users/amimid/Desktop/My Movie.wav",channels:0 );
@@ -318,7 +317,7 @@ angle=(angle+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
 var steps =64;
 
 ~nVals = steps.collect { |i|
-    i.linexp(0, steps-1, 0.18, 256).round
+    i.linexp(0, steps-1, 0.18, 512).round
 };
 			~nVals.asInteger;
 			}.value;
