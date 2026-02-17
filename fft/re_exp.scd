@@ -11,7 +11,7 @@ s.options.maxNodes = 1024 * 4;
 //s.recSampleFormat ="int16";
 //s.recChannels = 8;
 s.boot;
-~frames=512;
+~frames=1024;
 )
 
 Buffer.freeAll
@@ -317,12 +317,11 @@ angle=(angle+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
 var steps =64;
 
 ~nVals = steps.collect { |i|
-    i.linexp(0, steps-1, 0.18, 512).round
+    i.linexp(0, steps-1, 0.18, 256).round
 };
 			~nVals.asInteger;
 			}.value;
 		)
-
 
 (
 SynthDef.new(\re, {
@@ -331,7 +330,7 @@ SynthDef.new(\re, {
     var sph1,sph2;
 	var anglex1,angley1,anglez1,anglex2,angley2,anglez2;
 	var frames=~frames,silver=45,golden=45,g=((1+5.sqrt)/2),s=(1+2.sqrt);
-	var in1,in2,chain1,chain2,spread=1;
+	var in1,in2,chain1,chain2,spread=74;
 	var az1,el1,az2,el2;
 	var pan1,pan2,n=0;
 
