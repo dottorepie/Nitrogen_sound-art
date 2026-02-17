@@ -354,9 +354,13 @@ chain1rr = chain2.pvcollect(frames,
 	sig1rl=IFFT(chain1rl);
 sig1rr=IFFT(chain1rr);
 
+			az1=LFNoise1.ar(3).range(pi,pi.neg);
+	el1=LFNoise1.ar(3).range((pi/2),(pi/2).neg);
+	az2=LFNoise1.ar(3).range(pi,pi.neg);
+	el2=LFNoise1.ar(3).range((pi/2),(pi/2).neg);
 
-		sph1=Spherical(1,~az.[n],~el.[n]);
-	sph2=Spherical(1,~az.[n],~el.[n]);
+		sph1=Spherical(1,(~az.[n]+az1).wrap(pi.neg,pi),(~el.[n]+el1).wrap((pi/2).neg,(pi/2)));
+		sph2=Spherical(1,(~az.[n]+az2).wrap(pi.neg,pi),(~el.[n]+el2).wrap((pi/2).neg,(pi/2)));
 
 anglex1=exp(Complex(0,1)*sph1.theta).real*exp(Complex(0,1)*sph1.phi).real;
 angley1=exp(Complex(0,1)*sph1.theta).imag*exp(Complex(0,1)*sph1.phi).real;
