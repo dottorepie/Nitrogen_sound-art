@@ -80,7 +80,7 @@ s.meter;
 		//oscillator table
 		(
 ~n=1.neg;~array=992.collect{~n=~n+1;2.pow(~n/992)};
-~a=(0-(pi/496)); ~ph=992.collect{~a=~a+(pi/496);};
+~n=(0-(pi/496)); ~ph=992.collect{~n=~n+(pi/496);};
 ~bufferSize = 4096*8;
 ~signalSize = 2048*8;
 );
