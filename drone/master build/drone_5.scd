@@ -116,7 +116,8 @@ wt = signal.asWavetable;
 SynthDef.new(\synth,{
 
 	arg gain=1,low=992,tone=0,x=1,pan=1,mix=0.3,a=1,oct1=1,oct2=1,oct3=1,angle=0,panx=1,pany=1,panz=1,room=0.5,
-				fu=16,drive=1,spread=1,azx=0,azy=0,elx=0,ely=0,overdrive=0.1,axisx=1,axisy=1,axisz=1,drone_amp=1,rz=100;
+				fu=16,drive=1,spread=1,azx=0,azy=0,elx=0,ely=0,overdrive=0.1,drone_amp=1,rz=100,
+				axisx1=1,axisy1=1,axisz1=1,axisx2=1,axisy2=1,axisz2=1,axisx3=1,axisy3=1,axisz3=1;
 	var rq=1,m=2,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,cloud=1;
 	var az1,el1,az2,el2,az3,el3,temp_mag1,temp_mag2,temp_mag3,core=(9/8).rand;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
@@ -124,7 +125,7 @@ SynthDef.new(\synth,{
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope,gain1,gain2,gain3,env,azimuth,elevation;
 	var magx,magy,magz,magqx,magqy,mod_anglex,anglex,angley,anglez,phasex,phasey,phasez,rq1,rq2,rq3,rq4,rq5,rq6;
 	var mod_angley,mod_anglez,mx,my,mz,mqx,mqy,mag,magq,mq=(m-1),lfo,sph1,loc1,loc2,loc3,axis1,axis2,axis3,g=((1+5.sqrt)/2),s=(1+2.sqrt);
-	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axis,cx,cy,cz;
+	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,cx,cy,cz;
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3;
 
 fund=fu*(9/8);
@@ -137,11 +138,13 @@ lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 					temp_mag2=992*oct2;
 					temp_mag3=992*oct3;
 
-				axis=[axisx,axisy,axisz].normalizeSum.sqrt;
+				axisx=[axisx1,axisy1,axisz1].normalizeSum.sqrt;
+				axisy=[axisx2,axisy2,axisz2].normalizeSum.sqrt;
+				axisz=[axisx3,axisy3,axisz3].normalizeSum.sqrt;
 
-				cx=Cartesian(axis.[0],axis.[0],axis.[0]);
-				cy=Cartesian(axis.[1],axis.[1],axis.[1]);
-				cz=Cartesian(axis.[2],axis.[2],axis.[2]);
+				cx=Cartesian(axisx.[0],axisx.[0],axisx.[0]);
+				cy=Cartesian(axisy.[1],axisy.[1],axisy.[1]);
+				cz=Cartesian(axisz.[2],axisz.[2],axisz.[2]);
 
 
 					az1=cx.theta; el1=cy.phi;
@@ -354,7 +357,7 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 5.wait;
 
 		~synth=Synth.new(\synth,[\gain,10,\drive,992*4,\overdrive,992*1,\fu,32,\tone,0,\low,0,\pan,(992*16).neg,\mix,0.3,\drone_amp,1,\rz,100,\room,1
-			\x,1,\a,1,\oct1,1,\oct2,1,\oct3,1,\angle,pi/2,\panx,1,\pany,1,\panz,1,\spread,1,\azx,0,\azy,pi/2,\elx,0,\ely,\axisx,1,\axisy,1,\axisz,1;]).register;//s.record
+			\x,1,\a,1,\oct1,1,\oct2,1,\oct3,1,\angle,pi/2,\panx,1,\pany,1,\panz,1,\spread,1,\azx,0,\azy,pi/2,\elx,0,\ely,\axisx1,1,\axisy1,1,\axisz1,1\axisx2,1,\axisy2,1,\axisz2,1,\axisx3,1,\axisy3,1,\axisz3,1;]).register;//s.record
 
 
 2.wait;
