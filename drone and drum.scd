@@ -348,8 +348,8 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 5.wait;
 
 		~synth=Synth.new(\synth,[\gain,20,\drive,0,\overdrive,0,\fu,16,\tone,0,\low,992*0,\pan,(992*16).neg,
-			\mix,1,\drone_amp,1,\rz,100,\room,1,\m,2,\pann,(992*0),
-			\x,1,\a,2,\oct1,0,\oct2,0,\oct3,0,\panx,1,\pany,1,\panz,1,\spread,1,
+			\mix,1,\drone_amp,1,\rz,100,\room,1,\m,3,\pann,(992*3).neg,
+			\x,1,\a,5,\oct1,0,\oct2,0,\oct3,0,\panx,1,\pany,1,\panz,1,\spread,1,
 			\azx,0,\azy,pi/2,\elx,0,\ely,0,
 			\axisx1,0999.rand,\axisy1,0999.rand,\axisz1,0999.rand,
 			\axisx2,0999.rand,\axisy2,0999.rand,\axisz2,0999.rand,
@@ -462,6 +462,7 @@ ton.postln;
 
 
 (
+thisThread.randSeed = 1234;
 			////sequencer
 	~s= Routine({loop{
 
@@ -475,7 +476,7 @@ ton.postln;
 )*/
 	~synth.set(\tone, (56*2).rand2)	;
 
-1.wait
+4.wait
 };
 });
 );
@@ -695,6 +696,8 @@ m3=m3+1;
 
 /////sequence
 	(
+				thisThread.randSeed = 1234;
+
 		~dr=Pdef(\1, Pbind(\instrument, \kick,
 			\dur,Pseq(~dur1,inf),
 				\gain,64,
