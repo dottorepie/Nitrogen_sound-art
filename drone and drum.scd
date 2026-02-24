@@ -102,9 +102,9 @@ wt = signal.asWavetable;
 		/////distortion table
 		(
 		~transfer_function= Env([0.8.neg,0,0.8],[1,1],[8,8.neg]).asSignal(1024);
-			~transfer_function=~transfer_function+(Signal.sineFill(~signalSize,~array,~ph)/1);
+			~transfer_function=~transfer_function+(Signal.sineFill(~signalSize,~array,~ph)/8);
 		~transfer_function=~transfer_function.normalize;
-			//~transfer_function.plot;
+		//	~transfer_function.plot;
 			~dist=Buffer.loadCollection(s,~transfer_function.asWavetableNoWrap);
 		);
 
@@ -125,7 +125,7 @@ SynthDef.new(\synth,{
 	var loc1,loc2,loc3,axis1,axis2,axis3,g=((1+5.sqrt)/2),s=(1+2.sqrt),tensor;
 	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,cx,cy,cz;
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,spx,spy,spz;
-	var  axisx1=1,axisy1=1,axisz1=1,axisx2=1,axisy2=1,axisz2=1,axisx3=1,axisy3=1,axisz3=1;
+	var  axisx1=1,axisy1=1,axisz1=1,axisx2=1,axisy2=1,axisz2=1,axisx3=1,axisy3=1,axisz3=1,v1,v2,cross;
 
 fund=fu*(9/8);
 lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
@@ -139,15 +139,26 @@ lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 					temp_mag2=992*2.pow(oct2/992);
 					temp_mag3=992*2.pow(oct3/992);
 
-				spx=Spherical(1,az,el);spy=Spherical(1,(az+azr).wrap(pi.neg,pi),el);spz=Spherical(1,az,(el+elr).wrap((pi/2).neg,(pi/2)));
+				spx=Spherical(1,az,el);spy=Spherical(1,(az+azr).wrap(pi.neg,pi),el);
+				//spz=Spherical(1,az,(el+elr).wrap((pi/2).neg,(pi/2)));
 
-				//axisx=[axisx1,axisy1,axisz1].normalizeSum.sqrt;
-				//axisy=[axisx2,axisy2,axisz2].normalizeSum.sqrt;
-				//axisz=[axisx3,axisy3,axisz3].normalizeSum.sqrt;
+				v1=[spx.x,spx.y,spx.z]; v2=[spy.x,spy.y,spy.z];
 
-				axisx=[spx.x,spx.y,spx.z].normalizeSum.sqrt;
-				axisy=[spy.x,spy.y,spy.z].normalizeSum.sqrt;
-				axisz=[spz.x,spz.y,spz.z].normalizeSum.sqrt;
+cross = [
+    v1[1]*v2[2] - v1[2]*v2[1],  // x component
+    v1[2]*v2[0] - v1[0]*v2[2],  // y component
+    v1[0]*v2[1] - v1[1]*v2[0]   // z component
+];
+				spz=Cartesian(cross.[0],cross.[1],cross.[2]);
+
+
+				//axisx=[axisx1,axisy1,axisz1];
+				//axisy=[axisx2,axisy2,axisz2];
+				//axisz=[axisx3,axisy3,axisz3];
+
+				axisx=[spx.x,spx.y,spx.z];
+				axisy=[spy.x,spy.y,spy.z];
+				axisz=[spz.x,spz.y,spz.z];
 
 				tensor=axisx+axisy+axisz;
 
