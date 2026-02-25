@@ -112,11 +112,10 @@ wt = signal.asWavetable;
 (
 SynthDef.new(\synth,{
 
-	arg gain=1,low=992,tone=0,x=1,pan=1,mix=0.3,a=1,oct1=1,oct2=1,oct3=1,panx=1,pany=1,panz=1,room=0.5,m=2,
+	arg gain=1,low=992,tone=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,
 				fu=16,drive=1,spread=1,overdrive=0.1,drone_amp=1,rz=100,pann=0,az=0,el=0,azr=0;
 
-	var rq=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,cloud=1;
-	var temp_mag1,temp_mag2,temp_mag3,core=(9/8).rand;
+	var rq=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,cloud=3,core=(9/8).rand;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
 	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,ton,threshold1,threshold2,threshold3,phase1,phase2,phase3;
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope,gain1,gain2,gain3,env,azimuth,elevation;
@@ -124,7 +123,7 @@ SynthDef.new(\synth,{
 	var mod_angley,mod_anglez,mx,my,mz,mqx,mqy,mag,magq,mq=(m-1),lfo,sph;
 	var loc1,loc2,loc3,axis1,axis2,axis3,g=((1+5.sqrt)/2),s=(1+2.sqrt),tensor;
 	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,cx,cy,cz;
-	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,spx,spy,spz;
+	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,spx,spy,spz,axis;
 	var  axisx1=1,axisy1=1,axisz1=1,axisx2=1,axisy2=1,axisz2=1,axisx3=1,axisy3=1,axisz3=1,v1,v2,cross;
 
 fund=fu*(9/8);
@@ -134,10 +133,6 @@ lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 						lfo=2.pow(pan/992);
 				lfon=2.pow(pann/992);
 					band=pan;
-
-					temp_mag1=992*2.pow(oct1/992);
-					temp_mag2=992*2.pow(oct2/992);
-					temp_mag3=992*2.pow(oct3/992);
 
 				spx=Spherical(1,az,el);spy=Spherical(1,azr,el);
 				//spz=Spherical(1,az,(el+elr).wrap((pi/2).neg,(pi/2)));
@@ -167,11 +162,9 @@ cross = [
 
 				cloud.do{
 
-				axis1=Spherical(temp_mag1,(sph_object.theta+azf).wrap(pi,pi.neg),  (sph_object.phi+elf).wrap((pi/2),(pi/2).neg));
-					axis2=Spherical(temp_mag2,(sph_object.theta+azf).wrap(pi,pi.neg), (sph_object.phi+elf).wrap((pi/2),(pi/2).neg));
-					axis3=Spherical(temp_mag3,(sph_object.theta+azf).wrap(pi,pi.neg), (sph_object.phi+elf).wrap((pi/2),(pi/2).neg));
+				axis=Spherical(992,(sph_object.theta+azf).wrap(pi,pi.neg),  (sph_object.phi+elf).wrap((pi/2),(pi/2).neg));
 
-				polytope=Cartesian(axis1.x,axis2.y,axis3.z);
+				polytope=Cartesian(axis.x,axis.y,axis.z);
 
 b_x=2.pow(polytope.x.round(1)/992);
 b_y=2.pow(polytope.y.round(1)/992);
@@ -313,9 +306,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 
 	///final out
-					gain1=gain*rq1.sqrt.reciprocal*fu.reciprocal;//*(2.pow(drive/992)).reciprocal;
-					gain2=gain*rq2.sqrt.reciprocal*fu.reciprocal;//*(2.pow(drive/992)).reciprocal;
-					gain3=gain*rq3.sqrt.reciprocal*fu.reciprocal;//*(2.pow(drive/992)).reciprocal;
+					gain1=gain*rq1.sqrt.reciprocal;
+					gain2=gain*rq2.sqrt.reciprocal;
+					gain3=gain*rq3.sqrt.reciprocal;
 
 					///three channel
 				//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01));
@@ -328,9 +321,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 			//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01),panz,width:spread));
 
 				///3d vbap expansion
-//Out.ar(0,VBAP.ar(8,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01),~b,sph.theta.raddeg,sph.phi.raddeg,width:spread));
-//Out.ar(0,VBAP.ar(8,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01),~b,sph.theta.raddeg,sph.phi.raddeg,,width:spread));
-//Out.ar(0,VBAP.ar(8,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01),~b,sph.theta.raddeg,sph.phi.raddeg,,width:spread));
+//Out.ar(0,VBAP.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01),~b,spx.theta.raddeg,spx.phi.raddeg,width:spread));
+//Out.ar(0,VBAP.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01),~b,spy.theta.raddeg,spy.phi.raddeg,width:spread));
+//Out.ar(0,VBAP.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01),~b,spz.theta.raddeg,spz.phi.raddeg,width:spread));
 
 
 ///anbisonic decoded on stereo
@@ -348,13 +341,13 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 	///animation control buses out
 
-			Out.kr(~controlBus_1a, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*100));
-			Out.kr(~controlBus_2a, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01)*100));
-			Out.kr(~controlBus_3a, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01)*100));
+	//		Out.kr(~controlBus_1a, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01)*100));
+		//	Out.kr(~controlBus_2a, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01)*100));
+		//	Out.kr(~controlBus_3a, A2K.kr(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01)*100));
 
-			Out.kr(~controlBus_x, mod_anglex);
-			Out.kr(~controlBus_y, mod_angley);
-			Out.kr(~controlBus_z, mod_anglez);
+			//Out.kr(~controlBus_x, mod_anglex);
+		//	Out.kr(~controlBus_y, mod_angley);
+		//	Out.kr(~controlBus_z, mod_anglez);
 
 
 						azf = (azf+(2pi-(2pi/s))).wrap(pi.neg,pi);
@@ -369,42 +362,50 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
  (
 SynthDef(\kick, {
-	arg gain=1/8,tone=12,pan=1,low=0,noise=0.001,decay=1/2,attack=0.001,az=0,el=0,m=1,rz=1000,
-					temp_mag1=56,temp_mag2=56,temp_mag3=56,azx=0,azy=0,elx=0,ely=0,fu,mix=1,room=1,drive=1,
-				axisx1=1,axisy1=1,axisz1=1,axisx2=1,axisy2=1,axisz2=1,axisx3=1,axisy3=1,axisz3=1;
+	arg gain=1/8,tone=12,pan=1,low=0,noise=0.001,decay=1/2,attack=0.001,az=0,azr=0,el=0,m=1,rz=100,
+			fu=32,mix=1,room=1,drive=1,panx=1,pany=1,panz=1;
     var env,freq,anglex,angley,anglez,mod_anglex,mod_angley,mod_anglez,mx,my,mz,magx,magz,magy;
 	var sph,phase,threshold,ton,phase1,phase2,phase3,sph1,loc1,loc2,loc3,mag,fund,freqq;
 	var sig1,sig2,sig3,phasex,phasey,phasez,control1,control2,control3,axis1,axis2,axis3,lfo;
-		var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,az1,az2,az3,el1,el2,el3,cx,cy,cz;
+	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,az1,az2,az3,el1,el2,el3,cx,cy,cz,tensor;
+	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,spx,spy,spz,axis;
+	var  axisx1=1,axisy1=1,axisz1=1,axisx2=1,axisy2=1,axisz2=1,axisx3=1,axisy3=1,axisz3=1,v1,v2,cross;
+
 
 			ton=2.pow(tone/992);
 					fund=fu*(9/8);
 	freqq = fund*ton;
 					lfo=2.pow(pan/992);
 
+				spx=Spherical(1,az,el);spy=Spherical(1,azr,el);
+
+				v1=[spx.x,spx.y,spx.z]; v2=[spy.x,spy.y,spy.z];
+
+cross = [
+    v1[1]*v2[2] - v1[2]*v2[1],
+    v1[2]*v2[0] - v1[0]*v2[2],
+    v1[0]*v2[1] - v1[1]*v2[0]
+];
+				spz=Cartesian(cross.[0],cross.[1],cross.[2]);
+
+				axisx=[spx.x,spx.y,spx.z];
+				axisy=[spy.x,spy.y,spy.z];
+				axisz=[spz.x,spz.y,spz.z];
+
+				tensor=axisx+axisy+axisz;
+
+				sph_object=Cartesian(tensor.[0],tensor.[1],tensor.[2]);
+
+
 				freq = EnvGen.kr(Env([freqq, fund], [decay*2], curve: -8)); // pitch drop
-	env= EnvGen.kr(Env.perc(attack, decay, curve: -4),doneAction:2,levelScale:gain*ton.reciprocal*fu.reciprocal);
+	env= EnvGen.kr(Env.perc(attack, decay, curve: -4),doneAction:2,levelScale:gain*ton.reciprocal);
 
 			threshold=(((343/0.3)/freq).reciprocal.ampdb/2.sqrt).dbamp;
 
-				axisx=[axisx1,axisy1,axisz1].normalizeSum.sqrt;
-				axisy=[axisx2,axisy2,axisz2].normalizeSum.sqrt;
-				axisz=[axisx3,axisy3,axisz3].normalizeSum.sqrt;
 
-				cx=Cartesian(axisx.[0],axisx.[1],axisx.[2]);
-				cy=Cartesian(axisy.[0],axisy.[1],axisy.[2]);
-				cz=Cartesian(axisz.[0],axisz.[1],axisz.[2]);
+					axis=Spherical(992,sph_object.theta, sph_object.phi);
 
-
-					az1=cx.theta; el1=cx.phi;
-					az2=cy.theta; el2=cy.phi;
-					az3=cz.theta; el3=cz.phi;
-
-					axis1=Spherical(2.pow(temp_mag1/992),az1.lag(0.01), el1.lag(0.01));
-				axis2=Spherical(2.pow(temp_mag1/992),az2.lag(0.01), el2.lag(0.01));
-				axis3=Spherical(2.pow(temp_mag1/992),az3.lag(0.01), el3.lag(0.01));
-
-				sph=Cartesian(axis1.x,axis2.y,axis3.z);
+				sph=Cartesian(axis.x,axis.y,axis.z);
 
 
 anglex=exp(Complex(0,1)*sph.theta).real*exp(Complex(0,1)*sph.phi).real;
@@ -429,14 +430,14 @@ magz=((Complex(cos(((sph.phi+mod_anglez).round(0.00001)*m).wrap((pi/2).neg,(pi/2
 
 mx=(Cartesian(magx.value,0,0).rho);my=(Cartesian(0,magy.value,0).rho);mz=(Cartesian(0,0,magz.value).rho);
 
-phasex=Complex(0,mx.value).theta;
-phasey=Complex(0,my.value).theta;
-phasez=Complex(0,mz.value).theta;
+phasex=Complex(1,mx.value).theta;
+phasey=Complex(1,my.value).theta;
+phasez=Complex(1,mz.value).theta;
 									mag=(Cartesian(magx.value,magy.value,magz.value).rho);
 									sph1=Spherical(mag,sph.theta,sph.phi);
-			loc1=sph1.x;
-			loc2=sph1.y;
-			loc3=sph1.z;
+
+		//	loc1=sph1.x;  loc2=sph1.y;  loc3=sph1.z;
+					loc1=mx;  loc2=my;  loc3=mz;
 
 sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq,phase:phasex,mul:rz).abs*SinOsc.ar(freq,phase:phasex)),freq*2.pow(low.lag(0.01)/992),ton.reciprocal))*drive.reciprocal;
 sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq,phase:phasey,mul:rz).abs*SinOsc.ar(freq,phase:phasey)),freq*2.pow(low.lag(0.01)/992),ton.reciprocal))*drive.reciprocal;
@@ -456,34 +457,34 @@ sig1 = sig1 + (sig1 * BrownNoise.ar(noise*loc1)); sig2 = sig2 + (sig2 * BrownNoi
 		sig1=tanh(sig1*drive);sig2=tanh(sig2*drive);sig3=tanh(sig2*drive);
 
 
-	amb_sig1= Limiter.ar(LeakDC.ar(FreeVerb.ar((sig1*env*loc1.abs),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01);
-	amb_sig2=Limiter.ar( LeakDC.ar(FreeVerb.ar((sig2*env*loc2.abs),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01);
-	amb_sig3=Limiter.ar( LeakDC.ar(FreeVerb.ar((sig3*env*loc3.abs),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01);
+	amb_sig1= Limiter.ar(LeakDC.ar(FreeVerb.ar((sig1),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01);
+	amb_sig2=Limiter.ar( LeakDC.ar(FreeVerb.ar((sig2),mix.lag(0.01),room.lag(0.01),mul:env*loc2.abs)),0.9,0.01);
+	amb_sig3=Limiter.ar( LeakDC.ar(FreeVerb.ar((sig3),mix.lag(0.01),room.lag(0.01),mul:env*loc3.abs)),0.9,0.01);
 
 							amb_w=(amb_sig1+amb_sig2+amb_sig3)/2.sqrt;
 					amb_x=amb_sig1;
 					amb_y=amb_sig2;
 					amb_z=amb_sig3;
 
-					out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z, [azx, azy], [elx,ely],4 ));
+					out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z, [sph1.theta, sph1.theta], [sph1.phi,sph1.phi],4 ));
 
 
 
-//Out.ar(0,VBAP.ar(8,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01),~b,sph1.theta.raddeg,sph1.phi.raddeg,width:spread));
-//Out.ar(0,VBAP.ar(8,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:env*loc2.abs)),0.9,0.01),~b,sph1.theta.raddeg,sph1.phi.raddeg,,width:spread));
-//Out.ar(0,VBAP.ar(8,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:env*loc3.abs)),0.9,0.01),~b,sph1.theta.raddeg,sph1.phi.raddeg,,width:spread));
+//Out.ar(0,VBAP.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01),~b,spx.theta.raddeg,spx.phi.raddeg,width:spread));
+//Out.ar(0,VBAP.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:env*loc2.abs)),0.9,0.01),~b,spy.theta.raddeg,spy.phi.raddeg,width:spread));
+//Out.ar(0,VBAP.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:env*loc3.abs)),0.9,0.01),~b,spz.theta.raddeg,spz.phi.raddeg,width:spread));
 
 			// Out.kr(~controlBus_1.index,A2K.kr(sig1*env*loc1.abs*1000));
 			//	Out.kr(~controlBus_2.index,A2K.kr(sig2*env*loc2.abs*1000));
 			//	Out.kr(~controlBus_3.index,A2K.kr(sig3*env*loc3.abs*1000));
 
-						//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig1*env*loc1.abs ),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01));
-						//	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig2*env*loc2.abs),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01));
-						//	Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig3*env*loc3.abs),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01));
+						//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig1 ),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01));
+						//	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig2),mix.lag(0.01),room.lag(0.01),mul:env*loc2.abs)),0.9,0.01));
+						//	Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig3),mix.lag(0.01),room.lag(0.01),mul:env*loc3.abs)),0.9,0.01));
 
-			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(sig1),0.9,0.01),panx,width:spread));
-			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(sig2),0.9,0.01),pany,width:spread));
-			//Out.kr(0,PanAz.ar(4,Limiter.ar(LeakDC.ar(sig3),0.9,0.01),panz,width:spread));
+			//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(sig1*env*loc1.abs),0.9,0.01),panx,width:spread));
+			//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(sig2*env*loc2.abs),0.9,0.01),pany,width:spread));
+			//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(sig3*env*loc3.abs),0.9,0.01),panz,width:spread));
 
 
 }).add;);
@@ -548,32 +549,19 @@ m3=m3+1;
 		~dr=Pdef(\1, Pbind(\instrument, \kick,
 			\dur,Pseq(~dur1,inf),
 				\gain,64,
-				\tone,992*2,
-					\fu,16,
+				\tone,992*1,
 				\pan,496,
 					\m,2,
-			\low,992,
+			\low,0,
 				\noise,0.001,
-				\axisx1,1,
-					\axisy1,1,
-					\axisz1,1,
-					\axisx2,1,
-					\axisy2,1,
-					\axisz2,1,
-					\axisx3,1,
-					\axisy3,1,
-					\axisz3,1,
-			\temp_mag1,992,
-					\temp_mag2,992,
-					\temp_mag3,992,
+\az,0,
+	\azr,0,
+	\el,0,
 				\decay,2,
 				\attack,0.01,
-					\azx,0,
-					\azy,pi/2,
-					\elx,0,
-					\ely,0,
-					\rz,1000,
-					\mix,0.2,
+
+					\rz,100,
+					\mix,1,
 					\room,0.5;
 		))
 );
@@ -917,9 +905,30 @@ a.postln;
 };
 });
 )
-	~s.play
 
 
+(
+				thisThread.randSeed = 1234;
+
+		~dr=Pdef(\1, Pbind(\instrument, \kick,
+			\dur,Pseq(~dur1,inf),
+				\gain,64,
+				\tone,992*1,
+				\pan,496,
+					\m,2,
+			\low,0,
+				\noise,0.001,
+\az,0,
+	\azr,0,
+	\el,0,
+				\decay,2,
+				\attack,0.01,
+
+					\rz,100,
+					\mix,1,
+					\room,0.5;
+		))
+)
 /*
 (
 var n=1.neg;
