@@ -29,11 +29,15 @@ s.meter;
 
 		///vbap
 
-		///cube
+		///octahedron
+		(
+~az=[0.degrad,0.degrad,90.degrad,180.degrad,90.neg.degrad,0.degrad];
+~el=[90.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,90.degrad];
+);
 
 (
 ~a = VBAPSpeakerArray.new(3,
-[[45, 35.264390.neg], [135, 35.264390.neg], [45.neg, 35.264390.neg], [135.neg, 35.264390.neg],[45,35.264390],[135,35.264390],[45.neg,35.264390],[135.neg,35.264390]]);
+[[~az.[0],~el.[0]], [~az.[1],~el.[1]], [~az.[2],~el.[2]], [~az.[3],~el.[3]],[~az.[4],~el.[4]],[~az.[5],~el.[5]]]);
 	 ~b = Buffer.loadCollection(s, ~a.getSetsAndMatrices);
 );
 
@@ -495,10 +499,6 @@ sig1 = sig1 + (sig1 * BrownNoise.ar(noise*loc1)); sig2 = sig2 + (sig2 * BrownNoi
 	10.wait;
 	/////solid
 (
-(
-~az=[0.degrad,0.degrad,90.degrad,180.degrad,90.neg.degrad,0.degrad];
-~el=[90.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,90.degrad];
-);
 
 ///quaterion rhtyhm solid rotation
 /*(var i=Quaternion(0,
@@ -870,7 +870,7 @@ MIDIdef.cc(\midi_seq_pot1,{ |val, num, chan, src|
 		s1=val.linlin(0,127,0,56*4).round(1).asInteger;
 		s1.postln;
 		~s1=s1;
-},16);
+},18);
 						);
 
 				(
@@ -879,7 +879,7 @@ MIDIdef.cc(\midi_seq_pot2,{ |val, num, chan, src|
 					s2=val.linlin(0,127,0,56*4).round(1).asInteger;
 		s2.postln;
 		~s2=s2;
-},20);
+},22);
 	);
 
 									(
@@ -888,7 +888,7 @@ MIDIdef.cc(\midi_seq_pot3,{ |val, num, chan, src|
 			s3=val.linlin(0,127,0,56*4).round(1).asInteger;
 		s3.postln;
 		~s3=s3;
-},24);
+},26);
 	);
 
 												(
@@ -897,7 +897,7 @@ MIDIdef.cc(\midi_seq_pot4,{ |val, num, chan, src|
 			s4=val.linlin(0,127,0,56*4).round(1).asInteger;
 		s4.postln;
 		~s4=s4;
-},28);
+},30);
 	);
 
 														(
@@ -906,7 +906,7 @@ MIDIdef.cc(\midi_seq_pot5,{ |val, num, chan, src|
 			s5=val.linlin(0,127,0,56*4).round(1).asInteger;
 		s5.postln;
 		~s5=s5;
-},46);
+},48);
 	);
 
 														(
@@ -915,7 +915,7 @@ MIDIdef.cc(\midi_seq_pot6,{ |val, num, chan, src|
 			s6=val.linlin(0,127,0,56*4).round(1).asInteger;
 		s6.postln;
 		~s6=s6;
-},50);
+},52);
 	);
 
 														(
@@ -924,7 +924,7 @@ MIDIdef.cc(\midi_seq_pot7,{ |val, num, chan, src|
 			s7=val.linlin(0,127,0,56*4).round(1).asInteger;
 		s7.postln;
 		~s7=s7;
-},54);
+},56);
 	);
 
 																	(
@@ -933,81 +933,10 @@ MIDIdef.cc(\midi_seq_pot8,{ |val, num, chan, src|
 			s8=val.linlin(0,127,0,56*4).round(1).asInteger;
 		s8.postln;
 		~s8=s8;
-},58);
-	);
-
-
-												(
-MIDIdef.cc(\midi_seq_pot9,{ |val, num, chan, src|
-		var s9;
-			s9=val.linlin(0,127,0,56*4).round(1).asInteger;
-		s9.postln;
-		~s9=s9;
-},17);
-	);
-
-													(
-MIDIdef.cc(\midi_seq_pot10,{ |val, num, chan, src|
-		var s10;
-			s10=val.linlin(0,127,0,56*4).round(1).asInteger;
-		s10.postln;
-		~s10=s10;
-},21);
-	);
-
-														(
-MIDIdef.cc(\midi_seq_pot11,{ |val, num, chan, src|
-		var s11;
-			s11=val.linlin(0,127,0,56*4).round(1).asInteger;
-		s11.postln;
-		~s11=s11;
-},25);
-	);
-
-														(
-MIDIdef.cc(\midi_seq_pot12,{ |val, num, chan, src|
-		var s12;
-			s12=val.linlin(0,127,0,56*4).round(1).asInteger;
-		s12.postln;
-		~s12=s12;
-},29);
-	);
-
-													(
-MIDIdef.cc(\midi_seq_pot13,{ |val, num, chan, src|
-		var s13;
-			s13=val.linlin(0,127,0,56*4).round(1).asInteger;
-		s13.postln;
-		~s13=s13;
-},47);
-	);
-
-														(
-MIDIdef.cc(\midi_seq_pot14,{ |val, num, chan, src|
-		var s14;
-					s14=val.linlin(0,127,0,56*4).round(1).asInteger;
-		s14.postln;
-		~s14=s14;
-},51);
-	);
-															(
-MIDIdef.cc(\midi_seq_pot15,{ |val, num, chan, src|
-		var d15;
-					s15=val.linlin(0,127,0,56*4).round(1).asInteger;
-		s15.postln;
-		~s15=s15;
-},55);
-				);
-
-								(
-MIDIdef.cc(\midi_seq_pot16,{ |val, num, chan, src|
-		var s16;
-		s16=val.linlin(0,127,0,56*4).round(1).asInteger;
-		s16.postln;
-		~s16=s16;
-},59);
+},60);
 	);
 );
+
 
 )
 
