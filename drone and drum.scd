@@ -162,7 +162,8 @@ cross = [
 
 				tensor=axisx+axisy+axisz;
 
-				sph_object=Cartesian(tensor.[0],tensor.[1],tensor.[2]);
+			//	sph_object=Cartesian(tensor.[0],tensor.[1],tensor.[2]);
+				sph_object=Spherical(1,az,el);
 
 
 				cloud.do{
@@ -547,24 +548,24 @@ m3=m3+1;
 
 
 	(
-			//	thisThread.randSeed = ~val;
+				//	thisThread.randSeed = ~val;
 
 		~dr=Pdef(\1, Pbind(\instrument, \kick,
 			\dur,Pseq(~dur1,inf),
-				\gain,0,
-				\tone,992*1,
-				\pan,496,
-					\m,2,
+				\gain,100,
+				\tone,992*0,
+				\pan,992*1,
+					\m,1,
 			\low,0,
-				\noise,0.001,
-\az,0,
-	\azr,0,
-	\el,0,
+				\noise,0.0001,
+\az,pi/4,
+	\azr,pi/2,
+	\el,pi/2,
 				\decay,2,
-				\attack,0.01,
+				\attack,0.001,
 
-					\rz,100,
-					\mix,1,
+					\rz,200,
+					\mix,0.2,
 					\room,0.5;
 		))
 );
@@ -594,9 +595,11 @@ TempoClock.default.tempo_(2);
 		//	\axisx2,0999.rand,\axisy2,0999.rand,\axisz2,0999.rand,
 		//	\axisx3,0999.rand,\axisy3,0999.rand,\axisz3,0999.rand]).register;//s.record
 
-~synth=Synth(\synth[\cloud,1]).register;
+(
+~synth=Synth(\synth,[\cloud,1]).register;
 
 ~dr.play;
+)
 
 
 (
@@ -607,7 +610,7 @@ MIDIIn.connectAll;
 					(
 MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 		var drive;
-		drive=val.linlin(0,127,(992*2).neg,(992*8)).round(1).asInteger;
+		drive=val.linlin(0,127,(992*1).neg,(992*16)).round(1).asInteger;
 		drive.postln;
 		if(~synth.isPlaying,{~synth.set(\drive,drive)});
 },16);
@@ -989,7 +992,7 @@ SerialPort.devices;
 )
 /////////////sequencer with midi
 (
-~seq = Pseq(~dur1/1, inf).asStream;
+~seq = Pseq(~dur1/2, inf).asStream;
 	~s= Routine({loop{
 
 
@@ -1028,6 +1031,7 @@ SerialPort.devices;
 });
 )
 	~s.play;
+~s.stop
 
 
 
