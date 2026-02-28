@@ -633,7 +633,7 @@ MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 				(
 MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
          var low;
-					low=val.linlin(0,127,0,(992*4)).round(1).asInteger;
+		low=val.linlin(0,127,(992*4).neg),(992*4)).round(1).asInteger;
 		low.postln;
 		if(~synth.isPlaying,{~synth.set(\low,low)});
 },20);
@@ -697,7 +697,7 @@ MIDIdef.cc(\midi_pot8,{ |val, num, chan, src|
 												(
 MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 		var panx;
-			panx=val.linlin(0,127,0.001,10).round(0.0001);
+			panx=val.linlin(0,127,1,3).round(0.0001);
 		panx.postln;
 		if(~synth.isPlaying,{~synth.set(\panx,panx)});
 },17);
@@ -706,7 +706,7 @@ MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 													(
 MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
 		var pany;
-			pany=val.linlin(0,127,0.001,10).round(0.0001);
+			pany=val.linlin(0,127,1,3).round(0.0001);
 		pany.postln;
 		if(~synth.isPlaying,{~synth.set(\pany,pany)});
 },21);
@@ -715,7 +715,7 @@ MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
 														(
 MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
 		var panz;
-			panz=val.linlin(0,127,0.001,10).round(1).asInteger;
+			panz=val.linlin(0,127,1,3).round(1).asInteger;
 		panz.postln;
 		if(~synth.isPlaying,{~synth.set(\panz,panz)});
 },25);
@@ -770,7 +770,7 @@ MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
 			(
 MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 		var gain;
-	gain=val.linlin(0,127,0,1).round(0.0001);
+	gain=val.linlin(0,127,0,10).round(0.0001);
 		gain.postln;
 		if(~synth.isPlaying,{~synth.set(\gain,gain)});
 },19);
@@ -1050,6 +1050,8 @@ MIDIdef.cc(\midi_seq_pot8,{ |val, num, chan, src|
 /////////////sequencer with midi
 (
 ~seq = Pseq(~dur1/2, inf).asStream;
+~seq = Pseq([1/2], inf).asStream;
+
 	~s= Routine({loop{
 
 
