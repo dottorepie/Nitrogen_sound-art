@@ -797,7 +797,7 @@ MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 (
 MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 		var cl;
-		cl=val.linlin(0,127,1,5).round(1).asInteger;
+		cl=val.linlin(0,127,1,10).round(1).asInteger;
 		cl.postln;
 	~synth.free;
 ~synth=Synth.new(\synth,[\gain,0,\drive,0,\overdrive,0,\fu,32,\tone,0,\low,992*0,\pan,(992*16).neg,
@@ -844,7 +844,7 @@ MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 		var pan;
-			pan=val.linlin(0,(992*2).neg,0,992*2).round(1).asInteger;
+			pan=val.linlin(0,127,(992*2).neg,0,992*2).round(1).asInteger;
 		pan.postln;
 ~pan=pan;
 },61);
