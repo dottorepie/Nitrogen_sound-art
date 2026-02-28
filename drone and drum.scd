@@ -3,7 +3,7 @@
 (
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=12;
+s.options.numOutputBusChannels=2;
 s.options.numInputBusChannels=0;
 s.options.memSize = 8192*4;
 s.options.blockSize = 64;
@@ -322,9 +322,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 					////azimuthal multichannel expansion
 
-					//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01),SinOsc.ar.ar(panx,phasex),width:spread));
-			//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01),SinOsc.ar.ar(pany,phasey),width:spread));
-			//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01),SinOsc.ar.ar(panz,phasez),width:spread));
+		Out.kr(0,PanAz.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01),SinOsc.ar(panx,phasex),width:spread));
+		Out.kr(0,PanAz.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01),SinOsc.ar(pany,phasey),width:spread));
+		Out.kr(0,PanAz.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01),SinOsc.ar(panz,phasez),width:spread));
 
 				///3d vbap expansion
 //Out.ar(0,VBAP.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01),~b,spx.theta.raddeg,spx.phi.raddeg,width:spread));
@@ -333,17 +333,17 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 
 ///anbisonic decoded on stereo
-					amb_sig1=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01));
-					amb_sig2=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01));
-					amb_sig3=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01));
+					//amb_sig1=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01));
+					/////amb_sig2=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01));
+					//amb_sig3=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*loc3.abs)),0.9,0.01));
 
-					amb_w=(amb_sig1+amb_sig2+amb_sig3)/2.sqrt;
-					amb_x=amb_sig1;
-					amb_y=amb_sig2;
-					amb_z=amb_sig3;
-
-				out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z,
-						[sph.theta+azf, sph.theta+azf], [sph.phi+elf,sph.phi+elf],2 ));
+					//amb_w=(amb_sig1+amb_sig2+amb_sig3)/2.sqrt;
+					//amb_x=amb_sig1;
+//					amb_y=amb_sig2;
+			//		amb_z=amb_sig3;
+//
+				//out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z,
+				//		[sph.theta+azf, sph.theta+azf], [sph.phi+elf,sph.phi+elf],2 ));
 
 
 	///animation control buses out
@@ -368,9 +368,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 		//////kick
 
  (
-SynthDef(\kick, {
+~drone=SynthDef(\kick, {
 	arg gain=1/8,tone=12,pan=1,low=0,noise=0.001,decay=1/2,attack=0.001,az=0,azr=0,el=0,m=1,rz=100,
-			fu=32,mix=1,room=1,drive=1,panx=1,pany=1,panz=1;
+			fu=32,mix=1,room=1,drive=1,panx=1,pany=1,panz=1,spread=1;
     var env,freq,anglex,angley,anglez,mod_anglex,mod_angley,mod_anglez,mx,my,mz,magx,magz,magy;
 	var sph,phase,threshold,ton,phase1,phase2,phase3,sph1,loc1,loc2,loc3,mag,fund,freqq;
 	var sig1,sig2,sig3,phasex,phasey,phasez,control1,control2,control3,axis1,axis2,axis3,lfo;
@@ -464,16 +464,16 @@ sig1 = sig1 + (sig1 * BrownNoise.ar(noise*loc1)); sig2 = sig2 + (sig2 * BrownNoi
 		sig1=tanh(sig1*drive);sig2=tanh(sig2*drive);sig3=tanh(sig2*drive);
 
 
-	amb_sig1= Limiter.ar(LeakDC.ar(FreeVerb.ar((sig1),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01);
-	amb_sig2=Limiter.ar( LeakDC.ar(FreeVerb.ar((sig2),mix.lag(0.01),room.lag(0.01),mul:env*loc2.abs)),0.9,0.01);
-	amb_sig3=Limiter.ar( LeakDC.ar(FreeVerb.ar((sig3),mix.lag(0.01),room.lag(0.01),mul:env*loc3.abs)),0.9,0.01);
+	//amb_sig1= Limiter.ar(LeakDC.ar(FreeVerb.ar((sig1),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01);
+	/////amb_sig2=Limiter.ar( LeakDC.ar(FreeVerb.ar((sig2),mix.lag(0.01),room.lag(0.01),mul:env*loc2.abs)),0.9,0.01);
+	//amb_sig3=Limiter.ar( LeakDC.ar(FreeVerb.ar((sig3),mix.lag(0.01),room.lag(0.01),mul:env*loc3.abs)),0.9,0.01);
 
-							amb_w=(amb_sig1+amb_sig2+amb_sig3)/2.sqrt;
-					amb_x=amb_sig1;
-					amb_y=amb_sig2;
-					amb_z=amb_sig3;
+			//				amb_w=(amb_sig1+amb_sig2+amb_sig3)/2.sqrt;
+				//	amb_x=amb_sig1;
+				///	amb_y=amb_sig2;
+				////	amb_z=amb_sig3;
 
-					out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z, [sph1.theta, sph1.theta], [sph1.phi,sph1.phi],4 ));
+				///	out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z, [sph1.theta, sph1.theta], [sph1.phi,sph1.phi],4 ));
 
 
 
@@ -485,16 +485,16 @@ sig1 = sig1 + (sig1 * BrownNoise.ar(noise*loc1)); sig2 = sig2 + (sig2 * BrownNoi
 			//	Out.kr(~controlBus_2.index,A2K.kr(sig2*env*loc2.abs*1000));
 			//	Out.kr(~controlBus_3.index,A2K.kr(sig3*env*loc3.abs*1000));
 
-						//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig1 ),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01));
-						//	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig2),mix.lag(0.01),room.lag(0.01),mul:env*loc2.abs)),0.9,0.01));
-						//	Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig3),mix.lag(0.01),room.lag(0.01),mul:env*loc3.abs)),0.9,0.01));
+					//Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig1 ),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01));
+				///Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig2),mix.lag(0.01),room.lag(0.01),mul:env*loc2.abs)),0.9,0.01));
+					//	Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig3),mix.lag(0.01),room.lag(0.01),mul:env*loc3.abs)),0.9,0.01));
 
-			//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(sig1*env*loc1.abs),0.9,0.01),SinOsc.ar.ar(panx,phasex),width:spread));
-			//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(sig2*env*loc2.abs),0.9,0.01),SinOsc.ar.ar(pany,phasey),width:spread));
-			//Out.kr(0,PanAz.ar(5,Limiter.ar(LeakDC.ar(sig3*env*loc3.abs),0.9,0.01),SinOsc.ar.ar(panz,phasez),width:spread));
+			Out.kr(0,PanAz.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig1 ),mix.lag(0.01),room.lag(0.01),mul:env*loc1.abs)),0.9,0.01),SinOsc.ar(panx,phasex),width:spread));
+			Out.kr(0,PanAz.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig2),mix.lag(0.01),room.lag(0.01),mul:env*loc2.abs)),0.9,0.01),SinOsc.ar(pany,phasey),width:spread));
+			Out.kr(0,PanAz.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar((sig3),mix.lag(0.01),room.lag(0.01),mul:env*loc3.abs)),0.9,0.01),SinOsc.ar(panz,phasez),width:spread));
 
 
-}).add;);
+});~drone.add);
 
 	10.wait;
 	/////solid
@@ -562,6 +562,7 @@ m3=m3+1;
 	\el,pi/2,
 				\decay,2,
 				\attack,0.001,
+					\spread,4,
 
 					\rz,200,
 					\mix,0.2,
@@ -600,7 +601,7 @@ TempoClock.default.tempo_(2);
 ~dr.play;
 )
 
-
+~synth.store
 (
 MIDIClient.init;
 MIDIIn.connectAll;
@@ -785,7 +786,8 @@ MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 		var cl;
 		cl=val.linlin(0,127,1,5).round(1).asInteger;
 		cl.postln;
-		if(~synth.isPlaying,{~synth.set(\cloud,cl)});
+	~synth.free;
+~synth=Synth(\synth,[\cloud,cl]).register;
 
 },27);
 	)
