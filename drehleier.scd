@@ -146,7 +146,7 @@ SynthDef.new(\synth,{
 	var loc1,loc2,loc3,g=((1+5.sqrt)/2),s=(1+2.sqrt),tensor,dr;
 	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,cx,cy,cz;
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,axis;
-	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=100;
+	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=100,spx,spy,spz;
 
 fund=fu*(9/8);
 lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
@@ -157,6 +157,9 @@ lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 					band=pan;
 
 					spr=Spherical(1,az,el);
+				spx=Cartesian(spr.x,0,0);
+				spy=Cartesian(0,spr.y,0);
+				spz=Cartesian(0,0,spr.z);
 			//r_axis=[rx,ry,rz].normalizeSum.sqrt;
 
 //i=Quaternion(r_axis.[0], 0, 0);
