@@ -135,7 +135,7 @@ wt = signal.asWavetable;
 SynthDef.new(\synth,{
 
 	arg gain=1,low=992,tone=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,
-				fu=32,drive=1,spread=1,drone_amp=1,rz=100,pann=0,az=0,el=0,azr=0,dron=0,drone=1,theta=0,rx=1,ry=1,rz=1;
+				fu=32,drive=1,spread=1,drone_amp=1,pann=0,az=0,el=0,azr=0,dron=0,drone=1,theta=0,rx=0,ry=0,rz=0;
 
 	var rq=1,cloud=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,core=(9/8).rand;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
@@ -145,9 +145,9 @@ SynthDef.new(\synth,{
 	var mod_angley,mod_anglez,mx,my,mz,mqx,mqy,mag,magq,mq=(m-1),lfo,sph;
 	var loc1,loc2,loc3,g=((1+5.sqrt)/2),s=(1+2.sqrt),tensor,dr;
 	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,cx,cy,cz;
-	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,spx,spy,spz,axis;
-	var  axisx1=1,axisy1=1,axisz1=1,axisx2=1,axisy2=1,axisz2=1,axisx3=1,axisy3=1,axisz3=1,v1,v2,cross;
-	var r_axis, r_v, r1,r2, axis1,axis2,spxr,spyr,rot,i,j,k;
+	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,axis;
+	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=100;
+
 fund=fu*(9/8);
 lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 				ton=2.pow((tone.lag(0.01))/56).round(0.0001)*2.pow(dron.lag(0.01)/56);
@@ -156,45 +156,21 @@ lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 				lfon=2.pow(pann/992);
 					band=pan;
 
-					spxr=Spherical(1,az,el);spyr=Spherical(1,(az+(pi/2)).wrap(pi,pi.neg),el);
-				r_axis=[1,1,1].normalizeSum.sqrt
+					spr=Spherical(1,az,el);
+			//r_axis=[rx,ry,rz].normalizeSum.sqrt;
 
-i=Quaternion(r_axis.[0], 0, 0);
-j=Quaternion(0, 0, r_axis.[1], 0),
-k=Quaternion(0, 0, 0, r_axis.[2]);
-r_v=i+j+k;
+//i=Quaternion(r_axis.[0], 0, 0);
+//j=Quaternion(0, 0, r_axis.[1], 0);
+//k=Quaternion(0, 0, 0, r_axis.[2]);
+//r_v=i+j+k;
 
-axis1=Quaternion(0.spx.x,spx.y,spy.z);
-axis2=Quaternion(0,spy.x,spy.y,spy.z);
+//axisr=Quaternion(0.spr.x,spr.y,spr.z);
 
-rot=((r_v*exp(Complex(0,1)*theta).imag)+exp(Complex(0,1)*theta).real);
-r1=rot*axis1*rot.conjugate;
-r2=rot*axis2*rot.conjugate;
-				spx=Cartesian(r1.b,r1.c,r1.d);
-				spy=Cartesian(r2.b,r2.c,r2.d);
+	//			rot=((r_v*sin(theta))+cos(theta));
+//r=rot*axisr*rot.conjugate;
 
-				v1=[spx.x,spx.y,spx.z]; v2=[spy.x,spy.y,spy.z];
-
-cross = [
-    v1[1]*v2[2] - v1[2]*v2[1],  // x component
-    v1[2]*v2[0] - v1[0]*v2[2],  // y component
-    v1[0]*v2[1] - v1[1]*v2[0]   // z component
-];
-				spz=Cartesian(cross.[0],cross.[1],cross.[2]);
-
-
-				//axisx=[axisx1,axisy1,axisz1];
-				//axisy=[axisx2,axisy2,axisz2];
-				//axisz=[axisx3,axisy3,axisz3];
-
-				axisx=[spx.x,spx.y,spx.z];
-				axisy=[spy.x,spy.y,spy.z];
-				axisz=[spz.x,spz.y,spz.z];
-
-				tensor=axisx+axisy+axisz;
-
-				sph_object=Cartesian(tensor.[0],tensor.[1],tensor.[2]);
-
+//				sph_object=Cartesian(r.b,r.c,r.d);
+				sph_object=spr;
 
 				cloud.do{
 
@@ -304,13 +280,13 @@ control1=SinOsc.ar(freq1,phase:phasex,mul:amp1);
 control2=SinOsc.ar(freq2,phase:phasey,mul:amp2);
 control3=SinOsc.ar(freq3,phase:phasez,mul:amp3);
 
-ds1=(LPF.ar((Osc.ar(~w1.bufnum,f1,phase:phasex,mul:rz).abs*SinOsc.ar(f1,phase:phasex)),f1*2.pow(low.lag(0.01)/992),g1));
-ds2=(LPF.ar((Osc.ar(~w1.bufnum,f2,phase:phasey,mul:rz).abs*SinOsc.ar(f2,phase:phasey)),f2*2.pow(low.lag(0.01)/992),g2));
-ds3=(LPF.ar((Osc.ar(~w1.bufnum,f3,phase:phasez,mul:rz).abs*SinOsc.ar(f3,phase:phasez)),f3*2.pow(low.lag(0.01)/992),g3));
+ds1=(LPF.ar((Osc.ar(~w1.bufnum,f1,phase:phasex,mul:level).abs*SinOsc.ar(f1,phase:phasex)),f1*2.pow(low.lag(0.01)/992),g1));
+ds2=(LPF.ar((Osc.ar(~w1.bufnum,f2,phase:phasey,mul:level).abs*SinOsc.ar(f2,phase:phasey)),f2*2.pow(low.lag(0.01)/992),g2));
+ds3=(LPF.ar((Osc.ar(~w1.bufnum,f3,phase:phasez,mul:level).abs*SinOsc.ar(f3,phase:phasez)),f3*2.pow(low.lag(0.01)/992),g3));
 
-					sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:rz).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1)+ds1);
-					sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:rz).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2)+ds2);
-					sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:rz).abs*SinOsc.ar(freq3,phase:phasez)),freq3*2.pow(low.lag(0.01)/992),amp3)+ds3);
+					sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1)+ds1);
+					sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:level).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2)+ds2);
+					sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:level).abs*SinOsc.ar(freq3,phase:phasez)),freq3*2.pow(low.lag(0.01)/992),amp3)+ds3);
 
 	sig1=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
 						[sig1,BPF.ar(BRF.ar(sig1,band_osc1.lag(0.1),rq1),band_osc4.lag(0.1),rq4)]);
@@ -435,9 +411,9 @@ m3=m3+1;
 
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,992,\fu,32,\tone,0,\low,992*0,\pan,(992*16).neg,
-		\mix,0.3,\drone_amp,1,\rz,100,\room,0.5,\m,1,\pann,(992*3).neg,
+		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*3).neg,
 			\x,1,\a,1,\panx,1,\pany,1,\panz,1,\spread,1,
-			\az,0,\el,0,\azr,0,\dron,0,\drone,1,\theta=0,\rx=1,\ry=1,\rz=1]).register;
+			\az,0,\el,0,\azr,0,\dron,0,\drone,1,\theta,0,\rx,1,\ry,1,\rz,1]).register;
 );
 
 		(
