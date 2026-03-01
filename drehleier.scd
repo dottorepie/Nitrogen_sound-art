@@ -384,8 +384,38 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 10.wait;
 
 
-	////durs
-	.;
+////durs
+	({var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=6,time=32.reciprocal,beat=1,r=0;
+
+~dur1=[];~dur2=[];~dur3=[]; ~dx=[];~dy=[]; ~dz=[];
+
+					3.do{
+~x=bank.collect{
+m1=m1+1;
+					b=Spherical(beat,~az.[m1],~el.[m1]).rotate(r).tilt(r).tumble(r).x.round(0.00001);
+	2.pow(b).round(time);
+};
+~y=bank.collect{
+m2=m2+1;
+	c=Spherical(beat,~az.[m2],~el.[m2]).rotate(r).tilt(r).tumble(r).y.round(0.00001);
+	2.pow(c).round(time);
+};
+~z=bank.collect{
+m3=m3+1;
+	d=Spherical(beat,~az.[m3],~el.[m3]).rotate(r).tilt(r).tumble(r).z.round(0.00001);
+	2.pow(d).round(time);
+}; m1=1.neg; m2=1.neg; m3=1.neg; ~dx=~dx++~x; ~dy=~dy++~y;  ~dz=~dz++~z;   ~x=[]; ~y=[]; ~z=[];  r=r+90.degrad; };
+
+				18.do{ ~dur1=~dur1++~dx.[n];n=n+1;};n=0;
+		18.do{ ~dur2=~dur2++~dy.[n];n=n+1;};n=0;
+		18.do{ ~dur3=~dur3++~dz.[n];n=n+1;};n=0;
+	//	bank.do{~durs=~durs++~x.[n]++~y.[n]++~z.[n];n=n+1;}
+//	~dur = ~duri.collect { |x|
+  //  if (x == 0) { Rest(2) } { x }
+//	}
+}.value;
+);
+
 
 		3.wait;
 
