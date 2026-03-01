@@ -6,17 +6,43 @@ Buffer.freeAll;
 ~controlBus = Bus.control(s, 1);
 ~controlBus1 = Bus.control(s, 1);
 ~controlBus2 = Bus.control(s, 1);
+~controlBus3 = Bus.control(s, 1);
+~controlBus4 = Bus.control(s, 1);
+~controlBus5 = Bus.control(s, 1);
 
 
-
+	~scale1= Buffer.alloc(s,2048);
+	~scale2= Buffer.alloc(s,2048);
+	~scale3= Buffer.alloc(s,2048);
 	~w1= Buffer.alloc(s,2048);
 	~w2= Buffer.alloc(s,2048);
 	~w3= Buffer.alloc(s,2048);
 
-
+{
+var signal,wt;
+	signal=Env([1,10000],[3],[8]);
+	wt = signal.asSignal(1024).asWavetable;
+~scale2.loadCollection(wt);
+//signal.plot;
+		}.value;
+{
+var signal,wt;
+	signal=Env([1,10000],[3],[4]);
+	wt = signal.asSignal(1024).asWavetable;
+~scale3.loadCollection(wt);
+//signal.plot;
+		}.value;
 		{
 var signal,wt;
-	signal=Env([1,100],[1],[16]);
+	signal=Env([1,10000],[3],[12]);
+	wt = signal.asSignal(1024).asWavetable;
+~scale1.loadCollection(wt);
+//signal.plot;
+		}.value;
+
+	{
+var signal,wt;
+	signal=Env([0.001,1,0.01],[2,1],[4,2.neg]);
 	wt = signal.asSignal(1024).asWavetable;
 ~w1.loadCollection(wt);
 //signal.plot;
@@ -24,7 +50,7 @@ var signal,wt;
 
 	{
 var signal,wt;
-	signal=Env([0.0001,1],[1],[8]);
+	signal=Env([30000,0.01,100],[2,0.1],[16,2.neg]);
 	wt = signal.asSignal(1024).asWavetable;
 ~w2.loadCollection(wt);
 //signal.plot;
@@ -32,7 +58,7 @@ var signal,wt;
 
 	{
 var signal,wt;
-	signal=Env([10000,1],[1],[2]);
+	signal=Env([1,10],[3],[8]);
 	wt = signal.asSignal(1024).asWavetable;
 ~w3.loadCollection(wt);
 //signal.plot;
@@ -42,17 +68,17 @@ var signal,wt;
 
 SynthDef.new(\player,{
 	arg tempo;
-	Out.kr(~controlBus.index, (Osc.kr(~w1.bufnum,(1/100)).abs));
-	Out.kr(~controlBus1.index, (Osc.kr(~w2.bufnum,(1/100)).abs));
-		Out.kr(~controlBus2.index, (Osc.kr(~w3.bufnum,(1/100)).abs));
-
+	Out.kr(~controlBus.index, (Osc.kr(~scale1.bufnum,(1/150)).abs));
+	Out.kr(~controlBus1.index, (Osc.kr(~w1.bufnum,(1/150)).abs));
+		Out.kr(~controlBus2.index, (Osc.kr(~w2.bufnum,(1/150)).abs));
+Out.kr(~controlBus3.index, (Osc.kr(~w3.bufnum,(1/150)).abs));
 
 }).add;
 )
 
 
 Server.freeAll
-
+//
 
 //////////////////////////////////////////////////////////////////////animation
 
@@ -68,7 +94,7 @@ var az1=0,el1=0,az2=0,el2=0,az3=0,el3=0,mag,mag_x,mag_y,mag_z,mag_qx,mag_qy;
 var az11=0,el11=0,az22=0,el22=0,az33=0,el33=0,az44=0,el44=0,az55=0,el55=0,az66=0,el66=0,az77=0,el77=0;
 var az4=0,el4=0,az5=0,el5=0,az6=0,el6=0,az7=0,el7=0;
 var azimuth,elevation,magnitudex,magnitudey,magnitudez;
-var angle=0,n=12,num=1.neg,ellipsis=[1,1,1],spread=1;
+var angle=0,n=12,num=1.neg,ellipsis=[1,1,1],spread=1,harm;
 var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1;
 var scale=8,scale_mag_total,perspective,g=((1+5.sqrt)/2),s=(1+2.sqrt);
 
@@ -77,10 +103,10 @@ var scale=8,scale_mag_total,perspective,g=((1+5.sqrt)/2),s=(1+2.sqrt);
 Synth.new(\player);
 data = [];
 
-w = Window.new("3D Scatterplot", Rect(40,40, 1000, 1000)).front;
+w = Window.new("3D Scatterplot", Rect(40,40, 1500, 1000)).front;
 
-~v = UserView.new(w,Rect(0,0,1000,1000)).background_(Color.black);
-a = ScatterView3d(~v, Rect(0,0, 1000,1000), ~data, [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
+~v = UserView.new(w,Rect(0,0,1500,1000)).background_(Color.black);
+a = ScatterView3d(~v, Rect(0,0, 1500,1000), ~data, [-10000, 10000].asSpec,[-10000, 10000].asSpec,[-10000, 10000].asSpec);
 a.drawMethod = \fillRect;
 a.symbolSize = 2;
 a.symbolColor = Color.white;
@@ -93,6 +119,11 @@ a.background = Color.black;
 	scale=~controlBus.getSynchronous;
 	scale_mag_total=~controlBus1.getSynchronous;
 	perspective=~controlBus2.getSynchronous;
+	harm=~controlBus3.getSynchronous;
+
+	m_x=m_y=m_z=mq=harm;
+
+
 	//scale=1;
 	//scale.postln;
 
@@ -168,7 +199,7 @@ a.background = Color.black;
 				el44 = (el44+(pi-(pi/s))).wrap((pi/2).neg,(pi/2));
 
 				sph44=(Spherical(mag4/scale,(az44+angle+angle4).wrap(pi.neg,pi),(el44+angle+angle4).wrap((pi/2).neg,(pi/2))));
-	 mag_y=((Complex(sin((sph4.theta.round(0.000000000001)*m_x).wrap(pi.neg,pi)),sin((sph4.theta.round(0.000000000001)*m_x).wrap(pi.neg,pi))).rho/(2.sqrt)).pow(spread)*
+	 mag_y=((Complex(sin((sph4.theta.round(0.000000000001)*m_y).wrap(pi.neg,pi)),sin((sph4.theta.round(0.000000000001)*m_y).wrap(pi.neg,pi))).rho/(2.sqrt)).pow(spread)*
 			(Complex(cos((sph4.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2))),cos((sph4.phi.round(0.000000000001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)).pow(spread));
 	sphy=(Spherical(mag_y,sph4.theta,sph4.phi).asCartesian.round(0.000000000001)+Spherical(mag_y/scale,sph44.theta,sph44.phi).asCartesian.round(0.000000000001)).asSpherical.rho;
 
@@ -249,7 +280,7 @@ angle=(angle+(2pi-(2pi/s))).wrap(0,2pi);
 	el=~el.[pla];
 	//mag=1000;
 	// mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt))+(Cartesian(~qx.[pl],~qy.[pl],~magz.[pl]).rho/(2.sqrt));
-				 mag=(Cartesian(~magx.[pla],~magy.[pla],~magz.[pla]).rho/(2.sqrt));
+				 mag=(Cartesian(0,0,~magz.[pla]).rho/(2.sqrt));
 		// mag=~magz.[pl];
 	pla=pla+1;
 			//mk=(mk+(1-(1/1.6180339887499))).wrap(0,1);
