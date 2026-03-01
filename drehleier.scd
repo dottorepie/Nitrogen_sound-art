@@ -329,9 +329,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 
 	///final out
-					gain1=gain*rq1.sqrt.reciprocal*cloud.reciprocal;
-					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal;
-					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal;
+					gain1=gain*rq1.sqrt.reciprocal*cloud.reciprocal*4;
+					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal*4;
+					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal*4;
 
 					///three channel
 				//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01));
@@ -461,7 +461,7 @@ MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 												(
 MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
 		var pann;
-			pann=val.linlin(0,127,(992*8).neg,(992*4)).round(1).asInteger;
+			pann=val.linlin(0,127,(992*32).neg,(992*4)).round(1).asInteger;
 		pann.postln;
 		if(~synth.isPlaying,{~synth.set(\pann,pann)});
 },28);
@@ -580,7 +580,7 @@ MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
 			(
 MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 		var gain;
-	gain=val.linlin(0,127,0,10).round(0.0001);
+	gain=val.linlin(0,127,0,1).round(0.0001);
 		gain.postln;
 		if(~synth.isPlaying,{~synth.set(\gain,gain)});
 },19);
@@ -615,7 +615,7 @@ MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 					(
 MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
 		var drone;
-						drone=val.linlin(0,127,(12*16).neg,0).round(12).asInteger;
+						drone=val.linlin(0,127,(12*4).neg,0).round(12).asInteger;
 		drone.postln;
 		if(~synth.isPlaying,{~synth.set(\drone,drone)});
 },31);
