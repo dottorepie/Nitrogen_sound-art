@@ -135,7 +135,7 @@ wt = signal.asWavetable;
 SynthDef.new(\synth,{
 
 	arg gain=1,low=992,tone=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,
-				fu=32,drive=1,spread=1,drone_amp=1,rz=100,pann=0,az=0,el=0,azr=0,dron=0,drone=1;
+				fu=32,drive=1,spread=1,drone_amp=1,rz=100,pann=0,az=0,el=0,azr=0,dron=0,drone=1,theta=0,rx=1,ry=1,rz=1;
 
 	var rq=1,cloud=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,core=(9/8).rand;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
@@ -143,11 +143,11 @@ SynthDef.new(\synth,{
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope,gain1,gain2,gain3,env,azimuth,elevation;
 	var magx,magy,magz,magqx,magqy,mod_anglex,anglex,angley,anglez,phasex,phasey,phasez,rq1,rq2,rq3,rq4,rq5,rq6;
 	var mod_angley,mod_anglez,mx,my,mz,mqx,mqy,mag,magq,mq=(m-1),lfo,sph;
-	var loc1,loc2,loc3,axis1,axis2,axis3,g=((1+5.sqrt)/2),s=(1+2.sqrt),tensor,dr;
+	var loc1,loc2,loc3,g=((1+5.sqrt)/2),s=(1+2.sqrt),tensor,dr;
 	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,cx,cy,cz;
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,spx,spy,spz,axis;
 	var  axisx1=1,axisy1=1,axisz1=1,axisx2=1,axisy2=1,axisz2=1,axisx3=1,axisy3=1,axisz3=1,v1,v2,cross;
-
+	var r_axis, r_v, r1,r2, axis1,axis2,spxr,spyr,rot,i,j,k;
 fund=fu*(9/8);
 lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 				ton=2.pow((tone.lag(0.01))/56).round(0.0001)*2.pow(dron.lag(0.01)/56);
@@ -156,8 +156,22 @@ lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 				lfon=2.pow(pann/992);
 					band=pan;
 
-				spx=Spherical(1,az,el);spy=Spherical(1,(az+(pi/2)).wrap(pi,pi.neg),el);
-				//spz=Spherical(1,az,(el+elr).wrap((pi/2).neg,(pi/2)));
+					spxr=Spherical(1,az,el);spyr=Spherical(1,(az+(pi/2)).wrap(pi,pi.neg),el);
+				r_axis=[1,1,1].normalizeSum.sqrt
+
+i=Quaternion(r_axis.[0], 0, 0);
+j=Quaternion(0, 0, r_axis.[1], 0),
+k=Quaternion(0, 0, 0, r_axis.[2]);
+r_v=i+j+k;
+
+axis1=Quaternion(0.spx.x,spx.y,spy.z);
+axis2=Quaternion(0,spy.x,spy.y,spy.z);
+
+rot=((r_v*exp(Complex(0,1)*theta).imag)+exp(Complex(0,1)*theta).real);
+r1=rot*axis1*rot.conjugate;
+r2=rot*axis2*rot.conjugate;
+				spx=Cartesian(r1.b,r1.c,r1.d);
+				spy=Cartesian(r2.b,r2.c,r2.d);
 
 				v1=[spx.x,spx.y,spx.z]; v2=[spy.x,spy.y,spy.z];
 
@@ -423,7 +437,7 @@ m3=m3+1;
 ~synth=Synth.new(\synth,[\gain,1,\drive,992,\fu,32,\tone,0,\low,992*0,\pan,(992*16).neg,
 		\mix,0.3,\drone_amp,1,\rz,100,\room,0.5,\m,1,\pann,(992*3).neg,
 			\x,1,\a,1,\panx,1,\pany,1,\panz,1,\spread,1,
-			\az,0,\el,0,\azr,0,\dron,0,\drone,1]).register;
+			\az,0,\el,0,\azr,0,\dron,0,\drone,1,\theta=0,\rx=1,\ry=1,\rz=1]).register;
 );
 
 		(
@@ -542,10 +556,10 @@ MIDIdef.cc(\midi_pot12,{ |val, num, chan, src|
 
 													(
 MIDIdef.cc(\midi_pot13,{ |val, num, chan, src|
-		var azr;
-			azr=val.linlin(0,127,pi.neg,pi).round(0.0001);
-		azr.postln;
-		if(~synth.isPlaying,{~synth.set(\azr,azr)});
+		var theta;
+			theta=val.linlin(0,127,pi.neg,pi).round(0.0001);
+		theta.postln;
+		if(~synth.isPlaying,{~synth.set(\theta,theta)});
 },47);
 	);
 
@@ -622,37 +636,37 @@ MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
 			);
 (
 MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
-		var gain;
-	gain=val.linlin(0,127,0,1).round(0.0001);
-		gain.postln;
-		~gain=gain;
+		var rx;
+	rx=val.linlin(0,127,1.neg,1).round(0.0001);
+		rx.postln;
+		if(~synth.isPlaying,{~synth.set(\rx,rx)});
 },49);
 			);
 
 											(
 MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
-		var m;
-		m=val.linlin(0,127,1,16).round(1).asInteger;
-		m.postln;
-~m=m;
+		var ry;
+	ry=val.linlin(0,127,1.neg,1).round(0.0001);
+		ry.postln;
+		if(~synth.isPlaying,{~synth.set(\ry,ry)});
 },53);
 	);
 
 (
 MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
-		var low;
-		low=val.linlin(0,127,0,992*4).round(1).asInteger;
-		low.postln;
-~low=low;
+		var rz;
+	rz=val.linlin(0,127,1.neg,1).round(0.0001);
+		rz.postln;
+		if(~synth.isPlaying,{~synth.set(\rz,rz)});
 },57);
 	);
 
 	(
 MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
-		var pan;
-			pan=val.linlin(0,127,(992*2).neg,0,992*2).round(1).asInteger;
-		pan.postln;
-~pan=pan;
+		var gain;
+			gain=val.linlin(0,127,0,0,1).round(0.00011);
+		gain.postln;
+~gain=gain;
 },61);
 	)
 
