@@ -831,44 +831,7 @@ MIDIdef.cc(\midi_seq_pot8,{ |val, num, chan, src|
 
 
 );
-
-	});
-	Tdef(\drone).play;
-}
-)
-)
-
-
-
-
-			////sequencer
-
-	~s= Routine({loop{
-
-	thisThread.randSeed = ~val;
-
-		~val.postln;
-
-	~synth.set(\tone, (56).rand)	;
-
-2.wait
-};
-});
-
-	~s.play;
-/////server based randomes
-(
-~seq = Pseq(~dur1, inf).asStream;
-	~s= Routine({loop{
-
-
-	~synth.set(\tone, (56).rand)	;
-
-    ~seq.next.wait;\
-};
-});
-)
-/////////////sequencer with midi
+		/////////////sequencer with midi
 (
 ~seq = Pseq([1/2] ,inf).asStream;
 	~s= Routine({loop{
@@ -907,8 +870,46 @@ MIDIdef.cc(\midi_seq_pot8,{ |val, num, chan, src|
 	    ~seq.next.wait;
 };
 });
-)
+);
 	~s.play;
+
+	});
+	Tdef(\drone).play;
+}
+)
+)
+
+
+
+
+			////sequencer
+
+	~s= Routine({loop{
+
+	thisThread.randSeed = ~val;
+
+		~val.postln;
+
+	~synth.set(\tone, (56).rand)	;
+
+2.wait
+};
+});
+
+	~s.play;
+/////server based randomes
+(
+~seq = Pseq(~dur1, inf).asStream;
+	~s= Routine({loop{
+
+
+	~synth.set(\tone, (56).rand)	;
+
+    ~seq.next.wait;\
+};
+});
+)
+
 ~s.stop
 
 
