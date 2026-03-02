@@ -509,7 +509,7 @@ MIDIdef.cc(\midi_pot8,{ |val, num, chan, src|
 												(
 MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 		var panx;
-			panx=val.linlin(0,127,0.001,1).round(0.0001);
+			panx=val.linlin(0,127,0.0001,10).round(0.0001);
 		panx.postln;
 		if(~synth.isPlaying,{~synth.set(\panx,panx)});
 },17);
@@ -518,7 +518,7 @@ MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 													(
 MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
 		var pany;
-			pany=val.linlin(0,127,0.001,1).round(0.0001);
+			pany=val.linlin(0,127,0.0001,10).round(0.0001);
 		pany.postln;
 		if(~synth.isPlaying,{~synth.set(\pany,pany)});
 },21);
@@ -527,7 +527,7 @@ MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
 														(
 MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
 		var panz;
-			panz=val.linlin(0,127,0.001,1).round(0.0001);
+			panz=val.linlin(0,127,0.0001,10).round(0.0001);
 		panz.postln;
 		if(~synth.isPlaying,{~synth.set(\panz,panz)});
 },25);
