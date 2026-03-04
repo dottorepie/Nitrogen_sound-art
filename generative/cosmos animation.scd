@@ -303,7 +303,7 @@ Pen.translate(400,400);
 		a.rot(ot,ot,ot);
     ~v.refresh;
 
-		ot=ot+0.1.degrad;
+		ot=ot+0.01.degrad;
 
 };
 { while { run } {~v.background_(Color.black); ~v.refresh; (1/100).wait } }.fork(AppClock);
