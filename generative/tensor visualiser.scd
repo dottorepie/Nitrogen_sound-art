@@ -73,7 +73,7 @@ data = ~count.collect{
 	pl=pl+1;
 			///mk=(mk+((size*2.pow(n/12))-((size*2.pow(n/12))/1.6180339887499))).wrap(0,size*2.pow(n/12));
 		//mk=(mk+1);
-		sph=Spherical(mag*size,az,el).asCartesian.asArray;
+		sph=Spherical(size,az,el).asCartesian.asArray;
 };
 	~data=~data++data;
 
@@ -143,7 +143,7 @@ gravity1.do{
 				el11 = (el11+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 							angle11=angle1;
 
-				sph11=(Spherical(1,(az11+angle1).wrap(pi.neg,pi),(el11+angle1).wrap((pi/2).neg,(pi/2))));
+				sph11=(Spherical(1/scale1,(az11+angle1).wrap(pi.neg,pi),(el11+angle1).wrap((pi/2).neg,(pi/2))));
 
 sph_1=(sph1.asCartesian.round(0.000001)+sph11.asCartesian.round(0.000001)).asSpherical;
 
@@ -154,7 +154,7 @@ axis2.do{
 				az_1 = (az_1+(2pi-(2pi/g))).wrap(pi.neg,pi);
 				el_1 = (el_1+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 
-				sph_11=(Spherical(1,(az_1+angle11).wrap(pi.neg,pi),(el_1+angle11).wrap((pi/2).neg,(pi/2))));
+				sph_11=(Spherical(1/scale2,(az_1+angle11).wrap(pi.neg,pi),(el_1+angle11).wrap((pi/2).neg,(pi/2))));
 
 				(sph_1.asCartesian.round(0.000001)+sph_11.asCartesian.round(0.000001)).asSpherical.theta.round(0.000001);
 
@@ -181,7 +181,7 @@ gravity1.do{
 				el22 = (el22+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 							angle11=angle1;
 
-				sph22=(Spherical(1,(az22+angle1).wrap(pi.neg,pi),(el22+angle1).wrap((pi/2).neg,(pi/2))));
+				sph22=(Spherical(1/scale1,(az22+angle1).wrap(pi.neg,pi),(el22+angle1).wrap((pi/2).neg,(pi/2))));
 
 sph_2=(sph2.asCartesian.round(0.000001)+sph22.asCartesian.round(0.000001)).asSpherical;
 
@@ -192,7 +192,7 @@ axis2.do{
 				az_2 = (az_2+(2pi-(2pi/g))).wrap(pi.neg,pi);
 				el_2 = (el_2+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 
-				sph_22=(Spherical(1,(az_2+angle11).wrap(pi.neg,pi),(el_2+angle11).wrap((pi/2).neg,(pi/2))));
+				sph_22=(Spherical(1/scale2,(az_2+angle11).wrap(pi.neg,pi),(el_2+angle11).wrap((pi/2).neg,(pi/2))));
 
 				(sph_2.asCartesian.round(0.000001)+sph_22.asCartesian.round(0.000001)).asSpherical.phi.round(0.000001);
 
@@ -223,7 +223,7 @@ gravity1.do{
 				el33 = (el33+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 							angle11=angle1;
 
-				sph33=(Spherical(1,(az33+angle1).wrap(pi.neg,pi),(el33+angle1).wrap((pi/2).neg,(pi/2))));
+				sph33=(Spherical(1/scale1,(az33+angle1).wrap(pi.neg,pi),(el33+angle1).wrap((pi/2).neg,(pi/2))));
 
 sph_3=(sph3.asCartesian.round(0.000001)+sph33.asCartesian.round(0.000001)).asSpherical;
 
@@ -234,7 +234,7 @@ axis2.do{
 			   az_3= (az_3+(2pi-(2pi/g))).wrap(pi.neg,pi);
 				el_3 = (el_3+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 
-sph_33=Spherical(1,(az_3+angle11).wrap(pi.neg,pi),(el_3+angle11).wrap((pi/2).neg,(pi/2)));
+sph_33=Spherical(1/scale2,(az_3+angle11).wrap(pi.neg,pi),(el_3+angle11).wrap((pi/2).neg,(pi/2)));
 
 	 mag_x=(Complex(cos((sph3.theta*m_x).wrap(pi.neg,pi)),cos((sph3.theta*m_x).wrap(pi.neg,pi))).rho/(2.sqrt))*
 			(Complex(cos((sph3.phi).wrap((pi/2).neg,(pi/2))),cos((sph3.phi).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt));
@@ -266,7 +266,7 @@ gravity1.do{
 				el44 = (el44+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 							angle11=angle1;
 
-				sph44=(Spherical(1,(az44+angle1).wrap(pi.neg,pi),(el44+angle1).wrap((pi/2).neg,(pi/2))));
+				sph44=(Spherical(1/scale1,(az44+angle1).wrap(pi.neg,pi),(el44+angle1).wrap((pi/2).neg,(pi/2))));
 
 sph_4=(sph4.asCartesian.round(0.000001)+sph44.asCartesian.round(0.000001)).asSpherical;
 
@@ -277,7 +277,7 @@ axis2.do{
 			   az_4 = (az_4+(2pi-(2pi/g))).wrap(pi.neg,pi);
 				el_4 = (el_4+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 
-sph_44=Spherical(1,(az_4+angle11).wrap(pi.neg,pi),(el_4+angle11).wrap((pi/2).neg,(pi/2)));
+sph_44=Spherical(1/scale2,(az_4+angle11).wrap(pi.neg,pi),(el_4+angle11).wrap((pi/2).neg,(pi/2)));
 
 	 mag_y=(Complex(cos((sph4.theta*m_x).wrap(pi.neg,pi)),cos((sph4.theta*m_x).wrap(pi.neg,pi))).rho/(2.sqrt))*
 			(Complex(cos((sph4.phi).wrap((pi/2).neg,(pi/2))),cos((sph4.phi).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt));
@@ -308,7 +308,7 @@ gravity1.do{
 				el55 = (el55+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 							angle11=angle1;
 
-				sph55=(Spherical(1,(az55+angle1).wrap(pi.neg,pi),(el55+angle1).wrap((pi/2).neg,(pi/2))));
+				sph55=(Spherical(1/scale1,(az55+angle1).wrap(pi.neg,pi),(el55+angle1).wrap((pi/2).neg,(pi/2))));
 
 sph_5=(sph5.asCartesian.round(0.000001)+sph55.asCartesian.round(0.000001)).asSpherical;
 
@@ -319,7 +319,7 @@ axis2.do{
 			   az_5 = (az_5+(2pi-(2pi/g))).wrap(pi.neg,pi);
 				el_5 = (el_5+(pi-(pi/g))).wrap((pi/2).neg,(pi/2));
 
-sph_55=Spherical(1,(az_5+angle11).wrap(pi.neg,pi),(el_5+angle11).wrap((pi/2).neg,(pi/2)));
+sph_55=Spherical(1/scale2,(az_5+angle11).wrap(pi.neg,pi),(el_5+angle11).wrap((pi/2).neg,(pi/2)));
 
 mag_z=(Complex(sin((sph5.phi*m_z).wrap((pi/2).neg,(pi/2))),sin((sph5.phi*m_z).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt));
 
