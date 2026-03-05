@@ -214,34 +214,34 @@ mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi);
 					mod_anglez=SinOsc.ar(lfon*(1/2),phase3).range((pi/2).neg,(pi/2));
 
 					(
-		magx=((Complex(cos(((polytope.theta+mod_anglex).round(0.00001)*m).wrap(pi.neg,pi)),cos((((polytope.theta+mod_anglex).round(0.00001)*m)).wrap(pi.neg,pi))).rho/(2.sqrt))*(Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt));
-				);
+		/*magx=((Complex(cos(((polytope.theta+mod_anglex).round(0.00001)*m).wrap(pi.neg,pi)),cos((((polytope.theta+mod_anglex).round(0.00001)*m)).wrap(pi.neg,pi))).rho/(2.sqrt))*(Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt));
+				);*/
 
-magy=((Complex(sin(((polytope.theta+mod_angley).round(0.00001)*m).wrap(pi.neg,pi)),sin(((polytope.theta+mod_angley).round(0.00001)*m).wrap(pi.neg,pi))).rho/(2.sqrt))*
+/*magy=((Complex(sin(((polytope.theta+mod_angley).round(0.00001)*m).wrap(pi.neg,pi)),sin(((polytope.theta+mod_angley).round(0.00001)*m).wrap(pi.neg,pi))).rho/(2.sqrt))*
 		(Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt));
-				);
+				);*/
 
 magz=((Complex(cos(((polytope.phi+mod_anglez).round(0.00001)*m).wrap((pi/2).neg,(pi/2))),cos(((polytope.phi).round(0.00001)*m).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
-/*magqx=((((Complex(cos(((polytope.theta.round(0.00001)+mod_angle)*mq).wrap(pi.neg,pi)),
-cos(((polytope.theta.round(0.00001)+mod_angle)*mq).wrap(pi.neg,pi))))*
+magqx=((((Complex(cos(((polytope.theta.round(0.00001)+mod_anglex)*mq).wrap(pi.neg,pi)),
+cos(((polytope.theta.round(0.00001)+mod_anglex)*mq).wrap(pi.neg,pi))))*
 (Complex(sin((polytope.phi.round(0.00001)*(mq-1)).wrap((pi/2).neg,(pi/2))),
 sin((polytope.phi.round(0.00001)*(mq-1)).wrap((pi/2).neg,(pi/2)))))*
 (Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),
 cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).pow(spread);
 
- magqy=((((Complex(sin(((polytope.theta.round(0.00001)+mod_angle1)*mq).wrap(pi.neg,pi)),
-sin(((polytope.theta.round(0.00001)+mod_angle1)*mq).wrap(pi.neg,pi))))*
+ magqy=((((Complex(sin(((polytope.theta.round(0.00001)+mod_angley)*mq).wrap(pi.neg,pi)),
+sin(((polytope.theta.round(0.00001)+mod_angley)*mq).wrap(pi.neg,pi))))*
 (Complex(sin((polytope.phi.round(0.00001)*(mq-1)).wrap((pi/2).neg,(pi/2))),
 sin((polytope.phi.round(0.00001)*(mq-1)).wrap((pi/2).neg,(pi/2)))))*
 (Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),
-cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).pow(spread);*/
+cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt)).pow(spread);
 	);
 
-					mx=(Cartesian(magx,0,0).rho);     //mqx=(Cartesian(magqx,0,0).rho);
-					my=(Cartesian(0,magy,0).rho);      //mqy=(Cartesian(0,magqy,0).rho);
+					mx=(Cartesian(magqx,0,0).rho);     //mqx=(Cartesian(magqx,0,0).rho);
+					my=(Cartesian(0,magqy,0).rho);      //mqy=(Cartesian(0,magqy,0).rho);
 					mz=(Cartesian(0,0,magz).rho);
-					mag=(Cartesian(magx,magy,magz).rho);	  //magq=(Cartesian(magqx,magqy,0).rho);
+					mag=(Cartesian(magqx,magqy,magz).rho/2.sqrt);	  //magq=(Cartesian(magqx,magqy,0).rho);
 
 
 		sph=Spherical(mag,polytope.theta,polytope.phi);
@@ -434,7 +434,7 @@ m3=m3+1;
 
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,32,\tone,0,\low,992*0,\pan,(992*16).neg,
-		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*3).neg,
+		\mix,0.3,\drone_amp,1,\room,0.5,\m,2,\pann,(992*3).neg,
 			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,100,
 			\az,pi/2,\el,0,\azr,992,\dron,0,\drone,1,\sc,1]).register;
 );
@@ -602,7 +602,7 @@ MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 											(
 MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
 		var m;
-		m=val.linlin(0,127,1,16).round(1).asInteger;
+		m=val.linlin(0,127,2,16).round(1).asInteger;
 		m.postln;
 		if(~synth.isPlaying,{~synth.set(\m,m)});
 },23);
