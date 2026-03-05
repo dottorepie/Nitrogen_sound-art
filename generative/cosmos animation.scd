@@ -1,7 +1,7 @@
 
 (
 s.options.numOutputBusChannels=6;
-s.waitForBoot;
+s.waitForBoot{
 Buffer.freeAll;
 ~controlBus = Bus.control(s, 1);
 ~controlBus1 = Bus.control(s, 1);
@@ -42,7 +42,7 @@ var signal,wt;
 
 	{
 var signal,wt;
-	signal=Env([0.001,1,0.01],[2,1],[4,2.neg]);
+	signal=Env([0.005,1,0.01],[2,1],[4,2.neg]);
 	wt = signal.asSignal(1024).asWavetable;
 ~w1.loadCollection(wt);
 //signal.plot;
@@ -65,7 +65,7 @@ var signal,wt;
 		}.value;
 
 
-
+(
 SynthDef.new(\player,{
 	arg tempo;
 	Out.kr(~controlBus.index, (Osc.kr(~scale1.bufnum,(1/50)).abs));
@@ -74,6 +74,8 @@ SynthDef.new(\player,{
 Out.kr(~controlBus3.index, (Osc.kr(~w3.bufnum,(1/50)).abs));
 
 }).add;
+	);
+}
 )
 
 
@@ -87,7 +89,7 @@ var ot=0,dota,pla=0;
 var data;
 var az=0,el=0;
 var sph,pl=0,magg,r,run = true;
-var sph1,sph2,sph3,sph4,sph5,sph6,sph7,m_x=1,m_y=1,m_z=1,qx,qy,mq=0;
+var sph1,sph2,sph3,sph4,sph5,sph6,sph7,m_x=1,m_y=1,m_z=1,qx,qy,mq=3;
 var angle1=0,angle2=0,angle3=0,angle4=0,angle5=0,angle6=0,angle7=0;
 var sph11,sph22,sph33,sph44,sph55,sph66,sph77,sphx,sphy,sphz,sphqx,sphqy;
 var az1=0,el1=0,az2=0,el2=0,az3=0,el3=0,mag,mag_x,mag_y,mag_z,mag_qx,mag_qy;
@@ -139,6 +141,7 @@ a.background = Color.black;
 			el1 = (el1+(pi-(pi/s))).wrap((pi/2).neg,(pi/2));
 			sph1=(Spherical(mag1,(az1+angle).wrap(pi.neg,pi),(el1+angle).wrap((pi/2).neg,(pi/2))));
 
+
 			5.do{
 				az11=az1;el11=el1;
 	azimuth=5.collect{
@@ -146,6 +149,7 @@ a.background = Color.black;
 				el11 = (el11+(pi-(pi/s))).wrap((pi/2).neg,(pi/2));
 
 				sph11=(Spherical(mag1/scale,(az11+angle+angle1).wrap(pi.neg,pi),(el11+angle+angle1).wrap((pi/2).neg,(pi/2))));
+
 				(sph1.asCartesian.round(0.000000000001)+sph11.asCartesian.round(0.000000000001)).asSpherical.theta.round(0.000000000001);
 
 			};~az=~az++azimuth;angle1=(angle1+(2pi-(2pi/s))).wrap(0,2pi);};
@@ -280,7 +284,7 @@ angle=(angle+(2pi-(2pi/s))).wrap(0,2pi);
 	el=~el.[pla];
 	//mag=1000;
 	// mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt))+(Cartesian(~qx.[pl],~qy.[pl],~magz.[pl]).rho/(2.sqrt));
-				 mag=(Cartesian(0,0,~magz.[pla]).rho/(2.sqrt));
+				 mag=(Cartesian(~qx.[pla],0,0).rho/(2.sqrt));
 		// mag=~magz.[pl];
 	pla=pla+1;
 			//mk=(mk+(1-(1/1.6180339887499))).wrap(0,1);

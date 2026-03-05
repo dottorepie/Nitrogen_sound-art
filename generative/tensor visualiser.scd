@@ -55,7 +55,7 @@ Pen.translate(400,400);
 (
 var data,sph;
 var az=0,el=0;
-var m=600,pl=0,mag,r=1.neg;
+var m=600,pl=0,mag,r=1.neg,magg;
 var n=12,mk=0,size=500;
 
 ~data=[];
@@ -64,15 +64,16 @@ data = ~count.collect{
 
 	az=~az.[pl];
 	el=~el.[pl];
+	magg=~qx.[pl];
 	//mag=1000;
-	// mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt))+(Cartesian(~qx.[pl],~qy.[pl],~magz.[pl]).rho/(2.sqrt));
-				// mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt));
+	mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt));
+
 	//	mag=(Cartesian(~magx.[pl],~magy.[pl],~magz.[pl]).rho/(2.sqrt));
 		// mag=~magz.[pl];
 	pl=pl+1;
 			///mk=(mk+((size*2.pow(n/12))-((size*2.pow(n/12))/1.6180339887499))).wrap(0,size*2.pow(n/12));
 		//mk=(mk+1);
-		sph=Spherical((size),az,el).asCartesian.asArray;
+		sph=Spherical(mag*size,az,el).asCartesian.asArray;
 };
 	~data=~data++data;
 
@@ -101,7 +102,7 @@ Slider(w, Rect(1100, 10, 10, 450)).action_{|me|
 
 )
 
-~count=(2*2*4*4*4*4)
+~count=(2*2*4*4)
 
 /////////////
 (
