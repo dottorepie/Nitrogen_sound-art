@@ -19,3 +19,20 @@
 
 }.scope(2);
 )
+
+
+//manual
+///weights can be cartesian
+(
+{
+    var w, x, y, z;
+    var left, right;
+
+    #w, x, y, z = SoundIn.ar([0,1,2,3]);
+
+    left  = w + 0.5*x + 0.5*y + 0.2*z;
+    right = w + 0.5*x - 0.5*y + 0.2*z;
+
+    [left, right] * 0.5
+}.play;
+)
