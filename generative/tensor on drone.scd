@@ -167,7 +167,7 @@ SynthDef.new(\synth,{
 				env=EnvGen.ar(Env.sine(8),doneAction:2);
 fund=fu*(9/8);
 lamdoma=(x.lag(0.001)+a.lag(0.001))/x.lag(0.001);
-				ton=2.pow((tone.lag(0.001))/496).round(0.0001);
+				ton=2.pow((tone.lag(0.001))/56).round(0.0001);
 
 				lfon=2.pow(pann/992);
 					band=pan;
@@ -191,8 +191,8 @@ lamdoma=(x.lag(0.001)+a.lag(0.001))/x.lag(0.001);
 //r=rot*axisr*rot.conjugate;
 
 //				sph_object=Cartesian(r.b,r.c,r.d);
-				sph_object=spr;
-				sc=2.pow(fund_tone.round(1)/992);
+				//sph_object=spr;
+			//	sc=2.pow(fund_tone.round(1)/992);
 
 				cloud.do{
 
@@ -200,9 +200,9 @@ lamdoma=(x.lag(0.001)+a.lag(0.001))/x.lag(0.001);
 
 				polytope=spr;
 
-b_x=2.pow(polytope.x.round(0.0001)/496);
-b_y=2.pow(polytope.y.round(0.0001)/496);
-b_z=2.pow(polytope.z.round(0.0001)/496);
+b_x=2.pow(polytope.x.round(0.0001)/992);
+b_y=2.pow(polytope.y.round(0.0001)/992);
+b_z=2.pow(polytope.z.round(0.0001)/992);
 
 
 anglex=(exp(Complex(0,1)*polytope.theta).real*exp(Complex(0,1)*polytope.phi).real).round(0.00001);
@@ -461,7 +461,7 @@ i=~count.rand;
 ~synth=Synth.new(\synth,[\gain,1,\drive,992*1,\fu,32,\tone, ~magnitude[i],\low,992*1,\pan,(992*16).neg,
 		\mix,0.3,\drone_amp,10,\room,0.5,\m,2,\pann,(992*8).neg,
 			\x,1,\a,1,\panx,0.02,\pany,0.02,\panz,0.02,\spread,80,
-						\az,~azimuth[i],\el,~elevation[i],\drone,12.neg,\xx,~cart.[i].[0]/100, \yy,~cart.[i].[1]/100,\zz,~cart.[i].[2]/100]).register;
+						\az,~azimuth[i],\el,~elevation[i],\drone,12.neg,\xx,~cart.[i].[0], \yy,~cart.[i].[1],\zz,~cart.[i].[2]]).register;
 
         ~seq.next.wait;
 				//	(1).wait;

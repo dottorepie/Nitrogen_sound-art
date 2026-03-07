@@ -45,7 +45,7 @@ var signal,wt;
 	{
 var signal,wt;
 	//signal=Env([0.005,1,0.01],[2,1],[4,2.neg]);
-		signal=Env([1,20100,1],[2.95,0.05],[4,1.neg]);
+		signal=Env([1,20000,1],[2.95,0.05],[4,1.neg]);
 	wt = signal.asSignal(1024).asWavetable;
 ~scale.loadCollection(wt);
 //signal.plot;
@@ -540,7 +540,7 @@ az6=0;el6=0;
 
 	~azimuth=~az;
 	~elevation=~el;
-	~magnitude=~magnitude=(~magx.pow(2)+~magy.pow(2)+~magz.pow(2)).sqrt*(496/2);
+	~magnitude=~magnitude=(~magx.pow(2)+~magy.pow(2)+~magz.pow(2)).sqrt*(56);
 //~magnitude.postln;
 
 	dota=(~count.[0]*~count.[1]*~count.[2]*~count.[3]*~count.[4]*~count.[5]).collect{
@@ -600,7 +600,7 @@ r.play;
 		ry = (x*sin(ot)) + (y*cos(ot));
         x = rx; y = ry;
 
-        [x,y,z]
+        [x,y,z]/10
     };
 
 };
