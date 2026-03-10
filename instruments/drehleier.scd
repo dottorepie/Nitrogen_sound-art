@@ -246,7 +246,7 @@ cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt));
 
 		sph=Spherical(mag,polytope.theta,polytope.phi);
 
-	loc1=sph.x;  loc2=sph.y;  loc3=sph.z;
+	loc1=1;  loc2=1;  loc3=1;
 
 phasex=Complex(1,mx.value).theta;
 phasey=Complex(1,my.value).theta;
@@ -610,7 +610,7 @@ MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
 														(
 MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 		var t;
-		t=val.linlin(0,127,1/8,16).round(1/8);
+		t=val.linlin(0,127,1/4,8).round(1/8);
 		t.postln;
 		TempoClock.default.tempo_(t);
 
