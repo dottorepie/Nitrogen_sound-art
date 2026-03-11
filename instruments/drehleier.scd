@@ -222,9 +222,14 @@ ton=2.pow(Select.kr(tone.lag(0.001).linlin(0, 14, 0, 24), ~scale) /12).round(0.0
 
 				polytope=Cartesian(axis.x,axis.y,axis.z);
 
-b_x=2.pow(Select.kr(polytope.x.round(1).linlin(1, 14, 0, 24), ~scale1) /12);
-b_y=2.pow(Select.kr(polytope.y.round(1).linlin(1, 14, 0, 24), ~scale1) /12);
-b_z=2.pow(Select.kr(polytope.z.round(1).linlin(1, 14, 0, 24), ~scale1) /12);
+//b_x=2.pow(Select.kr(polytope.x.round(1).linlin(1, 14, 0, 24), ~scale1) /12);
+//b_y=2.pow(Select.kr(polytope.y.round(1).linlin(1, 14, 0, 24), ~scale1) /12);
+//b_z=2.pow(Select.kr(polytope.z.round(1).linlin(1, 14, 0, 24), ~scale1) /12);
+
+b_x=2.pow(polytope.x.round(1) /56);
+b_y=2.pow(polytope.y.round(1) /56);
+b_z=2.pow(polytope.z.round(1) /56);
+
 
 
 anglex=(exp(Complex(0,1)*polytope.theta).real*exp(Complex(0,1)*polytope.phi).real).round(0.00001);
@@ -364,18 +369,18 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal*10;
 					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal*10;
 
-					g_ch1=((spr.x*Spherical(1.rho,~az.[0],~el.[0]).x*Saw.ar(panx))+
-						         (spr.y*Spherical(1.rho,~az.[0],~el.[0]).y*Saw.ar(pany))+
-						          (spr.z*Spherical(1.rho,~az.[1],~el.[1]).z*Saw.ar(panz))).max(0);
-					g_ch2=((spr.x*Spherical(1.rho,~az.[1],~el.[1]).x*Saw.ar(panx))+
-						         (spr.y*Spherical(1.rho,~az.[1],~el.[1]).y*Saw.ar(pany))+
-						          (spr.z*Spherical(1.rho,~az.[1],~el.[1]).z*Saw.ar(panz))).max(0);
-					g_ch3=((spr.x*Spherical(1.rho,~az.[2],~el.[2]).x*Saw.ar(panx))+
-						         (spr.y*Spherical(1.rho,~az.[2],~el.[2]).y*Saw.ar(pany))+
-						          (spr.z*Spherical(1.rho,~az.[2],~el.[2]).z*Saw.ar(panz))).max(0);
-					g_ch4=((spr.x*Spherical(1.rho,~az.[3],~el.[3]).x*Saw.ar(panx))+
-						         (spr.y*Spherical(1.rho,~az.[3],~el.[3]).y*Saw.ar(pany))+
-						          (spr.z*Spherical(1.rho,~az.[3],~el.[3]).z*Saw.ar(panz))).max(0);
+					g_ch1=((sph.x*Spherical(sph.rho,~az.[0],~el.[0]).x*Saw.ar(panx))+
+						         (sph.y*Spherical(sph.rho,~az.[0],~el.[0]).y*Saw.ar(pany))+
+						          (sph.z*Spherical(sph.rho,~az.[1],~el.[1]).z*Saw.ar(panz))).max(0);
+					g_ch2=((sph.x*Spherical(sph.rho,~az.[1],~el.[1]).x*Saw.ar(panx))+
+						         (sph.y*Spherical(sph.rho,~az.[1],~el.[1]).y*Saw.ar(pany))+
+						          (sph.z*Spherical(sph.rho,~az.[1],~el.[1]).z*Saw.ar(panz))).max(0);
+					g_ch3=((sph.x*Spherical(sph.rho,~az.[2],~el.[2]).x*Saw.ar(panx))+
+						         (sph.y*Spherical(sph.rho,~az.[2],~el.[2]).y*Saw.ar(pany))+
+						          (sph.z*Spherical(sph.rho,~az.[2],~el.[2]).z*Saw.ar(panz))).max(0);
+					g_ch4=((sph.x*Spherical(sph.rho,~az.[3],~el.[3]).x*Saw.ar(panx))+
+						         (sph.y*Spherical(sph.rho,~az.[3],~el.[3]).y*Saw.ar(pany))+
+						          (sph.z*Spherical(sph.rho,~az.[3],~el.[3]).z*Saw.ar(panz))).max(0);
 
 				 gn = [g_ch1, g_ch2, g_ch3, g_ch4];   g_sum = gn.sum;  gn = gn / g_sum;
 
@@ -682,7 +687,7 @@ MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 (
 MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 		var cl;
-		cl=val.linlin(0,127,0,14).round(1).asInteger;
+		cl=val.linlin(0,127,0,56).round(1).asInteger;
 		cl.postln;
 		if(~synth.isPlaying,{~synth.set(\tone,cl)});
 },27);
