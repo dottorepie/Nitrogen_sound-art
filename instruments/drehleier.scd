@@ -166,12 +166,12 @@ wt = signal.asWavetable;
 (
 SynthDef.new(\synth,{
 
-	arg gain=1,low=992,tone=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,sc=1,
+	arg gain=1,low=992,tone1=0,tone2=0,tone3=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,sc=1,
 				fu=32,drive=1,spread=1,drone_amp=1,pann=0,az=0,el=0,azr=0,dron=0,drone=1,theta=0,rx=0,ry=0,rz=0;
 
 	var rq=1,cloud=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,core=(9/8).rand;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
-	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,ton,threshold1,threshold2,threshold3,phase1,phase2,phase3;
+	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,threshold1,threshold2,threshold3,phase1,phase2,phase3;
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope,gain1,gain2,gain3,env,azimuth,elevation;
 	var magx,magy,magz,magqx,magqy,mod_anglex,anglex,angley,anglez,phasex,phasey,phasez,rq1,rq2,rq3,rq4,rq5,rq6;
 	var mod_angley,mod_anglez,mx,my,mz,mqx,mqy,mag,mq,lfo,sph;
@@ -180,13 +180,14 @@ SynthDef.new(\synth,{
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,axis;
 	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=100,spx,spy,spz;
 	var g_ch1,g_ch2,g_ch3,g_ch4;
-	var gn ,g_sum,g_avg ;
+	var gn ,g_sum,g_avg ,ton1,ton2,ton3;
 
 fund=fu*(9/8);
 lamdoma=(x.lag(0.001)+a.lag(0.001))/x.lag(0.001);
 
-ton=2.pow(Select.kr(tone.lag(0.001).linlin(0, 14, 0, 24), ~scale) /12).round(0.0001)*2.pow(dron.lag(0.001)/992);
-
+ton1=2.pow(Select.kr(tone1.lag(0.001).linlin(0, 14, 0, 24), ~scale) /12).round(0.0001)*2.pow(dron.lag(0.001)/992);
+ton2=2.pow(Select.kr(tone2.lag(0.001).linlin(0, 14, 0, 24), ~scale) /12).round(0.0001)*2.pow(dron.lag(0.001)/992);
+ton3=2.pow(Select.kr(tone3.lag(0.001).linlin(0, 14, 0, 24), ~scale) /12).round(0.0001)*2.pow(dron.lag(0.001)/992);
 
 		//		ton=2.pow((tone.lag(0.001))/56).round(0.0001)*2.pow(dron.lag(0.001)/56);
 
@@ -284,9 +285,9 @@ phasey=Complex(1,sph.y).theta;
 phasez=Complex(1,sph.z).theta;
 
 
-freq1=(fund*ton)*b_x.lag(0.001)*lamdoma;
-freq2=(fund*ton)*b_y.lag(0.001)*lamdoma;
-freq3=(fund*ton)*b_z.lag(0.001)*lamdoma;
+freq1=(fund*ton1)*b_x.lag(0.001)*lamdoma;
+freq2=(fund*ton2)*b_y.lag(0.001)*lamdoma;
+freq3=(fund*ton3)*b_z.lag(0.001)*lamdoma;
 
 					dr=2.pow(drone.lag(0.1)/12)*2.pow(dron.lag(0.001)/992);
 
@@ -294,9 +295,9 @@ f1=(fund)*b_x.lag(0.001)*lamdoma*dr;
 f2=(fund)*b_y.lag(0.001)*lamdoma*dr;
 f3=(fund)*b_z.lag(0.001)*lamdoma*dr;
 
-amp1=ton.reciprocal*b_x.reciprocal*lamdoma.reciprocal;
-amp2=ton.reciprocal*b_y.reciprocal*lamdoma.reciprocal;
-amp3=ton.reciprocal*b_z.reciprocal*lamdoma.reciprocal;
+amp1=ton1.reciprocal*b_x.reciprocal*lamdoma.reciprocal;
+amp2=ton2.reciprocal*b_y.reciprocal*lamdoma.reciprocal;
+amp3=ton3.reciprocal*b_z.reciprocal*lamdoma.reciprocal;
 
 g1=b_x.reciprocal*lamdoma.reciprocal*dr.reciprocal*drone_amp.reciprocal;
 g2=b_y.reciprocal*lamdoma.reciprocal*dr.reciprocal*drone_amp.reciprocal;
@@ -338,7 +339,7 @@ ds3=(LPF.ar((Osc.ar(~w1.bufnum,f3+1,phase:phasez,mul:level).abs*SinOsc.ar(f3+1,p
 					);
 
 					sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.001)/992),amp1)+(ds1/2));
-					sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:level).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.001)/992),amp2)+(ds2/2);
+					sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:level).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.001)/992),amp2)+(ds2/2));
 				sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:level).abs*SinOsc.ar(freq3,phase:phasez)),freq3*2.pow(low.lag(0.001)/992),amp3)+(ds3/2));
 
 	sig1=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
@@ -506,7 +507,7 @@ m3=m3+1;
 
 
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,32,\tone,0,\low,992*0,\pan,(992*16).neg,
+~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,32,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
 		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,
 			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,1,
 			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,1]).register;
@@ -695,7 +696,7 @@ MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 		var cl;
 		cl=val.linlin(0,127,0,56).round(1).asInteger;
 		cl.postln;
-		if(~synth.isPlaying,{~synth.set(\tone,cl)});
+		if(~synth.isPlaying,{~synth.set(\tone1,cl,\tone2,cl,\tone3,cl)});
 },27);
 	);
 
@@ -929,35 +930,35 @@ m3=m3+1;
 
 				~seq = Pseq(~dur ,inf).asStream;
 
-	~synth.set(\tone, ~s1)	;
+	~synth.set(\tone3, ~s1)	;
 
     ~seq.next.wait;
 
-	~synth.set(\tone, ~s2)	;
+	~synth.set(\tone1, ~s2)	;
 
 	    ~seq.next.wait;
 
-	~synth.set(\tone, ~s3)	;
+	~synth.set(\tone1, ~s3)	;
 
 	    ~seq.next.wait;
 
-	~synth.set(\tone, ~s4)	;
+	~synth.set(\tone1, ~s4)	;
 
 	    ~seq.next.wait;
 
-	~synth.set(\tone, ~s5)	;
+	~synth.set(\tone2, ~s5)	;
 
 	    ~seq.next.wait;
 
-	~synth.set(\tone, ~s6)	;
+	~synth.set(\tone2, ~s6)	;
 
 	    ~seq.next.wait;
 
-	~synth.set(\tone, ~s7)	;
+	~synth.set(\tone2, ~s7)	;
 
 	    ~seq.next.wait;
 
-	~synth.set(\tone, ~s8)	;
+	~synth.set(\tone3, ~s8)	;
 
 	    ~seq.next.wait;
 };
@@ -974,11 +975,11 @@ m3=m3+1;
 ~s.stop
 
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,32,\tone,0,\low,992*0,\pan,(992*16).neg,
+~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,32,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
 		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,
-			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,100,
+			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,1,
 			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,1]).register;
-)
+);
 
 			////sequencer
 
