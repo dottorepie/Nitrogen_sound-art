@@ -299,9 +299,9 @@ amp1=ton1.reciprocal*b_x.reciprocal*lamdoma.reciprocal;
 amp2=ton2.reciprocal*b_y.reciprocal*lamdoma.reciprocal;
 amp3=ton3.reciprocal*b_z.reciprocal*lamdoma.reciprocal;
 
-g1=b_x.reciprocal*lamdoma.reciprocal*dr.reciprocal*drone_amp.reciprocal;
-g2=b_y.reciprocal*lamdoma.reciprocal*dr.reciprocal*drone_amp.reciprocal;
-g3=b_z.reciprocal*lamdoma.reciprocal*dr.reciprocal*drone_amp.reciprocal;
+g1=b_x.reciprocal*lamdoma.reciprocal*dr.reciprocal*drone_amp.reciprocal*panx;
+g2=b_y.reciprocal*lamdoma.reciprocal*dr.reciprocal*drone_amp.reciprocal*pany;
+g3=b_z.reciprocal*lamdoma.reciprocal*dr.reciprocal*drone_amp.reciprocal*panz;
 
 band_osc1=SinOsc.kr(b_x*2.pow(band.lag(0.001)/992),phase:phasex).exprange(496,16256);
 band_osc2=SinOsc.kr(b_y*2.pow(band.lag(0.001)/992),phase:phasey).exprange(496,16256);
@@ -376,18 +376,18 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal*10;
 					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal*10;
 
-					g_ch1=((sph.x*Spherical(sph.rho,~az.[0],~el.[0]).x*Saw.ar(panx))+
-						         (sph.y*Spherical(sph.rho,~az.[0],~el.[0]).y*Saw.ar(pany))+
-						          (sph.z*Spherical(sph.rho,~az.[1],~el.[1]).z*Saw.ar(panz))).max(0);
-					g_ch2=((sph.x*Spherical(sph.rho,~az.[1],~el.[1]).x*Saw.ar(panx))+
-						         (sph.y*Spherical(sph.rho,~az.[1],~el.[1]).y*Saw.ar(pany))+
-						          (sph.z*Spherical(sph.rho,~az.[1],~el.[1]).z*Saw.ar(panz))).max(0);
-					g_ch3=((sph.x*Spherical(sph.rho,~az.[2],~el.[2]).x*Saw.ar(panx))+
-						         (sph.y*Spherical(sph.rho,~az.[2],~el.[2]).y*Saw.ar(pany))+
-						          (sph.z*Spherical(sph.rho,~az.[2],~el.[2]).z*Saw.ar(panz))).max(0);
-					g_ch4=((sph.x*Spherical(sph.rho,~az.[3],~el.[3]).x*Saw.ar(panx))+
-						         (sph.y*Spherical(sph.rho,~az.[3],~el.[3]).y*Saw.ar(pany))+
-						          (sph.z*Spherical(sph.rho,~az.[3],~el.[3]).z*Saw.ar(panz))).max(0);
+					g_ch1=((sph.x*Spherical(sph.rho,~az.[0],~el.[0]).x)+
+						         (sph.y*Spherical(sph.rho,~az.[0],~el.[0]).y)+
+						          (sph.z*Spherical(sph.rho,~az.[1],~el.[1]).z)).max(0);
+					g_ch2=((sph.x*Spherical(sph.rho,~az.[1],~el.[1]).x)+
+						         (sph.y*Spherical(sph.rho,~az.[1],~el.[1]).y)+
+						          (sph.z*Spherical(sph.rho,~az.[1],~el.[1]).z)).max(0);
+					g_ch3=((sph.x*Spherical(sph.rho,~az.[2],~el.[2]).x)+
+						         (sph.y*Spherical(sph.rho,~az.[2],~el.[2]).y)+
+						          (sph.z*Spherical(sph.rho,~az.[2],~el.[2]).z)).max(0);
+					g_ch4=((sph.x*Spherical(sph.rho,~az.[3],~el.[3]).x)+
+						         (sph.y*Spherical(sph.rho,~az.[3],~el.[3]).y)+
+						          (sph.z*Spherical(sph.rho,~az.[3],~el.[3]).z)).max(0);
 
 				 gn = [g_ch1, g_ch2, g_ch3, g_ch4];   g_sum = gn.sum;  gn = gn / g_sum;
 
@@ -935,6 +935,7 @@ m3=m3+1;
     ~seq.next.wait;
 
 	~synth.set(\tone1, ~s2)	;
+				~synth.set(\tone3, 0)	;
 
 	    ~seq.next.wait;
 
@@ -947,6 +948,7 @@ m3=m3+1;
 	    ~seq.next.wait;
 
 	~synth.set(\tone2, ~s5)	;
+					~synth.set(\tone1, 0)	;
 
 	    ~seq.next.wait;
 
@@ -959,6 +961,7 @@ m3=m3+1;
 	    ~seq.next.wait;
 
 	~synth.set(\tone3, ~s8)	;
+					~synth.set(\tone2, 0)	;
 
 	    ~seq.next.wait;
 };
