@@ -149,7 +149,7 @@ wt = signal.asWavetable;
 		(
 			{
 				var nn=1.neg;
-		~scalee=14.collect{nn=nn+1;Scale.phrygian.performDegreeToKey(nn,12)};
+		~scalee=35.collect{nn=nn+1;Scale.phrygian.performDegreeToKey(nn,12)};
 			}.value;
 		);
 
@@ -177,14 +177,14 @@ SynthDef.new(\synth,{
 	var gn ,g_sum,g_avg ,ton1,ton2,ton3,tonb;
 
 
-				m = In.kr(~controlBus3);
+				m = In.kr(~controlBus3).lag(0.1);
 
 				env=EnvGen.ar(Env.sine(8),doneAction:2,levelScale:1);
 fund=fu*(9/8);
 lamdoma=(x.lag(0.001)+a.lag(0.001))/x.lag(0.001);
 
 
-						sph_object=Spherical(14,az.lag(0.0001),el.lag(0.0001));
+						sph_object=Spherical(35,az.lag(0.0001),el.lag(0.0001));
 				tone1=sph_object.x;
 				tone2=sph_object.y;
 				tone3=sph_object.z;
@@ -489,7 +489,7 @@ m3=m3+1;
 
 			~seq = Pseq(~dur, inf).asStream;
 		~system= Pseq(~r,inf).asStream;
-			~tonb=992*2;
+			~tonb=992*1.5;
 			~panwidth=1;
 
 ~s = Routine({
@@ -506,8 +506,8 @@ i= ~cart.lag(0.01).size.rand;
 					~detune=32.rand.round(2).max(1);
 
 	~synth=Synth.new(\synth,[\gain,0.5,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
-              \low,992.rand,\pan,(992*16).neg,\mix,0.999.rand,\room,1,\pann,(992*8).neg,\x,2,\a,1,\spread,~panwidth,
-						\pon,0.001,\pneuma,0,\namp,l,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
+						\low,(992*2).rand,\pan,(992*16).neg,\mix,0.8,\room,~rev.lag(0.01),\pann,(992*6).neg,\x,2,\a,1,\spread,~panwidth,
+						\pon,0.001,\pneuma,0,\namp,1,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
 						,\panx,0.1.rand,\pany,0.1.rand,\panz,0.1.rand,\dron,~tonb,
 						\xx,~cart.lag(0.01).[i].[0].round(1), \yy,~cart.lag(0.01).[i].[1].round(1),\zz,~cart.lag(0.01).[i].[2].round(1)]).register;
 

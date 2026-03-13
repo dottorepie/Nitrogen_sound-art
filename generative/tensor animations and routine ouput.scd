@@ -61,7 +61,7 @@ var signal,wt;
 
 	{
 var signal,wt;
-	signal=Env([1,8],[3],[8]);
+	signal=Env([1,10],[3],[8]);
 	wt = signal.asSignal(1024).asWavetable;
 ~harm.loadCollection(wt);
 //signal.plot;
@@ -118,7 +118,7 @@ var g=((1+5.sqrt)/2),s=(1+2.sqrt);
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
 Synth.new(\player);
 data = [];
-
+Window.free;
 w = Window.new("3D Scatterplot", Rect(40,40, 2000, 1200)).front;
 
 ~v = UserView.new(w,Rect(0,0,2000,1200)).background_(Color.black);
@@ -137,6 +137,7 @@ a.background = Color.black;
 	//perspective=~controlBus2.getSynchronous;
 	harm=~controlBus3.getSynchronous;
 	angle=~controlBus5.getSynchronous;
+		~rev=harm/10;
 
 	m_x=m_y=m_z=mq=harm;
 
@@ -541,7 +542,7 @@ az6=0;el6=0;
 
 	~azimuth=~az;
 	~elevation=~el;
-	~magnitude=(~magx.pow(2)+~magy.pow(2)+~magz.pow(2)).sqrt*(496/~detune);
+	~magnitude=(~magx.pow(2)+~magy.pow(2)+~magz.pow(2)).sqrt*(992/~detune);
 //~magnitude.postln;
 
 	dota=(~count.[0]*~count.[1]*~count.[2]*~count.[3]*~count.[4]*~count.[5]).collect{
