@@ -489,23 +489,26 @@ m3=m3+1;
 
 			~seq = Pseq(~dur, inf).asStream;
 		~system= Pseq(~r,inf).asStream;
-			~tonb=992;
+			~tonb=992*2;
+			~panwidth=1;
 
 ~s = Routine({
     var i,m,l;
 
     loop {
 				thisThread.randSeed = 123;
+					//	thisThread.randSeed = ~val.asInteger;
 							TempoClock.default.tempo_(1);
-					//~r1=0; ~r2=0; ~r3=0;
-i= ~cart.size.rand;
+				//	TempoClock.default.tempo_(~val/300);
+				//	~r1=0; ~r2=0; ~r3=0;
+i= ~cart.lag(0.01).size.rand;
 					l=~system.next;
 
-	~synth=Synth.new(\synth,[\gain,0.5,\drive,(992*2).rand,\fu,32,\sc,~magnitude.[i].round(1).max(1).asInteger,
-              \low,992.rand,\pan,(992*16).neg,\mix,0.999.rand,\room,1,\pann,(992*8).neg,\x,2,\a,1,\spread,0.5,
-						\pon,0.001,\pneuma,0,\namp,l,\drone,12.neg,\az,~azimuth.[i],\el,~elevation.[i]
+	~synth=Synth.new(\synth,[\gain,0.5,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger.lag,
+              \low,992.rand,\pan,(992*16).neg,\mix,0.999.rand,\room,1,\pann,(992*8).neg,\x,2,\a,1,\spread,~panwidth,
+						\pon,0.001,\pneuma,0,\namp,l,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
 						,\panx,0.5.rand,\pany,0.5.rand,\panz,0.5.rand,\dron,~tonb,
-						\xx,~cart.[i].[0].round(1), \yy,~cart.[i].[1].round(1),\zz,~cart.[i].[2].round(1)]).register;
+						\xx,~cart.lag(0.01).[i].[0].round(1), \yy,~cart.lag(0.01).[i].[1].round(1),\zz,~cart.lag(0.01).[i].[2].round(1)]).register;
 
 
 
