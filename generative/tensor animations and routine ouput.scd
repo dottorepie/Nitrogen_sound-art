@@ -580,7 +580,7 @@ r.play;
     a.rot(ot,ot,ot);
 				~r1=ot; ~r2=ot; ~r3=ot;
 
-		ot = (ot + 0.5.degrad).wrao(0,2pi);
+		ot = (ot + 0.5.degrad).wrap(0,2pi);
 
     ~cart = data.collect{|p|
 
