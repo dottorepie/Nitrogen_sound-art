@@ -1,7 +1,7 @@
 
 (
 s.options.numWireBufs = 1024*4;
-s.options.numOutputBusChannels=6;
+s.options.numOutputBusChannels=4;
 s.options.numInputBusChannels=0;
 s.options.memSize = 8192*16;
 s.options.blockSize = 64;
@@ -16,6 +16,7 @@ Buffer.freeAll;
 ~controlBus4 = Bus.control(s, 1);
 ~controlBus5 = Bus.control(s, 1);
 ~controlBus6 = Bus.control(s, 1);
+~controlBus7 = Bus.control(s, 1);
 
 	~scale1= Buffer.alloc(s,2048);
 	~scale2= Buffer.alloc(s,2048);
@@ -23,13 +24,14 @@ Buffer.freeAll;
 	~rotation= Buffer.alloc(s,2048);
 	~harm= Buffer.alloc(s,2048);
 	~temp= Buffer.alloc(s,2048);
+	~space= Buffer.alloc(s,2048);
 
 
 
 {
 var signal,wt;
 	//signal=Env([1,100],[3],[8]);
-		signal=Env([1,1500],[3],[8]);
+		signal=Env([1,1500],[3],[10]);
 	wt = signal.asSignal(1024).asWavetable;
 ~scale2.loadCollection(wt);
 //signal.plot;
@@ -37,7 +39,7 @@ var signal,wt;
 		{
 var signal,wt;
 //	signal=Env([1,10000],[3],[12]);
-			signal=Env([1,1000],[3],[12]);
+			signal=Env([1,1000],[3],[16]);
 	wt = signal.asSignal(1024).asWavetable;
 ~scale1.loadCollection(wt);
 //signal.plot;
@@ -54,7 +56,7 @@ var signal,wt;
 
 	{
 var signal,wt;
-	signal=Env([0.8,0.001],[3],[4]);
+	signal=Env([0.4,0.001],[3],[4]);
 	wt = signal.asSignal(1024).asWavetable;
 ~rotation.loadCollection(wt);
 //signal.plot;
@@ -62,7 +64,7 @@ var signal,wt;
 
 	{
 var signal,wt;
-	signal=Env([1,10],[3],[8]);
+	signal=Env([10,0],[3],[8]);
 	wt = signal.asSignal(1024).asWavetable;
 ~harm.loadCollection(wt);
 //signal.plot;
@@ -70,23 +72,32 @@ var signal,wt;
 
 		{
 var signal,wt;
-	signal=Env([1,0],[3],[4]);
+	signal=Env([1,0],[3],[12]);
 	wt = signal.asSignal(1024).asWavetable;
 ~temp.loadCollection(wt);
 //signal.plot;
 		}.value;
 
+			{
+var signal,wt;
+	signal=Env([0,1],[3],[256]);
+	wt = signal.asSignal(1024).asWavetable;
+~space.loadCollection(wt);
+	//signal.plot;
+		}.value;
+
 
 (
 SynthDef.new(\player,{
-	arg tempo;
+
 	Out.kr(~controlBus.index, (Osc.kr(~scale.bufnum,(1/100)).abs));
 	Out.kr(~controlBus1.index, (Osc.kr(~scale1.bufnum,(1/100)).abs));
-			Out.kr(~controlBus4.index, (Osc.kr(~scale2.bufnum,(1/100)).abs));
-		Out.kr(~controlBus2.index, (Osc.kr(~rotation.bufnum,(1/100)).abs));
-Out.kr(~controlBus3.index, (Osc.kr(~harm.bufnum,(1/100)).abs));
-			Out.kr(~controlBus5.index, (LFNoise1.kr(1/100).range(pi.neg,pi)));
-						Out.kr(~controlBus6.index, (Osc.kr(~temp.bufnum,(1/100)).abs));
+	Out.kr(~controlBus4.index, (Osc.kr(~scale2.bufnum,(1/100)).abs));
+	Out.kr(~controlBus2.index, (Osc.kr(~rotation.bufnum,(1/100)).abs));
+    Out.kr(~controlBus3.index, (Osc.kr(~harm.bufnum,(1/100)).abs));
+	Out.kr(~controlBus5.index, (LFNoise1.kr(1/100).range(pi.neg,pi)));
+	Out.kr(~controlBus6.index, (Osc.kr(~temp.bufnum,(1/100)).abs));
+	Out.kr(~controlBus7.index, (Osc.kr(~space.bufnum,(1/100)).abs));
 
 
 }).add;
@@ -108,7 +119,6 @@ var ot=0,dota,pla=0;
 var data;
 var az=0,el=0;
 var sph,mag,r,run = true;
-
 var scale=1,scale1=10,scale2=10,harm,perspective;
 var axis=~count.[0],cloud=~count.[1],axis1=~count.[2],gravity1=~count.[3],axis2=~count.[4],gravity2=~count.[5];
 var m_x=1,m_y=1,m_z=1,mq=m_x+1;
@@ -122,7 +132,7 @@ var az_1=0,el_1=0,az_2=0,el_2=0,az_3=0,el_3=0,az_4=0,el_4=0,az_7=0,el_7=0,az_6=0
 var azimuth,elevation,magnitudex,magnitudey,magnitudez,magnitudeqx;
 var magx,magy,magz,magqx,rotation;
 var angle=0,angle1=0,angle11=0;
-var g=((1+5.sqrt)/2),s=(1+2.sqrt),ott=pi.rand2,temp;
+var g=((1+5.sqrt)/2),s=(1+2.sqrt),ott=pi.rand2,temp,space;
 
 ~detune=16;
 	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[]; ~cart=[];
@@ -133,12 +143,12 @@ Window.free;
 w = Window.new("3D Scatterplot", Rect(40,40, 2000, 1200)).front;
 
 ~v = UserView.new(w,Rect(0,0,2000,1200)).background_(Color.black);
-a = ScatterView3d(~v, Rect(0,0, 2000,1200), ~data, [-2000, 2000].asSpec,[-2000, 2000].asSpec,[-2000, 2000].asSpec);
+a = ScatterView3d(~v, Rect(0,0, 2000,1200), ~data, [-2500, 2500].asSpec,[-2500, 2500].asSpec,[-2500, 2500].asSpec);
 a.drawMethod = \fillRect;
 a.symbolSize = 3;
 a.symbolColor = Color.white;
 a.background = Color.clear;
-b = ScatterView3d(~v, Rect(0,0, 2000,1200), ~data, [-1500, 1500].asSpec,[-1500, 1500].asSpec,[-1500, 1500].asSpec);
+b = ScatterView3d(~v, Rect(0,0, 2000,1200), ~data, [-2500, 2500].asSpec,[-2500, 2500].asSpec,[-2500, 2500].asSpec);
 b.drawMethod = \fillRect;
 b.symbolSize = 3;
 b.symbolColor = Color.white;
@@ -154,6 +164,8 @@ b.background = Color.clear;
 	harm=~controlBus3.getSynchronous;
 	angle=~controlBus5.getSynchronous;
 		temp=~controlBus6.getSynchronous;
+			space=~controlBus7.getSynchronous;
+
 		~rev=harm/10;
 
 	m_x=m_y=m_z=mq=harm;
@@ -584,6 +596,8 @@ az6=0;el6=0;
         AppClock.sched(0, {
             a.data = data;   // ScatterView3d data
 			b.data = data;
+
+			~v.background_(Color(space,space,space));
             ~v.refresh;
           //  0;               // keep AppClock loop going
         }); /*~cart.postln;*/ (1/8).wait;
