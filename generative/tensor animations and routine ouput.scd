@@ -46,7 +46,7 @@ var signal,wt;
 	{
 var signal,wt;
 	//signal=Env([0.005,1,0.01],[2,1],[4,2.neg]);
-		signal=Env([1,20000,1],[2.95,0.05],[4,1.neg]);
+		signal=Env([1,20000,1],[2.95,0.05],[5,1.neg]);
 	wt = signal.asSignal(1024).asWavetable;
 ~scale.loadCollection(wt);
 //signal.plot;
@@ -54,7 +54,7 @@ var signal,wt;
 
 	{
 var signal,wt;
-	signal=Env([1.6,0.001],[3],[4]);
+	signal=Env([0.8,0.001],[3],[4]);
 	wt = signal.asSignal(1024).asWavetable;
 ~rotation.loadCollection(wt);
 //signal.plot;
@@ -125,7 +125,7 @@ var angle=0,angle1=0,angle11=0;
 var g=((1+5.sqrt)/2),s=(1+2.sqrt),ott=pi.rand2,temp;
 
 ~detune=16;
-	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[]; ~cart=[];~data=[[1,1,1]];
+	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[]; ~cart=[];
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
 Synth.new(\player);
 data = [];
@@ -133,12 +133,12 @@ Window.free;
 w = Window.new("3D Scatterplot", Rect(40,40, 2000, 1200)).front;
 
 ~v = UserView.new(w,Rect(0,0,2000,1200)).background_(Color.black);
-a = ScatterView3d(~v, Rect(0,0, 2000,1200), ~data, [-5000, 5000].asSpec,[-5000, 5000].asSpec,[-5000, 5000].asSpec);
+a = ScatterView3d(~v, Rect(0,0, 2000,1200), ~data, [-2000, 2000].asSpec,[-2000, 2000].asSpec,[-2000, 2000].asSpec);
 a.drawMethod = \fillRect;
 a.symbolSize = 3;
 a.symbolColor = Color.white;
 a.background = Color.clear;
-b = ScatterView3d(~v, Rect(0,0, 2000,1200), ~data, [-5000, 5000].asSpec,[-5000, 5000].asSpec,[-5000, 5000].asSpec);
+b = ScatterView3d(~v, Rect(0,0, 2000,1200), ~data, [-1500, 1500].asSpec,[-1500, 1500].asSpec,[-1500, 1500].asSpec);
 b.drawMethod = \fillRect;
 b.symbolSize = 3;
 b.symbolColor = Color.white;
@@ -583,6 +583,7 @@ az6=0;el6=0;
         // schedule GUI update on AppClock
         AppClock.sched(0, {
             a.data = data;   // ScatterView3d data
+			b.data = data;
             ~v.refresh;
           //  0;               // keep AppClock loop going
         }); /*~cart.postln;*/ (1/8).wait;
@@ -599,7 +600,7 @@ r.play;
 
 		b.symbolColor = Color.new(red:temp,blue:1,green:temp);
 		a.symbolColor =Color.new(red:temp,blue:1,green:temp);
-    a.rot(ot,ot,ot);
+   a.rot(ot,ot,ot);
 		 b.rot(ott,ott,ott);
 				~r1=ot; ~r2=ot; ~r3=ot;
 
