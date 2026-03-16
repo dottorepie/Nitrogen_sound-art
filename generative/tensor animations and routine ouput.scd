@@ -612,8 +612,8 @@ r.play;
 
     Pen.translate(1000,600);
 
-		b.symbolColor = Color.new(red:temp,blue:1,green:temp);
-		a.symbolColor =Color.new(red:temp,blue:1,green:temp);
+		b.symbolColor = Color.new(red:temp,blue:temp,green:temp);
+		a.symbolColor =Color.new(red:temp,blue:temp,green:temp);
    a.rot(ot,ot,ot);
 		 b.rot(ott,ott,ott);
 				~r1=ot; ~r2=ot; ~r3=ot;

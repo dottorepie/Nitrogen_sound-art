@@ -55,23 +55,23 @@ s.meter;
 
 
 ////sesor based randomnes
-SerialPort.devices;
-~port = SerialPort.new("/dev/cu.usbserial-2240",9600);
-
-(
-~charArray = [];
-~getValues = Routine.new({
-
-	var ascii;
-	{ascii = ~port.read.asAscii;
-		if(ascii.isDecDigit, {~charArray = ~charArray.add(ascii)});
-		if(ascii == $a,{~val = ~charArray.collect(_.digit).convertDigits;
-			~charArray =[];
-		});
-	}.loop;
-
-}).play;
-);
+		// SerialPort.devices;
+		// ~port = SerialPort.new("/dev/cu.usbserial-2240",9600);
+		//
+		// (
+		// 	~charArray = [];
+		// 	~getValues = Routine.new({
+		//
+		// 		var ascii;
+		// 		{ascii = ~port.read.asAscii;
+		// 			if(ascii.isDecDigit, {~charArray = ~charArray.add(ascii)});
+		// 			if(ascii == $a,{~val = ~charArray.collect(_.digit).convertDigits;
+		// 				~charArray =[];
+		// 			});
+		// 		}.loop;
+		//
+		// 	}).play;
+		// );
 
 
 		///////L-system
@@ -179,7 +179,7 @@ SynthDef.new(\synth,{
 
 				m = In.kr(~controlBus3).lag(0.1);
 
-				env=EnvGen.ar(Env.sine(8),doneAction:2,levelScale:1);
+				env=EnvGen.ar(Env.sine(6),doneAction:2,levelScale:0.06);
 fund=fu*(9/8);
 lamdoma=(x.lag(0.001)+a.lag(0.001))/x.lag(0.001);
 
@@ -387,17 +387,20 @@ g_ch3 = gn[2];
 g_ch4 = gn[3];
 
 
-Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch1);	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch2);
-Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch3);
-Out.ar(3,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch4);
+//Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch1)
+//Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch2);
+//Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch3);
+//Out.ar(3,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch4);
 
-Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch1);	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch2);
-Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch3);
-Out.ar(3,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch4);
+//Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch1)
+//Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch2);
+//Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch3);
+//Out.ar(3,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch4);
 
-Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch1);	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch2);
-Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch3);
-Out.ar(3,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch4);
+//Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch1);
+//Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch2);
+//Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch3);
+//Out.ar(3,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch4);
 
 					///three channel
 				//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1*loc1.abs)),0.9,0.01));
@@ -424,17 +427,17 @@ Out.ar(0,VBAP.ar(3,Limiter.ar(LeakDC.ar(
 */
 
 ///ambisonic decoded on stereo
-					//amb_sig1=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1*loc1.abs)),0.9,0.01));
-					/////amb_sig2=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2*loc2.abs)),0.9,0.01));
-					//amb_sig3=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3*loc3.abs)),0.9,0.01));
+					amb_sig1=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01));
+					amb_sig2=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01));
+					amb_sig3=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01));
 
-					//amb_w=(amb_sig1+amb_sig2+amb_sig3)/2.sqrt;
-					//amb_x=amb_sig1;
-//					amb_y=amb_sig2;
-			//		amb_z=amb_sig3;
-//
-				//out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z,
-				//		[sph.theta+azf, sph.theta+azf], [sph.phi+elf,sph.phi+elf],2 ));
+					amb_w=(amb_sig1+amb_sig2+amb_sig3)/2.sqrt;
+					amb_x=amb_sig1;
+					amb_y=amb_sig2;
+					amb_z=amb_sig3;
+
+				out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z,
+						[sph.theta+LFSaw.ar(pon,0), sph.theta+LFSaw.ar(pon,0.5)], [sph.phi,sph.phi],2 ));
 
 
 
@@ -487,12 +490,14 @@ m3=m3+1;
 		/////////////sequencer
 		(
 
-			~seq = Pseq(~dur, inf).asStream;
+			~seq1= Pseq(~dur1/2, inf).asStream;
+				~seq2 = Pseq(~dur2/2, inf).asStream;
+				~seq3 = Pseq(~dur3/2, inf).asStream;
 		~system= Pseq(~r,inf).asStream;
 			~tonb=992*1.5;
 			~panwidth=1;
 
-~s = Routine({
+~str1 = Routine({
     var i,m,l;
 
     loop {
@@ -506,7 +511,32 @@ i= ~cart.lag(0.01).size.rand;
 					//~detune=32.rand.round(2).max(1);
 ~detune=4;
 
-	~synth=Synth.new(\synth,[\gain,0.5,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
+	~synth=Synth.new(\synth,[\gain,0.1,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
+						\low,(992*2).rand,\pan,(992*16).neg,\mix,0.8,\room,~rev.lag(0.01),\pann,(992*6).neg,\x,2,\a,1,\spread,~panwidth,
+						\pon,0.001,\pneuma,0,\namp,1,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
+						,\panx,0.001,\pany,0.001,\panz,0.001,\dron,~tonb,
+						\xx,~cart.lag(0.01).[i].[0].round(1), \yy,~cart.lag(0.01).[i].[1].round(1),\zz,~cart.lag(0.01).[i].[2].round(1)]).register;
+
+
+        ~seq1.next.wait;
+
+    }
+		});
+			~str2= Routine({
+    var i,m,l;
+
+    loop {
+				thisThread.randSeed = 123;
+					//	thisThread.randSeed = ~val.asInteger;
+							TempoClock.default.tempo_(1);
+				//	TempoClock.default.tempo_(~val/300);
+				//	~r1=0; ~r2=0; ~r3=0;
+i= ~cart.lag(0.01).size.rand;
+					l=~system.next;
+					//~detune=32.rand.round(2).max(1);
+~detune=4;
+
+	~synth=Synth.new(\synth,[\gain,0.1,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
 						\low,(992*2).rand,\pan,(992*16).neg,\mix,0.8,\room,~rev.lag(0.01),\pann,(992*6).neg,\x,2,\a,1,\spread,~panwidth,
 						\pon,0.001,\pneuma,0,\namp,1,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
 						,\panx,0.001,\pany,0.001,\panz,0.001,\dron,~tonb,
@@ -514,12 +544,40 @@ i= ~cart.lag(0.01).size.rand;
 
 
 
-        ~seq.next.wait;
+        ~seq2.next.wait;
 				//	(1).wait;
     }
-		})
+		});
+			~str3 = Routine({
+    var i,m,l;
+
+    loop {
+				thisThread.randSeed = 123;
+					//	thisThread.randSeed = ~val.asInteger;
+							TempoClock.default.tempo_(1);
+				//	TempoClock.default.tempo_(~val/300);
+				//	~r1=0; ~r2=0; ~r3=0;
+i= ~cart.lag(0.01).size.rand;
+					l=~system.next;
+					//~detune=32.rand.round(2).max(1);
+~detune=4;
+
+	~synth=Synth.new(\synth,[\gain,0.1,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
+						\low,(992*2).rand,\pan,(992*16).neg,\mix,0.8,\room,~rev.lag(0.01),\pann,(992*6).neg,\x,2,\a,1,\spread,~panwidth,
+						\pon,0.001,\pneuma,0,\namp,1,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
+						,\panx,0.001,\pany,0.001,\panz,0.001,\dron,~tonb,
+						\xx,~cart.lag(0.01).[i].[0].round(1), \yy,~cart.lag(0.01).[i].[1].round(1),\zz,~cart.lag(0.01).[i].[2].round(1)]).register;
+
+
+
+        ~seq3.next.wait;
+				//	(1).wait;
+    }
+		});
 		);
-	~s.play;
+	~str1.play;
+	~str2.play;
+	~str3.play;
 
 	});
 	Tdef(\drone).play;
@@ -527,7 +585,10 @@ i= ~cart.lag(0.01).size.rand;
 )
 )
 
-~s.stop;
+	~str1.stop;
+	~str2.stop;
+	~str3.stop;
+
 
 		TempoClock.default.tempo_(1/1);
 
