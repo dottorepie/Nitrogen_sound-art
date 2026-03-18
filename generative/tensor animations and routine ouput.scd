@@ -72,7 +72,7 @@ var signal,wt;
 
 		{
 var signal,wt;
-	signal=Env([1,0],[3],[12]);
+	signal=Env([1,0],[3],[16]);
 	wt = signal.asSignal(1024).asWavetable;
 ~temp.loadCollection(wt);
 //signal.plot;
@@ -140,9 +140,9 @@ var g=((1+5.sqrt)/2),s=(1+2.sqrt),ott=pi.rand2,temp,space;
 Synth.new(\player);
 data = [];
 Window.free;
-w = Window.new("3D Scatterplot", Rect(40,40, 2000, 1200)).front;
+~w = Window.new("3D Scatterplot", Rect(40,40, 2000, 1200)).front;
 
-~v = UserView.new(w,Rect(0,0,2000,1200)).background_(Color.black);
+~v = UserView.new(~w,Rect(0,0,2000,1200)).background_(Color.black);
 a = ScatterView3d(~v, Rect(0,0, 2000,1200), ~data, [-2500, 2500].asSpec,[-2500, 2500].asSpec,[-2500, 2500].asSpec);
 a.drawMethod = \fillRect;
 a.symbolSize = 3;
@@ -155,6 +155,7 @@ b.symbolColor = Color.white;
 b.background = Color.clear;
 
   r= Routine({loop{
+
 
 
 		scale=~controlBus.getSynchronous;
@@ -596,6 +597,8 @@ az6=0;el6=0;
         AppClock.sched(0, {
             a.data = data;   // ScatterView3d data
 			b.data = data;
+
+			~panwidth=0.99.rand;
 
 			~v.background_(Color(space,space,space));
             ~v.refresh;
