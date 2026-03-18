@@ -179,7 +179,7 @@ SynthDef.new(\synth,{
 
 				m = In.kr(~controlBus3).lag(0.1);
 
-				env=EnvGen.ar(Env.sine(6),doneAction:2,levelScale:0.06);
+				env=EnvGen.ar(Env.sine(6),doneAction:2,levelScale:1);
 fund=fu*(9/8);
 lamdoma=(x.lag(0.001)+a.lag(0.001))/x.lag(0.001);
 
@@ -211,9 +211,9 @@ ton3=2.pow(Select.kr(tone3.round(1), ~scalee) /12).round(0.0001)*tonb;
 					polytope=Spherical(sc,spr.theta,spr.phi);
 							laxis=Spherical(lamdoma,spr.theta,spr.phi);
 
-b_x=2.pow(polytope.x.round(1) /992)*laxis.x.round((9/8)/2);
-b_y=2.pow(polytope.y.round(1) /992)*laxis.y.round((9/8)/2);
-b_z=2.pow(polytope.z.round(1) /992)*laxis.z.round((9/8)/2);
+b_x=2.pow(polytope.x.round(1) /992)*lamdoma;
+b_y=2.pow(polytope.y.round(1) /992)*lamdoma;
+b_z=2.pow(polytope.z.round(1) /992)*lamdoma;
 
 //b_x=laxis.x.round((9/8)/2);
 //b_y=laxis.y.round((9/8)/2);
@@ -365,19 +365,18 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal*10*env;
 
 
-					g_ch1=((sph.x*Spherical(sph.rho,~az.[0],~el.[0]).x*SinOsc.ar(pon,0))+
-						(sph.y*Spherical(sph.rho,~az.[0],~el.[0]).y*SinOsc.ar(pon,(pi/2)))+
+					g_ch1=((sph.x*Spherical(sph.rho,~az.[0],~el.[0]).x*SinOsc.ar(pon,(pi*(4/4))))+
+						          (sph.y*Spherical(sph.rho,~az.[0],~el.[0]).y*SinOsc.ar(pon,((pi/2)*(4/4))))+
 						          (sph.z*Spherical(sph.rho,~az.[1],~el.[1]).z)).max(0);
-					g_ch2=((sph.x*Spherical(sph.rho,~az.[1],~el.[1]).x*SinOsc.ar(pon,0))+
-						         (sph.y*Spherical(sph.rho,~az.[1],~el.[1]).y*SinOsc.ar(pon,(pi/2)))+
+					g_ch2=((sph.x*Spherical(sph.rho,~az.[1],~el.[1]).x*SinOsc.ar(pon,(pi*(1/4))))+
+						         (sph.y*Spherical(sph.rho,~az.[1],~el.[1]).y*SinOsc.ar(pon,((pi/2)*(1/4))))+
 						          (sph.z*Spherical(sph.rho,~az.[1],~el.[1]).z)).max(0);
-					g_ch3=((sph.x*Spherical(sph.rho,~az.[2],~el.[2]).x*SinOsc.ar(pon,0))+
-						         (sph.y*Spherical(sph.rho,~az.[2],~el.[2]).y*SinOsc.ar(pon,(pi/2)))+
+					g_ch3=((sph.x*Spherical(sph.rho,~az.[2],~el.[2]).x*SinOsc.ar(pon,(pi*(2/4))))+
+						         (sph.y*Spherical(sph.rho,~az.[2],~el.[2]).y*SinOsc.ar(pon,((pi/2)*(2/4))))+
 						          (sph.z*Spherical(sph.rho,~az.[2],~el.[2]).z)).max(0);
-					g_ch4=((sph.x*Spherical(sph.rho,~az.[3],~el.[3]).x*SinOsc.ar(pon,0))+
-						         (sph.y*Spherical(sph.rho,~az.[3],~el.[3]).y*SinOsc.ar(pon,(pi/2)))+
+					g_ch4=((sph.x*Spherical(sph.rho,~az.[3],~el.[3]).x*SinOsc.ar(pon,(pi*(3/4))))+
+						         (sph.y*Spherical(sph.rho,~az.[3],~el.[3]).y*SinOsc.ar(pon,((pi/2)*(3/4))))+
 						          (sph.z*Spherical(sph.rho,~az.[3],~el.[3]).z)).max(0);
-
 
 				 gn = [g_ch1, g_ch2, g_ch3, g_ch4];   g_sum = gn.sum;  gn = gn / g_sum;
 
@@ -501,6 +500,7 @@ m3=m3+1;
 		~system= Pseq(~r,inf).asStream;
 			~tonb=992*1.5;
 			~panwidth=1;
+          ~detune=16;
 
 ~str1 = Routine({
     var i,m,l;
@@ -516,7 +516,7 @@ i= ~cart.lag(0.01).size.rand;
 					//~detune=32.rand.round(2).max(1);
 ~detune=4;
 
-	~synth=Synth.new(\synth,[\gain,0.1,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
+	~synth=Synth.new(\synth,[\gain,0.01,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
 						\low,(992*2).rand,\pan,(992*16).neg,\mix,0.8,\room,~rev.lag(0.01),\pann,(992*6).neg,\x,2,\a,1,\spread,~panwidth,
 						\pon,0.001,\pneuma,0,\namp,1,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
 						,\panx,0.001,\pany,0.001,\panz,0.001,\dron,~tonb,
@@ -541,7 +541,7 @@ i= ~cart.lag(0.01).size.rand;
 					//~detune=32.rand.round(2).max(1);
 ~detune=4;
 
-	~synth=Synth.new(\synth,[\gain,0.1,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
+	~synth=Synth.new(\synth,[\gain,0.01,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
 						\low,(992*2).rand,\pan,(992*16).neg,\mix,0.8,\room,~rev.lag(0.01),\pann,(992*6).neg,\x,2,\a,1,\spread,~panwidth,
 						\pon,0.001,\pneuma,0,\namp,1,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
 						,\panx,0.001,\pany,0.001,\panz,0.001,\dron,~tonb,
@@ -567,7 +567,7 @@ i= ~cart.lag(0.01).size.rand;
 					//~detune=32.rand.round(2).max(1);
 ~detune=4;
 
-	~synth=Synth.new(\synth,[\gain,0.1,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
+	~synth=Synth.new(\synth,[\gain,0.01,\drive,(992*2).rand,\fu,32,\sc,~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
 						\low,(992*2).rand,\pan,(992*16).neg,\mix,0.8,\room,~rev.lag(0.01),\pann,(992*6).neg,\x,2,\a,1,\spread,~panwidth,
 						\pon,0.001,\pneuma,0,\namp,1,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
 						,\panx,0.001,\pany,0.001,\panz,0.001,\dron,~tonb,

@@ -64,7 +64,7 @@ var signal,wt;
 
 	{
 var signal,wt;
-	signal=Env([10,0],[3],[8]);
+	signal=Env([10,1],[3],[8]);
 	wt = signal.asSignal(1024).asWavetable;
 ~harm.loadCollection(wt);
 //signal.plot;
@@ -134,8 +134,7 @@ var magx,magy,magz,magqx,rotation;
 var angle=0,angle1=0,angle11=0;
 var g=((1+5.sqrt)/2),s=(1+2.sqrt),ott=pi.rand2,temp,space;
 
-~detune=16;
-	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[]; ~cart=[];
+	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[]; ~cart=[];      ~detune=16;
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
 Synth.new(\player);
 data = [];
@@ -574,7 +573,7 @@ az6=0;el6=0;
 
 	~azimuth=~az;
 	~elevation=~el;
-	~magnitude=(~magx.pow(2)+~magy.pow(2)+~magz.pow(2)).sqrt*(992/~detune);
+	~magnitude=(~magqx.[pla].pow(2)+~magy.pow(2)+~magz.pow(2)).sqrt*(992/~detune);
 //~magnitude.postln;
 
 	dota=(~count.[0]*~count.[1]*~count.[2]*~count.[3]*~count.[4]*~count.[5]).collect{
@@ -582,7 +581,7 @@ az6=0;el6=0;
 	az=~az.[pla];
 	el=~el.[pla];
 	//mag=1000;
-		mag=(Cartesian(~magx.[pla],~magy.[pla],~magz.[pla]).rho);
+			mag=(Cartesian(~magqx.[pla],~magy.[pla],~magz.[pla]).rho)/2.sqrt;
 	//	mag=mag+(Cartesian(~magqx.[pla],0,0).rho);
 	pla=pla+1;
 			//mk=(mk+(1-(1/1.6180339887499))).wrap(0,1);
@@ -597,8 +596,6 @@ az6=0;el6=0;
         AppClock.sched(0, {
             a.data = data;   // ScatterView3d data
 			b.data = data;
-
-			~panwidth=0.99.rand;
 
 			~v.background_(Color(space,space,space));
             ~v.refresh;
@@ -622,7 +619,7 @@ r.play;
 				~r1=ot; ~r2=ot; ~r3=ot;
 
 		ot = (ot + rotation.degrad).wrap(0,2pi);
-				ott = (ott + rotation.degrad).wrap(0,2pi);
+		ott = (ott + (0.1+rotation).degrad).wrap(0,2pi);
 
     ~cart = data.collect{|p|
 
@@ -644,7 +641,7 @@ r.play;
 		ry = (x*sin(ot)) + (y*cos(ot));
         x = rx; y = ry;
 
-        [x,y,z];
+        [x,y,z]+1;
     };
 
 };
