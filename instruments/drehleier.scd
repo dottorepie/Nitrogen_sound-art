@@ -979,7 +979,7 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 			///comtroller 2
 			(
 					(
-MIDIdef.cc(\midi_seq_pot1,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot9,{ |val, num, chan, src|
 		var s1;
 		s1=val.linlin(0,127,0,14).round(1).asInteger;
 		s1.postln;
@@ -988,7 +988,7 @@ MIDIdef.cc(\midi_seq_pot1,{ |val, num, chan, src|
 						);
 
 				(
-MIDIdef.cc(\midi_seq_pot2,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot10,{ |val, num, chan, src|
          var s2;
 					s2=val.linlin(0,127,0,14).round(1).asInteger;
 		s2.postln;
@@ -997,7 +997,7 @@ MIDIdef.cc(\midi_seq_pot2,{ |val, num, chan, src|
 	);
 
 									(
-MIDIdef.cc(\midi_seq_pot3,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot11,{ |val, num, chan, src|
 		var s3;
 			s3=val.linlin(0,127,0,14).round(1).asInteger;
 		s3.postln;
@@ -1006,7 +1006,7 @@ MIDIdef.cc(\midi_seq_pot3,{ |val, num, chan, src|
 	);
 
 												(
-MIDIdef.cc(\midi_seq_pot4,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot12,{ |val, num, chan, src|
 		var s4;
 			s4=val.linlin(0,127,0,14).round(1).asInteger;
 		s4.postln;
@@ -1015,7 +1015,7 @@ MIDIdef.cc(\midi_seq_pot4,{ |val, num, chan, src|
 	);
 
 														(
-MIDIdef.cc(\midi_seq_pot5,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot13,{ |val, num, chan, src|
 		var s5;
 			s5=val.linlin(0,127,0,14).round(1).asInteger;
 		s5.postln;
@@ -1024,7 +1024,7 @@ MIDIdef.cc(\midi_seq_pot5,{ |val, num, chan, src|
 	);
 
 														(
-MIDIdef.cc(\midi_seq_pot6,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot14,{ |val, num, chan, src|
 		var s6;
 						s6=val.linlin(0,127,0,14).round(1).asInteger;
 		s6.postln;
@@ -1033,7 +1033,7 @@ MIDIdef.cc(\midi_seq_pot6,{ |val, num, chan, src|
 	);
 
 														(
-MIDIdef.cc(\midi_seq_pot7,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot15,{ |val, num, chan, src|
 		var s7;
 			s7=val.linlin(0,127,0,14).round(1).asInteger;
 		s7.postln;
@@ -1042,7 +1042,7 @@ MIDIdef.cc(\midi_seq_pot7,{ |val, num, chan, src|
 	);
 
 																	(
-MIDIdef.cc(\midi_seq_pot8,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot16,{ |val, num, chan, src|
 		var s8;
 			s8=val.linlin(0,127,0,14).round(1).asInteger;
 		s8.postln;
@@ -1052,7 +1052,7 @@ MIDIdef.cc(\midi_seq_pot8,{ |val, num, chan, src|
 );
 (
 			(
-MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider10,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1061,7 +1061,7 @@ MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 			);
 
 											(
-MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider11,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1070,7 +1070,7 @@ MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
 	);
 
 														(
-MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider12,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1079,7 +1079,7 @@ MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 },60,2);
 	);
 (
-MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider13,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1088,7 +1088,7 @@ MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 	);
 
 				(
-MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider14,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1096,7 +1096,7 @@ MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
 },62,2);
 			);
 					(
-MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider15,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1104,7 +1104,7 @@ MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
 },63,2);
 			);
 					(
-MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider16,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1113,7 +1113,7 @@ MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
 	);
 
 (
-MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider17,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1125,7 +1125,7 @@ MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
 			);
 						(
 					(
-MIDIdef.cc(\midi_seq_pot1,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot17,{ |val, num, chan, src|
 		var s1;
 		s1=val.linlin(0,127,0,14).round(1).asInteger;
 		s1.postln;
@@ -1134,7 +1134,7 @@ MIDIdef.cc(\midi_seq_pot1,{ |val, num, chan, src|
 						);
 
 				(
-MIDIdef.cc(\midi_seq_pot2,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot18,{ |val, num, chan, src|
          var s2;
 					s2=val.linlin(0,127,0,14).round(1).asInteger;
 		s2.postln;
@@ -1143,7 +1143,7 @@ MIDIdef.cc(\midi_seq_pot2,{ |val, num, chan, src|
 	);
 
 									(
-MIDIdef.cc(\midi_seq_pot3,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot19,{ |val, num, chan, src|
 		var s3;
 			s3=val.linlin(0,127,0,14).round(1).asInteger;
 		s3.postln;
@@ -1152,7 +1152,7 @@ MIDIdef.cc(\midi_seq_pot3,{ |val, num, chan, src|
 	);
 
 												(
-MIDIdef.cc(\midi_seq_pot4,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot20,{ |val, num, chan, src|
 		var s4;
 			s4=val.linlin(0,127,0,14).round(1).asInteger;
 		s4.postln;
@@ -1161,7 +1161,7 @@ MIDIdef.cc(\midi_seq_pot4,{ |val, num, chan, src|
 	);
 
 														(
-MIDIdef.cc(\midi_seq_pot5,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot21,{ |val, num, chan, src|
 		var s5;
 			s5=val.linlin(0,127,0,14).round(1).asInteger;
 		s5.postln;
@@ -1170,7 +1170,7 @@ MIDIdef.cc(\midi_seq_pot5,{ |val, num, chan, src|
 	);
 
 														(
-MIDIdef.cc(\midi_seq_pot6,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot22,{ |val, num, chan, src|
 		var s6;
 						s6=val.linlin(0,127,0,14).round(1).asInteger;
 		s6.postln;
@@ -1179,7 +1179,7 @@ MIDIdef.cc(\midi_seq_pot6,{ |val, num, chan, src|
 	);
 
 														(
-MIDIdef.cc(\midi_seq_pot7,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot23,{ |val, num, chan, src|
 		var s7;
 			s7=val.linlin(0,127,0,14).round(1).asInteger;
 		s7.postln;
@@ -1188,7 +1188,7 @@ MIDIdef.cc(\midi_seq_pot7,{ |val, num, chan, src|
 	);
 
 																	(
-MIDIdef.cc(\midi_seq_pot8,{ |val, num, chan, src|
+MIDIdef.cc(\midi_seq_pot24,{ |val, num, chan, src|
 		var s8;
 			s8=val.linlin(0,127,0,14).round(1).asInteger;
 		s8.postln;
@@ -1198,7 +1198,7 @@ MIDIdef.cc(\midi_seq_pot8,{ |val, num, chan, src|
 );
 (
 			(
-MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider18,{ |val, num, chan, src|
 		var s8;
 			s8=val.linlin(0,127,0,14).round(1).asInteger;
 		s8.postln;
@@ -1207,7 +1207,7 @@ MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 			);
 
 											(
-MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider19,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1216,7 +1216,7 @@ MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
 	);
 
 														(
-MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider20,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1225,7 +1225,7 @@ MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 },76,2);
 	);
 (
-MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider21,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1234,7 +1234,7 @@ MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 	);
 
 				(
-MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider22,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1242,7 +1242,7 @@ MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
 },78,2);
 			);
 					(
-MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider23,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1250,7 +1250,7 @@ MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
 },79,2);
 			);
 					(
-MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider24,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;
@@ -1259,7 +1259,7 @@ MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
 	);
 
 (
-MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
+MIDIdef.cc(\midi_slider25,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,0.0001,1).round(0.0001);
 		th.postln;

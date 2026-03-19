@@ -35,7 +35,7 @@ var  sph1,sph2,az1=0,el1=0,az2=0,el2=0,azimuth,elevation,angle=0,g=((1+5.sqrt)/2
 	~az=[];~el=[];
 
 
-	8.do{
+	4.do{
 azimuth=8.collect{
 			az1 = (az1+(2pi-(2pi/s))).wrap(pi.neg,pi);
 		   el1 = (el1+(pi-(pi/s))).wrap((pi/2).neg,(pi/2));
@@ -58,14 +58,6 @@ angle=(angle+(2pi-(2pi/g))).wrap(pi.neg,pi);
 }.value;
 );
 
-		/////distortion table
-		(
-		~transfer_function= Env([0.8.neg,0,0.8],[1,1],[8,8.neg]).asSignal(1024);
-			~transfer_function=~transfer_function+(Signal.sineFill(~signalSize,~array,~ph)/8);
-		~transfer_function=~transfer_function.normalize;
-		//	~transfer_function.plot;
-			~dist=Buffer.loadCollection(s,~transfer_function.asWavetableNoWrap);
-		);
 		//difusion
 		(
 			{
@@ -182,21 +174,19 @@ threshold3=(((343/0.15)/55).reciprocal.ampdb/2.sqrt).dbamp;
 		sig3=Compander.ar(sig3,sig3,threshold3,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 
 	///distortion
+	sig1 = (tanh(sig1.softclip*2.pow(drive/992))) / (1 + (tanh(sig1.softclip*2.pow(drive/992))).abs);
 
-
-		sig1 = (tanh(sig1.softclip*2.pow(drive/992))) / (1 + (tanh(sig1.softclip*2.pow(drive/992))).abs);
-
-		sig2 =  (tanh(sig2.softclip*2.pow(drive/992))) / (1 + (tanh(sig2.softclip*2.pow(drive/992))).abs);
+	sig2 =  (tanh(sig2.softclip*2.pow(drive/992))) / (1 + (tanh(sig2.softclip*2.pow(drive/992))).abs);
 
 	sig3 =  (tanh(sig3.softclip*2.pow(drive/992))) / (1 + (tanh(sig3.softclip*2.pow(drive/992))).abs);
 
 
 	///final out
 
-					///three channel
-				//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain)),0.9,0.01));
-				//	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain)),0.9,0.01));
-				//	Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain)),0.9,0.01));
+	///three channel
+//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain*loc1)),0.9,0.01));
+//	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain*loc2)),0.9,0.01));
+//	Out.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain*loc3)),0.9,0.01));
 
 
 ///ambisonic decoded on stereo
@@ -223,9 +213,9 @@ pl=pl+1;
 
 
 
-~synth=Synth.new(\synth,[\gain,1,\drive,992*1,\pan,(992*8).neg,\mix,0.3,\room,0.5,\m,1,\pon,0.01,\spread,0.6]);
+~synth=Synth.new(\synth,[\gain,1,\drive,496,\pan,(992*4).neg,\mix,0.3,\room,0.5,\m,2,\pon,0.01,\spread,0.6]);
 
 
-~synth.set(\drive,992*0,\gain,1,\pan,(992*4).neg,\mix,0.5,\room,0.7,\m,2,\pon,0.01,\spread,1);
+~synth.set(\drive,496*0,\gain,1,\pan,(992*4).neg,\mix,0.5,\room,0.7,\m,2,\pon,0.01,\spread,1);
 
 
