@@ -443,10 +443,8 @@ Out.ar(0,VBAP.ar(3,Limiter.ar(LeakDC.ar(
 							//	out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z,
 					//	[sph.theta+LFSaw.ar(pon,0), sph.theta+LFSaw.ar(pon,0.5)], [sph.phi,sph.phi],2 ));
 
-	g_ch1=((sph.x*Spherical(sph.rho,0,0).x*SinOsc.ar(pon,(pi*(4/4))))+
-	 (sph.y*Spherical(sph.rho,0,0).y*SinOsc.ar(pon,((pi/2)*(4/4))))).max(0);
-g_ch2=((sph.x*Spherical(sph.rho,pi/2,0).x*SinOsc.ar(pon,(pi*(1/4))))+
-  (sph.y*Spherical(sph.rho,pi/2,0).y*SinOsc.ar(pon,((pi/2)*(1/4)))) ).max(0);
+g_ch1=((sph.x*Spherical(sph.rho,0,0).x)+(sph.y*Spherical(sph.rho,0,0).y)).max(0);
+g_ch2=((sph.x*Spherical(sph.rho,pi/2,0).x)+(sph.y*Spherical(sph.rho,pi/2,0).y) ).max(0);
 
  gn = [g_ch1, g_ch2,];   g_sum = gn.sum;  gn = gn / g_sum;
 g_avg = gn.sum / gn.size;
