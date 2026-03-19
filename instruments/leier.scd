@@ -25,7 +25,7 @@ s.freqscope;
 s.scope;
 //s.makeWindow;
 s.meter;
-	~frames=512;
+	~frames=256;
 	Buffer.freeAll;
 
 		///difusion array
@@ -210,7 +210,7 @@ amb_sig3=(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.0001),room.lag(0.0001)
 				amb_y=amb_sig2;
 				amb_z=amb_sig3;
 			out= Out.ar(0,BFDecode1.ar1(amb_w, amb_x, amb_y, amb_z,
-						[sph.theta, sph.theta], [sph.phi,sph.phi],2 ));
+					[sph.theta+SinoOsc.ar(pon,0), sph.theta+SinoOsc.ar(pon,pi/2)], [sph.phi,sph.phi],2 ));
 
 pl=pl+1;
 				};
