@@ -4,7 +4,7 @@
 
 (
 (
-s.options.numWireBufs = 1024*2;
+s.options.numWireBufs = 1024*4;
 s.options.numOutputBusChannels=2;
 s.options.numInputBusChannels=1;
 s.options.memSize = 8192*16;
@@ -25,7 +25,7 @@ s.freqscope;
 s.scope;
 //s.makeWindow;
 s.meter;
-	~frames=512;
+	~frames=1024;
 	Buffer.freeAll;
 
 		///difusion array
@@ -36,14 +36,14 @@ var  sph1,sph2,az1=0,el1=0,az2=0,el2=0,azimuth,elevation,angle=0,g=((1+5.sqrt)/2
 
 
 	8.do{
-azimuth=32.collect{
+azimuth=8.collect{
 			az1 = (az1+(2pi-(2pi/s))).wrap(pi.neg,pi);
 		   el1 = (el1+(pi-(pi/s))).wrap((pi/2).neg,(pi/2));
 sph1=(Spherical(1,(az1+angle).wrap(pi.neg,pi),(el1+angle).wrap((pi/2).neg,(pi/2)))).theta.round(0.0001);
 
 	};
 
-elevation=32.collect{
+elevation=8.collect{
 				az2 = (az2+(2pi-(2pi/s))).wrap(pi.neg,pi);
 			el2 = (el2+(pi-(pi/s))).wrap((pi/2).neg,(pi/2));
 		sph2=(Spherical(1,(az2+angle).wrap(pi.neg,pi),(el2+angle).wrap((pi/2).neg,(pi/2)))).phi.round(0.0001);
@@ -69,10 +69,10 @@ angle=(angle+(2pi-(2pi/g))).wrap(pi.neg,pi);
 		//difusion
 		(
 			{
-var steps = 64;
+var steps = 32;
 
 ~nVals = steps.collect { |i|
-    i.linexp(0, steps-1, 0.18, 512).round
+    i.linexp(0, steps-1, 0.18, 1024).round
 };
 			~nVals.asInteger;
 			}.value;
@@ -101,7 +101,7 @@ SynthDef.new(\synth,{
 
 
 
-				(63).do{
+				(31).do{
 
 					axis=Spherical(1,~az.[pl],~el.[pl]);
 
