@@ -25,7 +25,7 @@ s.freqscope;
 s.scope;
 //s.makeWindow;
 s.meter;
-	~frames=256;
+	~frames=512;
 	Buffer.freeAll;
 
 		///difusion array

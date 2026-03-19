@@ -377,7 +377,6 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 	sig3 =  (tanh(sig3.softclip*2.pow(drive/992))) / (1 + (tanh(sig3.softclip*2.pow(drive/992))).abs);
 
-					(pi/2)*(2/4)
 	///final out
 					gain1=gain*rq1.sqrt.reciprocal*cloud.reciprocal*10*namp1;
 					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal*10*namp2;
