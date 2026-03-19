@@ -223,9 +223,9 @@ pl=pl+1;
 
 
 
-~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\pan,(992*8).neg,\mix,0.3,\room,0.5,\m,1,\pon,0.01,\spread,0.6]);
+~synth=Synth.new(\synth,[\gain,1,\drive,992*1,\pan,(992*8).neg,\mix,0.3,\room,0.5,\m,1,\pon,0.01,\spread,0.6]);
 
 
-~synth.se(\drive,992*2,\gain,1,\pan,(992*2).neg,\mix,0.5,\room,1,\m,2,\pon,0.01,\spread,1);
+~synth.set(\drive,992*0,\gain,1,\pan,(992*4).neg,\mix,0.5,\room,0.7,\m,2,\pon,0.01,\spread,1);
 
 
