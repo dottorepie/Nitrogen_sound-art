@@ -457,23 +457,23 @@ g_ch1 = gn[0]; g_ch2 = gn[1];
 
 Out.ar(0,Pan2.ar(
 				Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch1),
-					SinOsc.ar(pon,phasex);
+					SinOsc.ar(pon,phasex,spread.reciprocal);
 Out.ar(0,Pan2.ar(
 				Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch2),
-					SinOsc.ar(pon,phasex.neg);
+					SinOsc.ar(pon,phasex.neg,spread.reciprocal);
 
 Out.ar(0,Pan2.ar(
 					Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch1),
-					SinOsc.ar(pon,phasey);
+					SinOsc.ar(pon,phasey,spread.reciprocal);
 Out.ar(0,Pan2.ar(
 				Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain2)),0.9,0.01)*g_ch2),
 					SinOsc.ar(pon,phasey.neg);
 
 Out.ar(0,Pan2.ar(
-						Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch1),SinOsc.ar(pon,phasez);
+						Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch1),SinOsc.ar(pon,phasez,spread.reciprocal);
 Out.ar(0,Pan2.ar(
 			Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain3)),0.9,0.01)*g_ch2),
-						SinOsc.ar(pon,phasez.neg);
+						SinOsc.ar(pon,phasez.neg,spread.reciprocal);
 
 
 						azf = (azf+(2pi-(2pi/s))).wrap(pi.neg,pi);
