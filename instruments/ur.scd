@@ -200,6 +200,8 @@ g_ch1 = gn[0];  g_ch2 = gn[1];
 				Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain1)),0.9,0.01)*g_ch1,SinOsc.ar(pon,phasey,spread.reciprocal)));
 				Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2)),0.9,0.01)*g_ch2,SinOsc.ar(pon,phasey.neg,spread.reciprocal)));
 
+				Out.ar(0,WhiteNoise.ar(0.0001)!2);
+
 }).add;);
 
 5.wait;
