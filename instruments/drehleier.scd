@@ -44,7 +44,7 @@ s.meter;
 );*/
 
 		///vbap
-~chan=1;
+~chan=2;
 		///octahedron
 		(
 ~azz=[0.degrad,0.degrad,90.degrad,180.degrad,90.neg.degrad,0.degrad];
@@ -179,7 +179,7 @@ SynthDef.new(\synth,{
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,axis;
 	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=100,spx,spy,spz;
 	var g_ch1,g_ch2,g_ch3,g_ch4,chan=~chan;
-	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis;
+	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis,sp;
 
 fund=fu*(9/8);
 lamdoma=(x.lag(0.0001)+a.lag(0.0001))/x.lag(0.0001);
@@ -382,29 +382,21 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal*10*namp2;
 					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal*10*namp3;
 
-					g_ch1=((sph.x*Spherical(mx,~az.[0],~el.[0]).x)+
-						          (sph.y*Spherical(my,~az.[0],~el.[0]).y)+
-						          (sph.z*Spherical(mz,~az.[1],~el.[1]).z)).max(0);
-					g_ch2=((sph.x*Spherical(mx,~az.[1],~el.[1]).x)+
-						         (sph.y*Spherical(my,~az.[1],~el.[1]).y)+
-						          (sph.z*Spherical(mz,~az.[1],~el.[1]).z)).max(0);
-					g_ch3=((sph.x*Spherical(mx,~az.[2],~el.[2]).x)+
-						         (sph.y*Spherical(my,~az.[2],~el.[2]).y)+
-						          (sph.z*Spherical(mz,~az.[2],~el.[2]).z)).max(0);
-					g_ch4=((sph.x*Spherical(mx,~az.[3],~el.[3]).x)+
-						         (sph.y*Spherical(my,~az.[3],~el.[3]).y)+
-						          (sph.z*Spherical(mz,~az.[3],~el.[3]).z)).max(0);
+					sp= LFNoise1.kr(10).range(spread.neg, spread);
 
-				 gn = [g_ch1, g_ch2, g_ch3, g_ch4];   g_sum = gn.sum;  gn = gn / g_sum;
+					g_ch1=((sph.x*Spherical(mx,~az.[0]+sp,~el.[0]+sp).x)+
+						          (sph.y*Spherical(my,~az.[0]+sp,~el.[0]+sp).y)+
+						          (sph.z*Spherical(mz,~az.[0]+sp,~el.[0]+sp).z)).max(0);
+					g_ch2=((sph.x*Spherical(mx,~az.[1]+sp,~el.[1]+sp).x)+
+						         (sph.y*Spherical(my,~az.[1]+sp,~el.[1]+sp).y)+
+						          (sph.z*Spherical(mz,~az.[1]+sp,~el.[1]+sp).z)).max(0);
+					g_ch3=((sph.x*Spherical(mx,~az.[2]+sp,~el.[2]+sp).x)+
+						         (sph.y*Spherical(my,~az.[2]+sp,~el.[2]+sp).y)+
+						          (sph.z*Spherical(mz,~az.[2]+sp,~el.[2]+sp).z)).max(0);
+					g_ch4=((sph.x*Spherical(mx,~az.[3]+sp,~el.[3]+sp).x)+
+						         (sph.y*Spherical(my,~az.[3]+sp,~el.[3]+sp).y)+
+						          (sph.z*Spherical(mz,~az.[3]+sp,~el.[3]+sp).z)).max(0);
 
-g_avg = gn.sum / gn.size;
-gn = gn.collect { |gi| (1 - spread) * gi + spread * g_avg };
-
-gn = gn/ gn.sum;
-g_ch1 = gn.[0];
-g_ch2 = gn.[1];
-g_ch3 = gn.[2];
-g_ch4 = gn.[3];
 
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
@@ -579,7 +571,7 @@ MIDIdef.cc(\midi_pot7,{ |val, num, chan, src|
 																	(
 MIDIdef.cc(\midi_pot8,{ |val, num, chan, src|
 		var spread;
-			spread=val.linlin(0,127,1,4).round(0.0001);
+			spread=val.linlin(0,127,0.001.degrad,90.degrad.neg).round(0.0001);
 		spread.postln;
 		if(~synth.isPlaying,{~synth.set(\spread,spread)});
 },8);
