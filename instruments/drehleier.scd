@@ -179,7 +179,7 @@ SynthDef.new(\synth,{
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,axis;
 	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=100,spx,spy,spz;
 	var g_ch1,g_ch2,g_ch3,g_ch4,chan=~chan;
-	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis,sp;
+	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis,sp,spl;
 
 fund=fu*(9/8);
 lamdoma=(x.lag(0.0001)+a.lag(0.0001))/x.lag(0.0001);
@@ -382,60 +382,61 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal*10*namp2;
 					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal*10*namp3;
 
-					sp= SinOsc.ar(28).range(spread.neg, spread);
+					sp= LFNoise2.ar(6).range(spread*pi.neg, spread*pi);
+					spl= LFNoise2.ar(6).range(spread*(pi/2).neg, spread*(pi/2));
 
-					g_ch1=((sph.x*Spherical(mx,~az.[0]+sp,~el.[0]+sp).x)+
-						          (sph.y*Spherical(my,~az.[0]+sp,~el.[0]+sp).y)+
-						          (sph.z*Spherical(mz,~az.[0]+sp,~el.[0]+sp).z)).max(0);
-					g_ch2=((sph.x*Spherical(mx,~az.[1]+sp,~el.[1]+sp).x)+
-						         (sph.y*Spherical(my,~az.[1]+sp,~el.[1]+sp).y)+
-						          (sph.z*Spherical(mz,~az.[1]+sp,~el.[1]+sp).z)).max(0);
-					g_ch3=((sph.x*Spherical(mx,~az.[2]+sp,~el.[2]+sp).x)+
-						         (sph.y*Spherical(my,~az.[2]+sp,~el.[2]+sp).y)+
-						          (sph.z*Spherical(mz,~az.[2]+sp,~el.[2]+sp).z)).max(0);
-					g_ch4=((sph.x*Spherical(mx,~az.[3]+sp,~el.[3]+sp).x)+
-						         (sph.y*Spherical(my,~az.[3]+sp,~el.[3]+sp).y)+
-						          (sph.z*Spherical(mz,~az.[3]+sp,~el.[3]+sp).z)).max(0);
+					g_ch1=((sph.x*Spherical(mx,(~az.[0]+sp).wrap(pi,pi.neg),(~el.[0]+spl).wrap(pi/2,(pi/2).neg)).x)+
+						(sph.y*Spherical(my,(~az.[0]+sp).wrap(pi,pi.neg),(~el.[0]+spl).wrap(pi/2,(pi/2).neg)).y)+
+						(sph.z*Spherical(mz,(~az.[0]+sp).wrap(pi,pi.neg),(~el.[0]+spl).wrap(pi/2,(pi/2).neg)).z)).max(0).lag(0.01);
+					g_ch2=((sph.x*Spherical(mx,(~az.[1]+sp).wrap(pi,pi.neg),(~el.[1]+spl).wrap(pi/2,(pi/2).neg)).x)+
+						(sph.y*Spherical(my,(~az.[1]+sp).wrap(pi,pi.neg),(~el.[1]+spl).wrap(pi/2,(pi/2).neg)).y)+
+						(sph.z*Spherical(mz,(~az.[1]+sp).wrap(pi,pi.neg),(~el.[1]+spl).wrap(pi/2,(pi/2).neg)).z)).max(0).lag(0.01);
+					g_ch3=((sph.x*Spherical(mx,(~az.[2]+sp).wrap(pi,pi.neg),(~el.[2]+spl).wrap(pi/2,(pi/2).neg)).x)+
+						(sph.y*Spherical(my,(~az.[2]+sp).wrap(pi,pi.neg),(~el.[2]+spl).wrap(pi/2,(pi/2).neg)).y)+
+						(sph.z*Spherical(mz,(~az.[2]+sp).wrap(pi,pi.neg),(~el.[2]+spl).wrap(pi/2,(pi/2).neg)).z)).max(0).lag(0.01);
+					g_ch4=((sph.x*Spherical(mx,(~az.[3]+sp).wrap(pi,pi.neg),(~el.[3]+spl).wrap(pi/2,(pi/2).neg)).x)+
+						(sph.y*Spherical(my,(~az.[3]+sp).wrap(pi,pi.neg),(~el.[3]+spl).wrap(pi/2,(pi/2).neg)).y)+
+						(sph.z*Spherical(mz,(~az.[3]+sp).wrap(pi,pi.neg),(~el.[3]+spl).wrap(pi/2,(pi/2).neg)).z)).max(0).lag(0.01);
 
-
-Out.ar(0,PanAz.ar(chan,
-Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain1)),0.9,0.01)*g_ch1,LFSaw.ar(pon,0),width:2));
-Out.ar(0,PanAz.ar(chan,
-Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain1)),0.9,0.01)*g_ch2,LFSaw.ar(pon,1/4),width:2));
-Out.ar(0,PanAz.ar(chan,
-Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain1)),0.9,0.01)*g_ch3,LFSaw.ar(pon,1/2),width:2));
-Out.ar(0,PanAz.ar(chan,
-Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain1)),0.9,0.01)*g_ch4,LFSaw.ar(pon,3/4),width:2));
 
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2)),0.9,0.01)*g_ch1,LFSaw.ar(pon,0),width:2));
+sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain1)),0.9,0.01)*g_ch1,LFSaw.ar(pon,0),width:spread+1));
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2)),0.9,0.01)*g_ch2,LFSaw.ar(pon,1/4),width:2));
+sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain1)),0.9,0.01)*g_ch2,LFSaw.ar(pon,1/4),width:spread+1));
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2)),0.9,0.01)*g_ch3,LFSaw.ar(pon,1/2),width:2));
+sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain1)),0.9,0.01)*g_ch3,LFSaw.ar(pon,1/2),width:spread+1));
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2)),0.9,0.01)*g_ch4,LFSaw.ar(pon,3/4),width:2));
+sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain1)),0.9,0.01)*g_ch4,LFSaw.ar(pon,3/4),width:spread+1));
 
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch1,LFSaw.ar(pon,0),width:2));
+sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2)),0.9,0.01)*g_ch1,LFSaw.ar(pon,0),width:spread+1));
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch2,LFSaw.ar(pon,1/4),width:2));
+sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2)),0.9,0.01)*g_ch2,LFSaw.ar(pon,1/4),width:spread+1));
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch3,LFSaw.ar(pon,1/2),width:2));
+sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2)),0.9,0.01)*g_ch3,LFSaw.ar(pon,1/2),width:spread+1));
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
-sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch4,LFSaw.ar(pon,3/4),width:2));
+sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2)),0.9,0.01)*g_ch4,LFSaw.ar(pon,3/4),width:spread+1));
+
+Out.ar(0,PanAz.ar(chan,
+Limiter.ar(LeakDC.ar(FreeVerb.ar(
+sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch1,LFSaw.ar(pon,0),width:spread+1));
+Out.ar(0,PanAz.ar(chan,
+Limiter.ar(LeakDC.ar(FreeVerb.ar(
+sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch2,LFSaw.ar(pon,1/4),width:spread+1));
+Out.ar(0,PanAz.ar(chan,
+Limiter.ar(LeakDC.ar(FreeVerb.ar(
+sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch3,LFSaw.ar(pon,1/2),width:spread+1));
+Out.ar(0,PanAz.ar(chan,
+Limiter.ar(LeakDC.ar(FreeVerb.ar(
+sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch4,LFSaw.ar(pon,3/4),width:spread+1));
 
 					Out.ar(0,WhiteNoise.ar(0.0001)!chan);
 					///three channel
@@ -494,10 +495,10 @@ sig3,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch4,LFSaw.ar(pon,3
 
 
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,32,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
+~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,32,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*2).neg,
 		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,\pon,0.001,\pneuma1,0,\pneuma2,0,\pneuma3,0,
-			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,1,\namp1,1,\namp2,1,\namp3,1,
-			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,992]).register;
+			\x,1,\a,1,\panx,0.01,\pany,0.1,\panz,0.01,\spread,1,\namp1,1,\namp2,1,\namp3,1,
+			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,1]).register;
 );
 
 		(
