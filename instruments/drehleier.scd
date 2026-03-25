@@ -378,6 +378,7 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 	sig3 =  (tanh((sig3*2.pow(drive/992)).softclip)) / (1 + (tanh((sig3*2.pow(drive/992)).softclip)).abs);
 
 	///final out
+
 					gain1=gain*rq1.sqrt.reciprocal*cloud.reciprocal*10*namp1;
 					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal*10*namp2;
 					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal*10*namp3;
@@ -401,6 +402,12 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 					g_ch4=((sph.x*Spherical(mx,(~az.[3]+sp).wrap(pi,pi.neg),(~el.[3]+spl).wrap(pi/2,(pi/2).neg)).x)+
 						(sph.y*Spherical(my,(~az.[3]+sp).wrap(pi,pi.neg),(~el.[3]+spl).wrap(pi/2,(pi/2).neg)).y)+
 						(sph.z*Spherical(mz,(~az.[3]+sp).wrap(pi,pi.neg),(~el.[3]+spl).wrap(pi/2,(pi/2).neg)).z)).max(0).lag(0.01);
+
+					g_ch1= (g_ch1+(g_ch2*spread)+(g_ch3*spread)+(g_ch4*spread))/2.sqrt;
+					g_ch2= (g_ch2+(g_ch1*spread)+(g_ch3*spread)+(g_ch4*spread))/2.sqrt;
+					g_ch3= (g_ch3+(g_ch1*spread)+(g_ch2*spread)+(g_ch4*spread))/2.sqrt;
+					g_ch4= (g_ch4+(g_ch1*spread)+(g_ch2*spread)+(g_ch3*spread))/2.sqrt;
+
 
 
 Out.ar(0,PanAz.ar(chan,
