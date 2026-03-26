@@ -230,14 +230,14 @@ anglex=(exp(Complex(0,1)*polytope.theta).real*exp(Complex(0,1)*polytope.phi).rea
 angley=(exp(Complex(0,1)*polytope.theta).imag*exp(Complex(0,1)*polytope.phi).real).round(0.00001);
 anglez=(exp(Complex(0,1)*polytope.phi).imag).round(0.00001);
 
-phase1=Complex(1,anglex).theta;
-phase2=Complex(1,angley).theta;
-phase3=Complex(1,anglez).theta;
+//mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi);
+//mod_angley=SinOsc.ar(lfon,phase2).range(pi.neg,pi);
+//mod_anglez=SinOsc.ar(lfon,phase3).range((pi/2).neg,(pi/2));
 
+mod_anglex=DelayC.ar(LFNoise1.ar(lfon).range(pi.neg,pi),anglex,anglex);
+mod_angley=DelayC.ar(LFNoise1.ar(lfon).range(pi.neg,pi),angley,angley);
+mod_anglez=DelayC.ar(LFNoise1.ar(lfon).range((pi/2).neg,(pi/2)),anglez,anglez);
 
-mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi);
-					mod_angley=SinOsc.ar(lfon*(2/3),phase2).range(pi.neg,pi);
-					mod_anglez=SinOsc.ar(lfon*(1/2),phase3).range((pi/2).neg,(pi/2));
 
 					(
 	magx=((Complex(cos(((polytope.theta+mod_anglex).round(0.00001)*m).wrap(pi.neg,pi)),cos((((polytope.theta+mod_anglex).round(0.00001)*m)).wrap(pi.neg,pi))).rho/(2.sqrt))*
@@ -541,7 +541,7 @@ m3=m3+1;
 				~seq2 = Pseq(~dur2, inf).asStream;
 				~seq3 = Pseq(~dur3, inf).asStream;
 		//~system= Pseq(~r,inf).asStream;
-			~tonb=1.neg;
+			~tonb=496/32;
 			~panwidth=1;
           ~detune=1;
 			~pass=992*3;
@@ -549,13 +549,14 @@ m3=m3+1;
 			~mox=0.8;
 			~gg=2;
 			~pon=0.05;
-			~sphpan=(992*6).neg;
+			~sphpan=(992*8).neg;
 			~bband=(992*16).neg;
+			~drn=0.6;
 		//	thisThread.randSeed = 123;
 
 ~str1 = Routine({
     var i,m,l;
-		i= ~cart.lag(0.01).size.rand;
+
     loop {
 					//	thisThread.randSeed = ~val.asInteger;
 							TempoClock.default.tempo_(1);
@@ -564,12 +565,13 @@ m3=m3+1;
 				//	i=0;
 				//	l=~system.next;
 					//~detune=32.rand.round(2).max(1);
+							i= ~cart.lag(0.01).size.rand;
 ~detune=1;
 
 	~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,16,\sc,14,//~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
 						\low,~pass,\pan,~bband,\mix,0.6,\room,~rev.lag(0.01),\pann,~sphpan,\x,2,\a,1,\spread,~rev.lag(0.01),
 						\pon,~pon,\pneuma,0,\namp,1,\drone,12.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
-						,\panx,0.3,\pany,0.3,\panz,0.3,\dron,~tonb,
+						,\panx,~drn+0.55.rand,\pany,~drn+0.55.rand,\panz,~drn+0.55.rand,\dron,~tonb,
 \xx,~cart.lag(0.01).[i].[0].round(0.00001), \yy,~cart.lag(0.01).[i].[1].round(0.00001),\zz,~cart.lag(0.00001).[i].[2].round(0.00001)]).register;
 
 
