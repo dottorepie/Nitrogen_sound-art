@@ -234,9 +234,10 @@ phase1=Complex(1,anglex).theta;
 phase2=Complex(1,angley).theta;
 phase3=Complex(1,anglez).theta;
 
-mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi);
-mod_angley=SinOsc.ar(lfon/2,phase2).range(pi.neg,pi);
-mod_anglez=SinOsc.ar(lfon/3,phase3).range((pi/2).neg,(pi/2));
+
+mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi).lag(0.01);
+mod_angley=SinOsc.ar(lfon/2,phase2).range(pi.neg,pi).lag(0.01);
+mod_anglez=SinOsc.ar(lfon/3,phase3).range((pi/2).neg,(pi/2)).lag(0.01);
 
 					(
 	magx=((Complex(cos(((polytope.theta+mod_anglex).round(0.00001)*m).wrap(pi.neg,pi)),cos((((polytope.theta+mod_anglex).round(0.00001)*m)).wrap(pi.neg,pi))).rho/(2.sqrt))*
@@ -263,10 +264,10 @@ sin((polytope.phi.round(0.00001)*(mq-1)).wrap((pi/2).neg,(pi/2)))))*
 cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt));
 	);
 
-					mx=(Cartesian(magx,0,0).rho);
-					my=(Cartesian(0,magy,0).rho);
-					mz=(Cartesian(0,0,magz).rho);
-					mag=(Cartesian(magqx,my,mz).rho/2.sqrt);
+		mx=(Cartesian(magx,0,0).rho/2.sqrt);
+					my=(Cartesian(0,magy,0).rho/2.sqrt);
+					mz=(Cartesian(0,0,magz).rho/2.sqrt);
+					mag=(Cartesian(mx,my,mz).rho/2.sqrt) ;
 
 		sph=Spherical(mag,polytope.theta,polytope.phi);
 
@@ -410,10 +411,12 @@ g_ch4 = (g44 + (g11*spread) + (g22*spread) + (g33*spread));
 
 g_sum = (g_ch1.pow(2) + g_ch2.pow(2) + g_ch3.pow(2) + g_ch4.pow(2)).sqrt;
 
-g_ch1 = (g_ch1 / g_sum).lag(0.01);
-g_ch2 = (g_ch2 / g_sum).lag(0.01);
-g_ch3 = (g_ch3 / g_sum).lag(0.01);
-g_ch4 = (g_ch4 / g_sum).lag(0.01);
+
+g_ch1 = (g_ch1 / g_sum).lag(0.01)/2.sqrt;
+g_ch2 = (g_ch2 / g_sum).lag(0.01)/2.sqrt;
+g_ch3 = (g_ch3 / g_sum).lag(0.01)/2.sqrt;
+g_ch4 = (g_ch4 / g_sum).lag(0.01)/2.sqrt;
+
 
 
 //Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain1)),0.9,0.01)*g_ch1*loc1)
