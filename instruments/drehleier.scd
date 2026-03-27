@@ -432,10 +432,14 @@ g_ch2 = (g_ch2 / g_sum).lag(0.01);
 g_ch3 = (g_ch3 / g_sum).lag(0.01);
 g_ch4 = (g_ch4 / g_sum).lag(0.01);
 
-					g_ch1 = g_ch1.pow(1/2).max(0.1);
-g_ch2 = g_ch2.pow(1/2).max(0.1);
-g_ch3 = g_ch3.pow(1/2).max(0.1);
-					g_ch4 = g_ch4.pow(1/2).max(0.1);
+g_ch1 = g_ch1.pow(spread.linlin(0.01,1,0.01,1));
+g_ch2 = g_ch2.pow(spread.linlin(0.01,1,0.01,1));
+g_ch3 = g_ch3.pow(spread.linlin(0.01,1,0.01,1));
+
+		g_ch1.max(0.01) + (g_ch1 - g_ch1.max(0.01)).min(0);
+		g_ch2.max(0.01) + (g_ch2 - g_ch2.max(0.01)).min(0);
+		g_ch3.max(0.01) + (g_ch3 - g_ch3.max(0.01)).min(0);
+		g_ch4.max(0.01) + (g_ch4 - g_ch4.max(0.01)).min(0);
 
 Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
@@ -610,7 +614,7 @@ MIDIdef.cc(\midi_pot7,{ |val, num, chan, src|
 																	(
 MIDIdef.cc(\midi_pot8,{ |val, num, chan, src|
 		var spread;
-			spread=val.linlin(0,127,0,1).round(0.0001);
+			spread=val.linlin(0,127,0.01,1).round(0.0001);
 		spread.postln;
 		if(~synth.isPlaying,{~synth.set(\spread,spread)});
 },8);
