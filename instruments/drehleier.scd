@@ -179,7 +179,7 @@ SynthDef.new(\synth,{
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,axis;
 	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=100,spx,spy,spz;
 	var g_ch1,g_ch2,g_ch3,g_ch4,chan=~chan;
-	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis,sp,spl,g1,g2,g3,g4;
+	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis,sp,spl,g11,g22,g33,g44;
 
 fund=fu*(9/8);
 lamdoma=(x.lag(0.0001)+a.lag(0.0001))/x.lag(0.0001);
@@ -419,15 +419,15 @@ g_ch4 = (
    (Spherical(mz,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).z * Spherical(mag,~az[0],~el[0]).z)
 );
 
-g1 = g_ch1;
-g2 = g_ch2;
-g3 = g_ch3;
-g4 = g_ch4;
+g11 = g_ch1;
+g22 = g_ch2;
+g33 = g_ch3;
+g44 = g_ch4;
 
-g_ch1 = (g1 + (g2*spread) + (g3*spread) + (g4*spread));
-g_ch2 = (g2 + (g1*spread) + (g3*spread) + (g4*spread));
-g_ch3 = (g3 + (g1*spread) + (g2*spread) + (g4*spread));
-g_ch4 = (g4 + (g1*spread) + (g2*spread) + (g3*spread));
+g_ch1 = (g11 + (g22*spread) + (g33*spread) + (g44*spread));
+g_ch2 = (g22 + (g11*spread) + (g33*spread) + (g44*spread));
+g_ch3 = (g33 + (g11*spread) + (g22*spread) + (g44*spread));
+g_ch4 = (g44 + (g11*spread) + (g22*spread) + (g33*spread));
 
 g_sum = (g_ch1.pow(2) + g_ch2.pow(2) + g_ch3.pow(2) + g_ch4.pow(2)).sqrt;
 
@@ -477,7 +477,7 @@ Out.ar(0,PanAz.ar(chan,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
 sig3* g_ch4.sign,mix.lag(0.0001),room.lag(0.0001),mul:gain3)),0.9,0.01)*g_ch4.abs,LFSaw.ar(pon,3/4),width:spread+1));
 
-					Out.ar(0,WhiteNoise.ar(0.0001)!chan);
+					Out.ar(0,WhiteNoise.ar(0.00001)!chan);
 					///three channel
 				//	Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.0001),room.lag(0.0001),mul:gain1*loc1.abs)),0.9,0.01));
 				//	Out.ar(1,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.0001),room.lag(0.0001),mul:gain2*loc2.abs)),0.9,0.01));
