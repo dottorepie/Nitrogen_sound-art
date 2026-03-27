@@ -264,9 +264,9 @@ sin((polytope.phi.round(0.00001)*(mq-1)).wrap((pi/2).neg,(pi/2)))))*
 cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt));
 	);
 
-		mx=(Cartesian(magx,0,0).rho/2.sqrt);
-					my=(Cartesian(0,magy,0).rho/2.sqrt);
-					mz=(Cartesian(0,0,magz).rho/2.sqrt);
+		mx=(Cartesian(magx,0,0).rho);
+					my=(Cartesian(0,magy,0).rho);
+					mz=(Cartesian(0,0,magz).rho);
 					mag=(Cartesian(mx,my,mz).rho/2.sqrt) ;
 
 		sph=Spherical(mag,polytope.theta,polytope.phi);
@@ -376,27 +376,27 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 
 g_ch1 = (
-   (Spherical(mx,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).x * Spherical(1,~az[0],~el[0]).x) +
- (Spherical(my,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).y * Spherical(1,~az[0],~el[0]).y )+
-  (Spherical(mz,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).z * Spherical(1,~az[0],~el[0]).z)
+   (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).x * Spherical(mag,~az[0],~el[0]).x) +
+ (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).y * Spherical(mag,~az[0],~el[0]).y)+
+  (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).z * Spherical(mag,~az[0],~el[0]).z)
 );
 
 g_ch2 = (
-   (Spherical(mx,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).x * Spherical(1,~az[1],~el[1]).x )+
-(Spherical(my,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).y * Spherical(1,~az[1],~el[1]).y )+
-  (Spherical(mz,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).z * Spherical(1,~az[1],~el[1]).z)
+   (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).x * Spherical(mag,~az[1],~el[1]).x)+
+(Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).y * Spherical(mag,~az[1],~el[1]).y)+
+  (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).z * Spherical(mag,~az[1],~el[1]).z)
 );
 
 g_ch3 = (
-  (Spherical(mx,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).x * Spherical(1,~az[2],~el[2]).x )+
-   (Spherical(my,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).y * Spherical(1,~az[2],~el[2]).y )+
-  (Spherical(mz,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).z * Spherical(1,~az[2],~el[2]).z)
+  (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).x * Spherical(mag,~az[2],~el[2]).x)+
+   (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).y * Spherical(mag,~az[2],~el[2]).y)+
+  (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).z * Spherical(mag,~az[2],~el[2]).z)
 );
 
 g_ch4 = (
-  (Spherical(mx,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).x * Spherical(1,~az[3],~el[3]).x) +
- (Spherical(my,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).y * Spherical(1,~az[3],~el[3]).y )+
-   (Spherical(mz,(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).z * Spherical(1,~az[3],~el[3]).z)
+(Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).x * Spherical(mag,~az[3],~el[3]).x) +
+ (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).y * Spherical(mag,~az[3],~el[3]).y )+
+   (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(pi/2,(pi/2).neg)).z * Spherical(mag,~az[3],~el[3]).z)
 					);
 
 g11 = g_ch1;
@@ -412,10 +412,16 @@ g_ch4 = (g44 + (g11*spread) + (g22*spread) + (g33*spread));
 g_sum = (g_ch1.pow(2) + g_ch2.pow(2) + g_ch3.pow(2) + g_ch4.pow(2)).sqrt;
 
 
-g_ch1 = (g_ch1 / g_sum).lag(0.01)/2.sqrt;
-g_ch2 = (g_ch2 / g_sum).lag(0.01)/2.sqrt;
-g_ch3 = (g_ch3 / g_sum).lag(0.01)/2.sqrt;
-g_ch4 = (g_ch4 / g_sum).lag(0.01)/2.sqrt;
+g_ch1 = (g_ch1 / g_sum).lag(0.01);
+g_ch2 = (g_ch2 / g_sum).lag(0.01);
+g_ch3 = (g_ch3 / g_sum).lag(0.01);
+g_ch4 = (g_ch4 / g_sum).lag(0.01);
+
+g_ch1 = g_ch1.pow(0.1);
+g_ch2 = g_ch2.pow(0.1);
+g_ch3 = g_ch3.pow(0.1);
+g_ch4 = g_ch4.pow(0.1);
+
 
 
 
