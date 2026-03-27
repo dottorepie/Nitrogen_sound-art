@@ -235,9 +235,9 @@ phase2=Complex(1,angley).theta;
 phase3=Complex(1,anglez).theta;
 
 
-mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi).lag(0.01);
-mod_angley=SinOsc.ar(lfon/2,phase2).range(pi.neg,pi).lag(0.01);
-mod_anglez=SinOsc.ar(lfon/3,phase3).range((pi/2).neg,(pi/2)).lag(0.01);
+mod_anglex=SinOsc.ar(lfon*ton1,phase1).range(pi.neg,pi).lag(0.01);
+mod_angley=SinOsc.ar(lfon*ton2,phase2).range(pi.neg,pi).lag(0.01);
+mod_anglez=SinOsc.ar(lfon*ton3,phase3).range((pi/2).neg,(pi/2)).lag(0.01);
 
 					(
 	magx=((Complex(cos(((polytope.theta+mod_anglex).round(0.00001)*m).wrap(pi.neg,pi)),cos((((polytope.theta+mod_anglex).round(0.00001)*m)).wrap(pi.neg,pi))).rho/(2.sqrt))*
@@ -417,11 +417,10 @@ g_ch2 = (g_ch2 / g_sum).lag(0.01);
 g_ch3 = (g_ch3 / g_sum).lag(0.01);
 g_ch4 = (g_ch4 / g_sum).lag(0.01);
 
-g_ch1 = g_ch1.pow(0.1);
-g_ch2 = g_ch2.pow(0.1);
-g_ch3 = g_ch3.pow(0.1);
-g_ch4 = g_ch4.pow(0.1);
-
+						g_ch1 = g_ch1.pow(1/2).max(0.1);
+g_ch2 = g_ch2.pow(1/2).max(0.1);
+g_ch3 = g_ch3.pow(1/2).max(0.1);
+					g_ch4 = g_ch4.pow(1/2).max(0.1);
 
 
 
@@ -570,7 +569,7 @@ m3=m3+1;
 }.value;
 );
 
-		/////////////sequencer
+		////////2////sequencer
 		(
 
 			~seq1= Pseq(~dur, inf).asStream;
@@ -583,11 +582,11 @@ m3=m3+1;
 			~pass=992*3;
 			~drive=992*3;
 			~mox=0.8;
-			~gg=2;
+			~gg=0.5;
 			~pon=0.05;
 			~sphpan=(992*8).neg;
 			~bband=(992*16).neg;
-			~drn=0.6;
+			~drn=0.1;
 		//	thisThread.randSeed = 123;
 
 ~str1 = Routine({

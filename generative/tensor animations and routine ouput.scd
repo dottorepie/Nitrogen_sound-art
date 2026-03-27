@@ -101,7 +101,7 @@ SynthDef.new(\player,{
 
 
 }).add;
-	);~count=[1,2,2,2,2,3];
+	);~count=[1,2,2,2,2,8];
 }
 )
 
