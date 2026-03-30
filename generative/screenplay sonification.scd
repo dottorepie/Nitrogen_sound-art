@@ -29,31 +29,30 @@ height.postln;
 
 (
 var img = Image.open("/Users/amimid/Desktop/1.png");
-var c=0, color,x=0,y=0,r=[],g=[],b=[],h_count;
-
+var c=0, color,xx=0,yy=0,r=[],g=[],b=[],h_count=0;
+	c=(img.height/10).asInteger;
 		~ax=[]; ~ay=[];  ~az=[];
 
 	5.do{
-			h_count=((img.height/5)+c);
+
 h_count.do {
 				img.width.do {
-         color = img.getColor(x, y);
+         color = img.getColor(xx, yy);
 		[color.red, color.green, color.blue].postln;
 				r=r++color.red;
 				g=g++color.green;
 				b=b++color.blue;
-x=x+1;
+xx=xx+1;
 				};
-				x=0;
-				y=y+1;
+				xx=0;
+				yy=yy+1;
     };
-			~ax=~ax++(r.sum / r.size);
-				~ay=~ay++(g.sum / g.size);
-				~az=~az++(b.sum / b.size);
-			c=(img.height/5);
+          ~ax=~ax++(r.sum / r.size);
+			~ay=~ay++(g.sum / g.size);
+			~az=~az++(b.sum / b.size);
+			h_count=(h_count+c).asInteger.postln;
 };
 )
-
 
 
 
@@ -140,7 +139,8 @@ ton1=2.pow(Select.kr(tone1.lag(0.0001), ~scalee) /12).round(0.0001)*2.pow(dron.l
 ton2=2.pow(Select.kr(tone2.lag(0.0001), ~scalee) /12).round(0.0001)*2.pow(dron.lag(0.0001)/992);
 ton3=2.pow(Select.kr(tone3.lag(0.0001), ~scalee) /12).round(0.0001)*2.pow(dron.lag(0.0001)/992);
 
-	env=EnvGen.ar(Env.sine(12),doneAction:2,levelScale:1);
+	//env=EnvGen.ar(Env.sine(12),doneAction:2,levelScale:10);
+	env=10;
 
 						lfo=2.pow(pan/992);
 				lfon=2.pow(pann/992);
@@ -302,9 +302,9 @@ threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 	///final out
 
-					gain1=gain*rq1.sqrt.reciprocal*cloud.reciprocal*10*namp1;
-					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal*10*namp2;
-					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal*10*namp3;
+					gain1=gain*rq1.sqrt.reciprocal*cloud.reciprocal*env*namp1;
+					gain2=gain*rq2.sqrt.reciprocal*cloud.reciprocal*env*namp2;
+					gain3=gain*rq3.sqrt.reciprocal*cloud.reciprocal*env*namp3;
 
 					sp=azf;
 					spl=elf;
