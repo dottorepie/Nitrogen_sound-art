@@ -39,19 +39,19 @@ var c=0, color,xx=0,yy=0,r=[],g=[],b=[],h_count=0;
 h_count.do {
 				img.width.do {
          color = img.getColor(xx, yy);
-		[color.red, color.green, color.blue].postln;
-				r=r++color.red;
-				g=g++color.green;
-				b=b++color.blue;
+		//[color.red, color.green, color.blue].postln;
+			r=r++color.red;
+			g=g++color.green;
+         	b=b++color.blue;
 xx=xx+1;
 				};
 				xx=0;
 				yy=yy+1;
     };
-          ~ax=~ax++(r.sum / r.size);
-			~ay=~ay++(g.sum / g.size);
-			~az=~az++(b.sum / b.size);
-			h_count=(h_count+c).asInteger.postln;
+        ~ax=~ax++(r.sum / r.size);
+		~ay=~ay++(g.sum / g.size);
+		~az=~az++(b.sum / b.size);
+
 };
 )
 
