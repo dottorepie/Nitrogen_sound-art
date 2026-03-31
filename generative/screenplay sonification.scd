@@ -305,9 +305,9 @@ ds3=(LPF.ar((Osc.ar(~w1.bufnum,f3+1,phase:phasez,mul:level).abs*SinOsc.ar(f3+1,p
 	sig3=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
 						[sig3,BPF.ar(BRF.ar(sig3,band_osc3.lag(0.1),rq3),band_osc6.lag(0.1),rq6)]);
 
-threshold1=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
-threshold2=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
-threshold3=(((343/0.3)/fund).reciprocal.ampdb/2.sqrt).dbamp;
+threshold1=(((343/0.1)/fund).reciprocal.ampdb/2.sqrt).dbamp;
+threshold2=(((343/0.1)/fund).reciprocal.ampdb/2.sqrt).dbamp;
+threshold3=(((343/0.1)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 		sig1=HPF.ar(sig1,50);
 		sig2=HPF.ar(sig2, 50);
