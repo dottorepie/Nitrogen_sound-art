@@ -242,9 +242,9 @@ phase2=Complex(1,angley).theta;
 phase3=Complex(1,anglez).theta;
 
 
-mod_anglex=SinOsc.ar(lfon*ton1,phase1).range(pi.neg,pi).lag(0.01);
-mod_angley=SinOsc.ar(lfon*ton2,phase2).range(pi.neg,pi).lag(0.01);
-mod_anglez=SinOsc.ar(lfon*ton3,phase3).range((pi/2).neg,(pi/2)).lag(0.01);
+mod_anglex=SinOsc.ar(lfon*ton1,phase1,spread.reciprocal).range(pi.neg,pi).lag(0.01);
+mod_angley=SinOsc.ar(lfon*ton2,phase2,spread.reciprocal).range(pi.neg,pi).lag(0.01);
+mod_anglez=SinOsc.ar(lfon*ton3,phase3,spread.reciprocal).range((pi/2).neg,(pi/2)).lag(0.01);
 
 
 					(
@@ -543,7 +543,7 @@ m3=m3+1;
 			~drive=992*2;
 			~mox=0.7;
 			~gg=1;
-			~pon=0.1;
+			~pon=0.01;
 			~sphpan=(992*32).neg;
 			~bband=(992*16).neg;
 			~drn=0.1;
