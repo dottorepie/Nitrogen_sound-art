@@ -125,44 +125,6 @@ xx=xx+1;
 };
 )
 
-
-  r= Routine({loop{
-(
-var img = Image.open("/Users/amimid/Desktop/1.png");
-var c=0, color,xx=0,yy=0,r=[],g=[],b=[],h_count=0;
-	c=(img.height/5).asInteger;
-	h_count=(img.height/5).asInteger;
-		~cx=[]; ~cy=[];  ~cz=[];
-
-	5.do{
-
-h_count.do {
-				img.width.do {
-         color = img.getColor(xx, yy);
-		//[color.red, color.green, color.blue].postln;
-			r=r++color.red;
-			g=g++color.green;
-         	b=b++color.blue;
-xx=xx+1;
-				};
-				xx=0;
-				yy=yy+1;
-    };
-        ~cx=~cx++(r.sum / r.size);
-		~cy=~cy++(g.sum / g.size);
-		~cz=~cz++(b.sum / b.size);
-			r=[];g=[];b=[];
-};
-)
-	(1).wait;
-};
-
-	};
-
-);
-
-r.play;
-
 }
 );
 
@@ -219,9 +181,9 @@ SynthDef.new(\synth,{
 
 	arg gain=1,low=992,tone1=0,tone2=0,tone3=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,pon=1,
 				fu=32,drive=1,spread=1,drone_amp=1,pann=0,dron=0,drone=1,theta=0,rx=0,ry=0,rz=0,
-				pneuma1=0,pneuma2=0,pneuma3=0,namp1=1,namp2=1,namp3=1,sc=14;
+				pneuma1=0,pneuma2=0,pneuma3=0,namp1=1,namp2=1,namp3=1,sc=14,mm=0;
 
-	var rq=1,cloud=5,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,core=(9/8).rand;
+	var rq=1,cloud=7,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,core=(9/8).rand;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
 	var sig1,sig2,bank=6,out1,out2,band_osc1,band_osc2,threshold1,threshold2,threshold3,phase1,phase2,phase3;
 	var band_osc3,band_osc4,band_osc5,band_osc6,sig3,out3,cell_tria,b_x,b_y,b_z,polytope,gain1,gain2,gain3,env,azimuth,elevation;
@@ -231,7 +193,7 @@ SynthDef.new(\synth,{
 	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,cx,cy,cz;
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,axis;
 	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=100;
-	var g_ch1,g_ch2,g_ch3,g_ch4,chan=2,nn=0;
+	var g_ch1,g_ch2,g_ch3,g_ch4,chan=2;
 	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis,sp,spl,g11,g22,g33,g44;
 
 fund=fu*(9/8);
@@ -241,8 +203,8 @@ ton1=2.pow(Select.kr(tone1.lag(0.0001), ~scaleee) /12).round(0.0001)*2.pow(dron.
 ton2=2.pow(Select.kr(tone2.lag(0.0001), ~scaleee) /12).round(0.0001)*2.pow(dron.lag(0.0001)/992);
 ton3=2.pow(Select.kr(tone3.lag(0.0001), ~scaleee) /12).round(0.0001)*2.pow(dron.lag(0.0001)/992);
 
-	//env=EnvGen.ar(Env.sine(12),doneAction:2,levelScale:10);
-	env=10;
+	env=EnvGen.ar(Env.sine(4),doneAction:2,levelScale:10);
+//	env=10;
 
 						lfo=2.pow(pan/992);
 				lfon=2.pow(pann/992);
@@ -252,7 +214,7 @@ ton3=2.pow(Select.kr(tone3.lag(0.0001), ~scaleee) /12).round(0.0001)*2.pow(dron.
 
 						cloud.do{
 
-		spr=Cartesian(~cx.[nn],~cy.[nn],~cz.[nn]);
+		spr=Cartesian(Select.ar(nn+mm,~cx),Select.ar(nn+mm,~cy),Select.ar(nn+mm,~cz));
 				sph_object=spr;
 
 
@@ -452,10 +414,10 @@ g_ch2 = (g_ch2 / g_sum).lag(0.01);
 g_ch3 = (g_ch3 / g_sum).lag(0.01);
 g_ch4 = (g_ch4 / g_sum).lag(0.01);
 
-g_ch1 = g_ch1.pow(0.01);
-g_ch2 = g_ch2.pow(0.01);
-g_ch3 = g_ch3.pow(0.01);
-g_ch4 = g_ch4 .pow(0.01);
+g_ch1 = g_ch1.pow(0.1);
+g_ch2 = g_ch2.pow(0.1);
+g_ch3 = g_ch3.pow(0.1);
+g_ch4 = g_ch4 .pow(0.1);
 
 
 g_ch1 =g_ch1.max(0.01) + (g_ch1 - g_ch1.max(0.01)).min(0);
@@ -582,24 +544,17 @@ m3=m3+1;
 		//	thisThread.randSeed = 123;
 
 ~str1 = Routine({
-    var i,m,l;
+    var i,m,l=0;
 
-    loop {
+    60.do{
 					//	thisThread.randSeed = ~val.asInteger;
 							TempoClock.default.tempo_(1);
-				//	TempoClock.default.tempo_(~val/300);
-				//	~r1=0; ~r2=0; ~r3=0;
-				//	i=0;
-				//	l=~system.next;
-					//~detune=32.rand.round(2).max(1);
-							i= ~cart.lag(0.01).size.rand;
-~detune=1;
 
 	~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,8,\sc,14,\low,~pass,\pan,~bband,\mix,~mox,\room,~rev.lag(0.01),
-				\pann,~sphpan,\x,2,\a,1,\spread,~rev.lag(0.01),\pon,~pon,\pneuma,0,\namp,1,\drone,5.neg,\panx,~0.1
-				\pany,~0.1,\panz,~0.1,\dron,~tonb]).register;
+				\pann,~sphpan,\x,2,\a,1,\spread,~rev.lag(0.01),\pon,~pon,\pneuma,0,\namp,1,\drone,5.neg,\panx,0.1
+				\pany,0.1,\panz,0.1,\dron,~tonb,\mm,l]).register;
 
-
+l=l+7;
         ~seq1.next.wait;
 
     }
