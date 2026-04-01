@@ -96,7 +96,7 @@ PathName.new("/Users/amimid/Desktop/screenplay/").files.do { |f|
 
 	(
 				~cx=[]; ~cy=[];  ~cz=[];
-PathName.new("/Users/amimid/Desktop/screenplay/").files.do { |f|
+PathName.new("/Users/amimid/Desktop/iloveimg-resized/").files.do { |f|
 
 var img = Image.open(f.fullPath);
 var c=0, color,xx=0,yy=0,r=[],g=[],b=[],h_count=0;
