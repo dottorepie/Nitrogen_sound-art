@@ -162,7 +162,7 @@ xx=xx+1;
 /////one value per image
 	(
 				~cx=[]; ~cy=[];  ~cz=[];
-		PathName.new("/Users/amimid/Documents/film/screenplay/").files.do { |f|
+		PathName.new("/Users/amimid/Documents/film/tzortz/iloveimg-resized/").files.do { |f|
 
 var img = Image.open(f.fullPath);
 var c=0, color,xx=0,yy=0,r=[],g=[],b=[],h_count=0;
@@ -351,9 +351,9 @@ cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt));
 					mx=(Cartesian(magx,0,0).rho);
 					my=(Cartesian(0,magy,0).rho);
 					mz=(Cartesian(0,0,magz).rho);
-					mag=(Cartesian(mx,my,mz).rho/2.sqrt) ;
+		mag=(Cartesian(mx,my,mz)) ;
 
-		sph=Spherical(mag,polytope.theta,polytope.phi);
+		sph=Spherical(mag.rho/2.sqrt,polytope.theta,polytope.phi);
 
 loc1=mx;  loc2=magy;  loc3=magz;
 
@@ -457,40 +457,41 @@ threshold3=(((343/0.1)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 					spl=elf;
 
 
+
 g_ch1 = (
    (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).x *
-							Spherical(mag,~az[0],~el[0]).x) +
+							Spherical(mag.x,~az[0],~el[0]).x) +
  (Spherical(my.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).y *
-							Spherical(mag,~az[0],~el[0]).y)+
+							Spherical(mag.y,~az[0],~el[0]).y)+
   (Spherical(mz.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).z *
-							Spherical(mag,~az[0],~el[0]).z)
+							Spherical(mag.z,~az[0],~el[0]).z)
 );
 
 g_ch2 = (
    (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).x *
-							Spherical(mag,~az[1],~el[1]).x)+
+							Spherical(mag.x,~az[1],~el[1]).x)+
 (Spherical(mz.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).y *
-							Spherical(mag,~az[1],~el[1]).y)+
+							Spherical(mag.y,~az[1],~el[1]).y)+
   (Spherical(mz.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).z *
-							Spherical(mag,~az[1],~el[1]).z)
+							Spherical(mag.z,~az[1],~el[1]).z)
 );
 
 g_ch3 = (
   (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).x *
-							Spherical(mag,~az[2],~el[2]).x)+
+							Spherical(mag.x,~az[2],~el[2]).x)+
    (Spherical(my.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).y *
-							Spherical(mag,~az[2],~el[2]).y)+
+							Spherical(mag.y,~az[2],~el[2]).y)+
   (Spherical(mz.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).z *
-							Spherical(mag,~az[2],~el[2]).z)
+							Spherical(mag.z,~az[2],~el[2]).z)
 );
 
 g_ch4 = (
 (Spherical(mx.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).x *
-							Spherical(mag,~az[3],~el[3]).x) +
+							Spherical(mag.x,~az[3],~el[3]).x) +
  (Spherical(my.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).y *
-							Spherical(mag,~az[3],~el[3]).y)+
+							Spherical(mag.y,~az[3],~el[3]).y)+
    (Spherical(mz.lag(0.01),(polytope.theta+sp).wrap(pi,pi.neg),(polytope.phi+spl).wrap(35.264390.degrad,35.264390.degrad.neg)).z *
-							Spherical(mag,~az[3],~el[3]).z)
+							Spherical(mag.z,~az[3],~el[3]).z)
 					);
 
 g_ch1 = g_ch1.pow(spread.reciprocal);
@@ -535,7 +536,7 @@ sig3* g_ch1.lag(0.1)*pon1,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01));
 Out.ar(1,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
 sig3* g_ch2.lag(0.1)*pon2,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01));
-Out.ar(2,
+Out.ar(0,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
 sig3* g_ch3.lag(0.1)*pon3,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01));
 Out.ar(3,
@@ -554,7 +555,7 @@ nn=nn+1;
 }).add;);
 (
 (
-	~synth=Synth.new(\synth,[\gain,0.5,\drive,992,\fu,32,\sc,992*2,\low,992,
+	~synth=Synth.new(\synth,[\gain,0.5,\drive,992,\fu,32,\sc,992,\low,992,
 	\pan,(992*16).neg,\mix,0.5,\room,0.6,\mm,0,\m,3,\tone1,0,\tone2,0,\tone3,0,
 	\pann,(992*6).neg,\x,1,\a,1,\spread,1,\pon,0.01,
 	\pneuma,0,\namp,1,\drone,5.neg,\panx,0.3,\pany,0.4,\panz,0.2,\dron,0]).register;);
@@ -570,7 +571,7 @@ nn=nn+1;
 
 l=l+1;
       //  ~seq1.next.wait;
-		(1/4).wait;
+		(8).wait;
 
     }
 		});
