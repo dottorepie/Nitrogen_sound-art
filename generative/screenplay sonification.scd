@@ -403,13 +403,13 @@ freq3=(fund*ton3)*b_z.lag(0.0001);
 
 					dr=2.pow(drone.lag(0.1)/12)*2.pow(dron.lag(0.0001)/992);
 
-f1=(fund)*b_x.lag(0.0001)*dr;
-f2=(fund)*b_y.lag(0.0001)*dr;
-f3=(fund)*b_z.lag(0.0001)*dr;
+f1=(fund*ton1)*b_x.lag(0.01)*dr;
+f2=(fund*ton2)*b_y.lag(0.01)*dr;
+f3=(fund*ton3)*b_z.lag(0.01)*dr;
 
-amp1=ton1.reciprocal*b_x.reciprocal;
-amp2=ton2.reciprocal*b_y.reciprocal;
-amp3=ton3.reciprocal*b_z.reciprocal;
+g1=b_x.reciprocal*dr.reciproca*ton1.reciprocal;
+g2=b_y.reciprocal*dr.reciprocal*ton2.reciprocal;
+g3=b_z.reciprocal*dr.reciprocal*ton3.reciprocal;
 
 g1=b_x.reciprocal*dr.reciprocal*panx;
 g2=b_y.reciprocal*dr.reciprocal*pany;
@@ -440,15 +440,9 @@ control1=SinOsc.ar(freq1,phase:phasex,mul:amp1);
 control2=SinOsc.ar(freq2,phase:phasey,mul:amp2);
 control3=SinOsc.ar(freq3,phase:phasez,mul:amp3);
 
-ds1=(LPF.ar((Osc.ar(~w1.bufnum,f1+1,phase:phasex,mul:level).abs*SinOsc.ar(f1+1,phase:phasex)),f1*2.pow(low.lag(0.0001)/992),g1)+
-	LPF.ar((Osc.ar(~w1.bufnum,f1+1,phase:phasex+(pi/2),mul:level).abs*SinOsc.ar(f1+1,phase:phasex+(pi/2))),f1*2.pow(low.lag(0.0001)/992),g1)
-					);
-ds2=(LPF.ar((Osc.ar(~w1.bufnum,f2+1,phase:phasey,mul:level).abs*SinOsc.ar(f2+1,phase:phasey)),f2*2.pow(low.lag(0.0001)/992),g2)+
-	LPF.ar((Osc.ar(~w1.bufnum,f2+1,phase:phasey+(pi/2),mul:level).abs*SinOsc.ar(f2+1,phase:phasey+(pi/2))),f2*2.pow(low.lag(0.0001)/992),g2)
-					);
-ds3=(LPF.ar((Osc.ar(~w1.bufnum,f3+1,phase:phasez,mul:level).abs*SinOsc.ar(f3+1,phase:phasez)),f3*2.pow(low.lag(0.0001)/992),g3)+
-	LPF.ar((Osc.ar(~w1.bufnum,f3+1,phase:phasez+(pi/2),mul:level).abs*SinOsc.ar(f3+1,phase:phasez+(pi/2))),f3*2.pow(low.lag(0.0001)/992),g3)
-					);
+ds1=(LPF.ar((Osc.ar(~w1.bufnum,f1+1,phase:phasex,mul:level).abs*SinOsc.ar(f1+1,phase:phasex)),f1*2.pow(low.lag(0.01)/992),g1));
+ds2=(LPF.ar((Osc.ar(~w1.bufnum,f2+1,phase:phasey,mul:level).abs*SinOsc.ar(f2+1,phase:phasey)),f2*2.pow(low.lag(0.01)/992),g2));
+ds3=(LPF.ar((Osc.ar(~w1.bufnum,f3+1,phase:phasez,mul:level).abs*SinOsc.ar(f3+1,phase:phasez)),f3*2.pow(low.lag(0.01)/992),g3));
 
 sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1).range(panx,1)+(ds1));
 sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:level).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2).range(pany,1)+(ds2));
