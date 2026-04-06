@@ -130,7 +130,7 @@ xx=xx+1;
 )*/
 
 /////granular
-	//*(
+	/*(
 				~cx=[]; ~cy=[];  ~cz=[];
 		PathName.new("/Users/amimid/Documents/film/screenplay/").files.do { |f|
 
@@ -159,10 +159,12 @@ xx=xx+1;
 };
 )*/
 
+)
+
 /////one value per image
-	(
+	/*(
 				~cx=[]; ~cy=[];  ~cz=[];
-		PathName.new("/Users/amimid/Documents/film/tzortz/iloveimg-resized/").files.do { |f|
+	PathName.new("/Users/amimid/Desktop/untitled folder/").files.do { |f|
 
 var img = Image.open(f.fullPath);
 var c=0, color,xx=0,yy=0,r=[],g=[],b=[],h_count=0;
@@ -187,8 +189,40 @@ xx=xx+1;
 				yy=0;
 };
 
-)
+)*/
+////entropy, one value per image
+(
+				~cx=[]; ~cy=[];  ~cz=[];
+	PathName.new("/Users/amimid/Documents/film/screenplay/").files.do { |f|
 
+var img = Image.open(f.fullPath);
+var c=0, color,xx=0,yy=0,r=[],g=[],b=[],h_count=0;
+
+
+	img.height.do {
+				img.width.do {
+         color = img.getColor(xx, yy);
+	[color.red, color.green, color.blue].postln;
+			r=r++color.red;
+			g=g++color.green;
+         	b=b++color.blue;
+xx=xx+1;
+				};
+				xx=0;
+				yy=yy+1;
+    };
+			r=r+0.0001;  g=g+0.0001;  b=b+0.0001;
+	r=r/r.sum;   g=g/g.sum;   b=b/b.sum;
+	r=r.neg*log2(r);  	g=g.neg*log2(g);  	b=b.neg*log2(b);
+
+        ~cx=~cx++r.sum;
+		~cy=~cy++g.sum;
+		~cz=~cz++b.sum;
+			r=[];g=[];b=[];
+				yy=0;
+};
+
+)
 
 
 (
@@ -272,9 +306,9 @@ env=10;
 	//lllx=(Select.kr(mm.lag(0.001),~cx)+Select.kr(mm.lag(0.001)+1,~cx)+Select.kr(mm.lag(0.001)+2,~cx))/3;
 	//llly=(Select.kr(mm.lag(0.001),~cy)+Select.kr(mm.lag(0.001)+1,~cy)+Select.kr(mm.lag(0.001)+2,~cy))/3;
 	//lllz=(Select.kr(mm.lag(0.001),~cz)+Select.kr(mm.lag(0.001)+1,~cz)+Select.kr(mm.lag(0.001)+2,~cz))/3;
-	lllx=Select.kr(mm.lag(0.001),~cx);
-	llly=Select.kr(mm.lag(0.001),~cy);
-	lllz=Select.kr(mm.lag(0.001),~cz);
+//	lllx=Select.kr(mm.lag(0.001),~cx);
+	//llly=Select.kr(mm.lag(0.001),~cy);
+	//lllz=Select.kr(mm.lag(0.001),~cz);
 
 //	tone1=lllx.linlin(0,1,0,14).round(1);
 	//tone2=llly.linlin(0,1,0,14).round(1);
@@ -500,10 +534,10 @@ g_ch2 = g_ch2.pow(spread.reciprocal);
 g_ch3 = g_ch3.pow(spread.reciprocal);
 g_ch4 = g_ch4.pow(spread.reciprocal);
 
-pon1=SinOsc.ar(pon,0).range(0.0001,1).lag(0.1);
-pon2=SinOsc.ar(pon,0.25pi).range(0.0001,1).lag(0.1);
-pon3=SinOsc.ar(pon,0.5pi).range(0.0001,1).lag(0.1);
-pon4=SinOsc.ar(pon,0.75pi).range(0.0001,1).lag(0.1);
+pon1=SinOsc.ar(pon,0).range(1,1).lag(0.1);
+pon2=SinOsc.ar(pon,0.25pi).range(1,1).lag(0.1);
+pon3=SinOsc.ar(pon,0.5pi).range(1,1).lag(0.1);
+pon4=SinOsc.ar(pon,0.75pi).range(1,1).lag(0.1);
 
 Out.ar(0,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
@@ -556,15 +590,15 @@ nn=nn+1;
 }).add;);
 (
 (
-	~synth=Synth.new(\synth,[\gain,0.5,\drive,992,\fu,32,\sc,992,\low,992,
-	\pan,(992*16).neg,\mix,0.5,\room,0.6,\mm,0,\m,3,\tone1,0,\tone2,0,\tone3,0,
-	\pann,(992*6).neg,\x,1,\a,1,\spread,1,\pon,0.01,
-	\pneuma,0,\namp,1,\drone,5.neg,\panx,0.3,\pany,0.4,\panz,0.2,\dron,0]).register;);
+	~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,16,\sc,992*4,\low,992*1.5,
+	\pan,(992*16).neg,\mix,0.8,\room,0.6,\mm,0,\m,3,\tone1,3,\tone2,5,\tone3,6,
+	\pann,(992*8.neg).neg,\x,3,\a,1,\spread,1,\pon,1/32,
+	\pneuma,0,\namp,1,\drone,12.neg,\panx,0.3,\pany,0.4,\panz,0.5,\dron,0]).register;);
 
 (
 ~r1 = Routine({
     var i,m,l=0;
-    60.do{
+    500.do{
 					//	thisThread.randSeed = ~val.asInteger;
 						//	TempoClock.default.tempo_(1);
 
@@ -572,7 +606,7 @@ nn=nn+1;
 
 l=l+1;
       //  ~seq1.next.wait;
-		(8).wait;
+		(1/4).wait;
 
     }
 		});

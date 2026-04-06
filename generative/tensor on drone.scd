@@ -550,7 +550,7 @@ m3=m3+1;
 							i= ~cart.lag(0.01).size.rand;
 ~detune=1;
 
-	~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,8,\sc,14,//~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
+	~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,32,\sc,14,//~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
 						\low,~pass,\pan,~bband,\mix,~mox,\room,~rev.lag(0.01),\pann,~sphpan,\x,2,\a,1,\spread,~rev.lag(0.01),
 						\pon,~pon,\pneuma,0,\namp,1,\drone,5.neg,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
 						,\panx,~drn+0.55.rand,\pany,~drn+0.55.rand,\panz,~drn+0.55.rand,\dron,~tonb,
