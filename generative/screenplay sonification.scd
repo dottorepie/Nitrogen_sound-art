@@ -407,7 +407,7 @@ f1=(fund*ton1)*b_x.lag(0.01)*dr;
 f2=(fund*ton2)*b_y.lag(0.01)*dr;
 f3=(fund*ton3)*b_z.lag(0.01)*dr;
 
-g1=b_x.reciprocal*dr.reciproca*ton1.reciprocal;
+g1=b_x.reciprocal*dr.reciprocal*ton1.reciprocal;
 g2=b_y.reciprocal*dr.reciprocal*ton2.reciprocal;
 g3=b_z.reciprocal*dr.reciprocal*ton3.reciprocal;
 
