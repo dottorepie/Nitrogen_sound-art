@@ -158,14 +158,14 @@ wt = signal.asWavetable;
 (
 			{
 				var nn=1.neg;
-		~scale=14.collect{nn=nn+1;Scale.phrygian.performDegreeToKey(nn,12)};
+		~scale=10.collect{nn=nn+1;Scale.majorPentatonic.performDegreeToKey(nn,12)};
 			}.value;
 		);
 
 		(
 			{
 				var nn=1.neg;
-		~scalee=14.collect{nn=nn+1;Scale.dorian.performDegreeToKey(nn,12)};
+		~scalee=10.collect{nn=nn+1;Scale.minorPentatonic.performDegreeToKey(nn,12)};
 			}.value;
 		);
 		////sound
@@ -237,9 +237,9 @@ ton3=2.pow(Select.kr(tone3.lag(0.01), ~scalee) /12).round(0.0001)*2.pow(dron.lag
 //b_y=2.pow(Select.kr(polytope.y.round(1).linlin(1, 14, 0, 24), ~scale1) /12);
 //b_z=2.pow(Select.kr(polytope.z.round(1).linlin(1, 14, 0, 24), ~scale1) /12);
 
-b_x=2.pow(polytope.x.round(1) /992).round(0.0001)*lamdoma;
-b_y=2.pow(polytope.y.round(1) /992).round(0.0001)*lamdoma;
-b_z=2.pow(polytope.z.round(1) /992).round(0.0001)*lamdoma;
+b_x=2.pow(polytope.x.round(0.0001) /992).round(0.0001)*lamdoma;
+b_y=2.pow(polytope.y.round(0.0001) /992).round(0.0001)*lamdoma;
+b_z=2.pow(polytope.z.round(0.0001) /992).round(0.0001)*lamdoma;
 
 
 //b_x=laxis.x.round((9/8)/2);
