@@ -161,7 +161,7 @@ ton2=2.pow(Select.kr(tone2.lag(0.01), ~scale) /12).round(0.0001)*2.pow(dron.lag(
 ton3=2.pow(Select.kr(tone3.lag(0.01), ~scale) /12).round(0.0001)*2.pow(dron.lag(0.01)/992);
 
 		//		ton=2.pow((tone.lag(0.01))/56).round(0.0001)*2.pow(dron.lag(0.01)/56);
-				env=EnvGen.ar(Env.perc(0.0001,32,curve:cur),doneAction:2);
+				env=EnvGen.ar(Env.perc(0.01,32,curve:cur),doneAction:2);
 						lfo=2.pow(pan/992);
 				lfon=2.pow(pann/992);
 					band=pan;
@@ -540,29 +540,29 @@ m3=m3+1;
 			(
 		~aa=Pdef(\1, Pbind(\instrument, \synth,
 			\dur,Pseq(~dur*16,inf),
-			\gain,0.1,
-			\drive,992*2,
-		\fu,128,
+			\gain,1,
+			\drive,992*1,
+		\fu,256,
 				\tone1,Pbrown(0,5,1,inf),
 			\tone2,Pbrown(0,5,1,inf),
 			\tone3,Pbrown(0,5,1,inf),
 			\low,Pbrown(0,(992*2),496,inf),
 			\pan,(992*16).neg,
-		\mix,Pseq([0.3],inf),
+		\mix,Prand([0.5,0.6,0.8],inf),
 			\drone_amp,1,
-			\room,Pseq([1],inf),
+			\room,Prand([0.7,0.8,1],inf),
 				\m,Prand([1,2,3],inf),
 				\pann,Pbrown((992*2),(992*7),992,inf),
-			\pon,0.01,
+			\pon,Pbrown(0.001,28,0.1,inf),
 			\pneuma1,0,\pneuma2,0,\pneuma3,0,
 			\x,2,
 			\a,1,
-			\panx,Pexprand(0.5.neg,0.000001,inf),
-			\pany,Pexprand(0.5.neg,0.000001,inf),
-			\panz,Pexprand(0.5.neg,0.000001,inf),
+			\panx,Pbrown(0.1.neg,0,0.01,inf),
+			\pany,Pbrown(0.1.neg,0,0.01,inf),
+			\panz,Pbrown(0.1.neg,0,0.01,inf),
 			\spread,1,\namp1,1,\namp2,1,\namp3,1,
-			\az,Pbrown(pi.neg,pi,0.1pi,inf),
-			\el,Pbrown(0.5pi.neg,0.5pi,0.05pi,inf),
+			\az,Pbrown(pi.neg,pi,0.2pi,inf),
+			\el,Pbrown(0.5pi.neg,0.5pi,0.1pi,inf),
 			\dron,0,
 				\cur,Pbrown(2.neg,8.neg,1,inf),
 			\drone,24.neg,
@@ -574,8 +574,7 @@ m3=m3+1;
 
 
 
-
-		TempoClock.default.tempo_(1);
+		TempoClock.default.tempo_(2);
 
 	});
 	Tdef(\drone).play;
