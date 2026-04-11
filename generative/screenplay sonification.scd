@@ -533,10 +533,11 @@ g_ch2 = g_ch2.pow(spread.reciprocal);
 g_ch3 = g_ch3.pow(spread.reciprocal);
 g_ch4 = g_ch4.pow(spread.reciprocal);
 
-pon1=SinOsc.ar(pon,0).range(1,1).lag(0.1);
-pon2=SinOsc.ar(pon,0.25pi).range(1,1).lag(0.1);
-pon3=SinOsc.ar(pon,0.5pi).range(1,1).lag(0.1);
-pon4=SinOsc.ar(pon,0.75pi).range(1,1).lag(0.1);
+
+pon1=SinOsc.ar(pon*lfon,0).range(0.0001,1).lag(0.1);
+pon2=SinOsc.ar(pon*lfon,0.25pi).range(0.0001,1).lag(0.1);
+pon3=SinOsc.ar(pon*lfon,0.5pi).range(0.0001,1).lag(0.1);
+pon4=SinOsc.ar(pon*lfon,0.75pi).range(0.0001,1).lag(0.1);
 
 Out.ar(0,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
