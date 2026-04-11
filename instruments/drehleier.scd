@@ -208,9 +208,9 @@ anglex=(exp(Complex(0,1)*polytope.theta).real*exp(Complex(0,1)*polytope.phi).rea
 angley=(exp(Complex(0,1)*polytope.theta).imag*exp(Complex(0,1)*polytope.phi).real).round(0.00001);
 anglez=(exp(Complex(0,1)*polytope.phi).imag).round(0.00001);
 
-phase1=anglex.linlin(1,1.neg,pi,pi.neg);
-phase2=angley.linlin(1,1.neg,pi,pi.neg);
-phase3=anglez.linlin(1,1.neg,0.5pi,0.5pi.neg);
+phase1=Complex(1,anglex).theta;
+phase2=Complex(1,angley).theta;
+phase3=Complex(1,anglez).theta;
 
 
 mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi).lag(0.01);
@@ -253,9 +253,9 @@ cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt));
 
 loc1=mx;  loc2=magy;  loc3=magz;
 
-phasex=sph.x.linlin(mag.rho,mag.rho.neg,pi,pi.neg);
-phasey=sph.y.linlin(mag.rho,mag.rho.neg,pi,pi.neg);
-phasez=sph.z.linlin(mag.rho,mag.rho.neg,0.5pi,0.5pi.neg);
+phasex=Complex(1,sph.x).theta;
+phasey=Complex(1,sph.y).theta;
+phasez=Complex(1,sph.z).theta;
 
 
 freq1=(fund*ton1)*b_x.lag(0.01);
@@ -960,13 +960,16 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 			));
 
 
-
+		(
+~azz=[0.degrad,0.degrad,90.degrad,180.degrad,90.neg.degrad,0.degrad];
+~ell=[90.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,90.degrad];
+);
 
 
 		);
 		/////////////sequencer with midi
 ({
-			var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=4,time=8.reciprocal,beat=1,r=0;
+			var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=6,time=8.reciprocal,beat=1,r=0;
 			~r=0;		~r1=0;		~r2=0;
 				(
 
@@ -975,17 +978,17 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 					1.do{
 ~x=bank.collect{
 m1=m1+1;
-					b=Spherical(beat,~az.[m1],~el.[m1]).rotate(~r).tilt(~r1).tumble(~r2).x.round(0.00001);
+					b=Spherical(beat,~azz.[m1],~ell.[m1]).rotate(~r).tilt(~r1).tumble(~r2).x.round(0.00001);
 	2.pow(b).round(time);
 };
 ~y=bank.collect{
 m2=m2+1;
-	c=Spherical(beat,~az.[m2],~el.[m2]).rotate(~r).tilt(~r1).tumble(~r2).y.round(0.00001);
+	c=Spherical(beat,~azz.[m2],~ell.[m2]).rotate(~r).tilt(~r1).tumble(~r2).y.round(0.00001);
 	2.pow(c).round(time);
 };
 ~z=bank.collect{
 m3=m3+1;
-	d=Spherical(beat,~az.[m3],~el.[m3]).rotate(~r).tilt(~r1).tumble(~r2).z.round(0.00001);
+	d=Spherical(beat,~azz.[m3],~ell.[m3]).rotate(~r).tilt(~r1).tumble(~r2).z.round(0.00001);
 	2.pow(d).round(time);
 }; m1=1.neg; m2=1.neg; m3=1.neg; ~dx=~dx++~x; ~dy=~dy++~y;  ~dz=~dz++~z;   ~x=[]; ~y=[]; ~z=[];  r=r+90.degrad; };
 
@@ -1002,7 +1005,7 @@ m3=m3+1;
 );
 		}.value);
 						//	~seq = Pseq([1] ,inf).asStream;
-		~seq1= Pseq(~dur1 ,inf).asStream;
+		//~seq1= Pseq(~dur1 ,inf).asStream;
 				~seq1= Pseq(~dur ,inf).asStream;
 	///	~seq2= Pseq(~dur2 ,inf).asStream;
 	//	~seq3= Pseq(~dur3 ,inf).asStream;
@@ -1013,37 +1016,37 @@ m3=m3+1;
 
 
 
-	~synth.set(\tone1, ~s1, \pneuma1,0, \namp1,~ss1)	;
+	~synth.set(\tone1, ~s1, \pneuma1,0, \namp1,1)	;
 
     ~seq1.next.wait;
 
-	~synth.set(\tone1, ~s2, \pneuma1,0, \namp1,~ss2)	;
+	~synth.set(\tone2, ~s2, \pneuma1,0, \namp1,1)	;
 
 	    ~seq1.next.wait;
 
-	~synth.set(\tone1, ~s3, \pneuma1,0, \namp1,~ss3)	;
+	~synth.set(\tone3, ~s3, \pneuma1,0, \namp1,1)	;
 
 	    ~seq1.next.wait;
 
-	~synth.set(\tone2, ~s4, \pneuma2,0, \namp2,~ss4)	;
+	~synth.set(\tone1, ~s4, \pneuma2,0, \namp2,1)	;
 
 	    ~seq1.next.wait;
 
-	~synth.set(\tone2, ~s5, \pneuma2,0, \namp2,~ss5)	;
+	~synth.set(\tone2, ~s5, \pneuma2,0, \namp2,1)	;
 
 	    ~seq1.next.wait;
 
-	~synth.set(\tone2, ~s6, \pneuma2,0, \namp2,~ss6)	;
+	~synth.set(\tone3, ~s6, \pneuma2,0, \namp2,1)	;
 
 	    ~seq1.next.wait;
 
-	~synth.set(\tone3, ~s7, \pneuma3,0, \namp3,~ss7)	;
+	~synth.set(\tone3, ~s7, \pneuma3,0, \namp3,1)	;
 
 	    ~seq1.next.wait;
 
-	~synth.set(\tone3, ~s8, \pneuma3,0, \namp3,~ss8)	;
+	~synth.set(\tone2, ~s8, \pneuma3,0, \namp3,1)	;
 
-	    ~seq1.next.wait;
+	  ~seq1.next.wait;
 
 };
 		}));
