@@ -226,7 +226,6 @@ xx=xx+1;
 
 
 (
-(
 ~az=[45.degrad,135.neg.degrad,45.neg.degrad,135.degrad];
 ~el=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad];
 );
@@ -255,7 +254,7 @@ wt = signal.asWavetable;
 
 
 ////scale
-	(
+(
 			{
 				var nn=1.neg;
 		~scalee=10.collect{nn=nn+1;Scale.majorPentatonic.performDegreeToKey(nn,12)};
@@ -268,8 +267,8 @@ wt = signal.asWavetable;
 		~scaleee=10.collect{nn=nn+1;Scale.minorPentatonic.performDegreeToKey(nn,12)};
 			}.value;
 		);
+
 		~sc=[~scalee,~scaleee];
-)
 		////sound
 
 
@@ -278,7 +277,7 @@ wt = signal.asWavetable;
 SynthDef.new(\synth,{
 
 	arg gain=1,low=992,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,pon=1,
-				fu=32,drive=1,spread=1,drone_amp=1,pann=0,dron=0,drone=1,theta=0,rx=0,ry=0,rz=0,qq=0.0000001,
+				fu=32,drive=1,spread=1,drone_amp=1,pann=0,dron=0,drone=1,theta=0,rx=0,ry=0,rz=0,qq=0.0000001,spirit=1,
 				pneuma1=0,pneuma2=0,pneuma3=0,namp1=1,namp2=1,namp3=1,sc=7,mm=0,tone1=0,tone2=0,tone3=0,qqq=0;
 
 	var rq=1,cloud=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3;
@@ -350,11 +349,9 @@ anglex=(exp(Complex(0,1)*polytope.theta).real*exp(Complex(0,1)*polytope.phi).rea
 angley=(exp(Complex(0,1)*polytope.theta).imag*exp(Complex(0,1)*polytope.phi).real).round(0.00001);
 anglez=(exp(Complex(0,1)*polytope.phi).imag).round(0.00001);
 
-phase1=Complex(1,anglex).theta;
-phase2=Complex(1,angley).theta;
-phase3=Complex(1,anglez).theta;
-
-
+phase1=(Complex(1,anglex).theta+SinOsc.ar(spirit,mul:2pi)).wrap(2pi.neg,2pi);
+phase2=(Complex(1,angley).theta+SinOsc.ar(spirit,mul:2pi)).wrap(2pi.neg,2pi);
+phase3=(Complex(1,anglez).theta+SinOsc.ar(spirit,mul:2pi)).wrap(2pi.neg,2pi);
 
 
 //mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi).lag(0.01);
@@ -410,7 +407,7 @@ freq1=(fund*ton1)*b_x.lag(0.0001);
 freq2=(fund*ton2)*b_y.lag(0.0001);
 freq3=(fund*ton3)*b_z.lag(0.0001);
 
-					dr=2.pow(drone.lag(0.1)/12)*2.pow(dron.lag(0.0001)/992);
+					dr=2.pow(drone.lag(0.1)/12);
 
 		amp1=ton1.reciprocal*b_x.reciprocal;
 amp2=ton2.reciprocal*b_y.reciprocal;
@@ -621,7 +618,7 @@ nn=nn+1;
 (
 	~synth=Synth.new(\synth,[\gain,1,\drive,992*3,\fu,256,\sc,992*0,\low,992*1,
 	\pan,(992*16).neg,\mix,0.6,\room,0.6,\mm,0,\m,2,\tone1,3,\tone2,5,\tone3,6,
-	\pann,(992*1.neg).neg,\x,1,\a,1,\spread,1,\pon,5,\qq,0.0000001,\qqq,1.rnd,
+	\pann,(992*1.neg).neg,\x,1,\a,1,\spread,1,\pon,5,\qq,0.0000001,\qqq,1.rand,\spirit,0.1,
 	\pneuma,0,\namp,1,\drone,36.neg,\panx,0,\pany,0,\panz,0,\dron,0]).register;);
 
 (
@@ -642,7 +639,7 @@ l=l+1;
 );
 
 	~r1.play;
-s.record(numChannels:2)
+//s.record(numChannels:2)
 )
 
 

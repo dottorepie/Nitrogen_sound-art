@@ -146,7 +146,7 @@ wt = signal.asWavetable;
 			~dist.loadCollection(~transfer_function.asWavetableNoWrap);
 		);
 ////scale
-	(
+(
 			{
 				var nn=1.neg;
 		~scalee=10.collect{nn=nn+1;Scale.majorPentatonic.performDegreeToKey(nn,12)};
@@ -159,7 +159,8 @@ wt = signal.asWavetable;
 		~scaleee=10.collect{nn=nn+1;Scale.minorPentatonic.performDegreeToKey(nn,12)};
 			}.value;
 		);
-				~sc=[~scalee,~scaleee];
+
+		~sc=[~scalee,~scaleee];
 		////sound
 
 (
@@ -167,7 +168,7 @@ SynthDef.new(\synth,{
 
 	arg gain=1,low=992,tone1=0,tone2=0,tone3=0,x=1,pan=1,mix=0.3,a=1,room=0.5,fund_tone=1,pon=0.01,namp=1,
 				drive=1,spread=1,drone_amp=1,pann=0,drone=1,xx=1,yy=1,zz=1,qq=0.0000001,
-				pneuma=0,panx=1,pany=1,panz=1,sc=1,dron=1,az=0,el=0,qqq=0;
+				pneuma=0,panx=1,pany=1,panz=1,sc=1,dron=1,az=0,el=0,qqq=0,spirit=1;
 
 	var rq=1,cloud=3,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,core=(9/8).rand;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
@@ -237,9 +238,9 @@ anglex=(exp(Complex(0,1)*polytope.theta).real*exp(Complex(0,1)*polytope.phi).rea
 angley=(exp(Complex(0,1)*polytope.theta).imag*exp(Complex(0,1)*polytope.phi).real).round(0.00001);
 anglez=(exp(Complex(0,1)*polytope.phi).imag).round(0.00001);
 
-phase1=Complex(1,anglex).theta;
-phase2=Complex(1,angley).theta;
-phase3=Complex(1,anglez).theta;
+phase1=(Complex(1,anglex).theta+SinOsc.ar(spirit,mul:2pi)).wrap(2pi.neg,2pi);
+phase2=(Complex(1,angley).theta+SinOsc.ar(spirit,mul:2pi)).wrap(2pi.neg,2pi);
+phase3=(Complex(1,anglez).theta+SinOsc.ar(spirit,mul:2pi)).wrap(2pi.neg,2pi);
 
 
 //mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi).lag(0.01);
@@ -297,7 +298,7 @@ freq1=(fund*ton1)*b_x.lag(0.0001);
 freq2=(fund*ton2)*b_y.lag(0.0001);
 freq3=(fund*ton3)*b_z.lag(0.0001);
 
-					dr=2.pow(drone.lag(0.1)/12)*tonb;
+					dr=2.pow(drone.lag(0.1)/12);
 f1=(fund*ton1)*b_x.lag(0.01)*dr;
 f2=(fund*ton2)*b_y.lag(0.01)*dr;
 f3=(fund*ton3)*b_z.lag(0.01)*dr;
@@ -544,7 +545,7 @@ m3=m3+1;
 			~pass=992*4;
 			~drive=992*2;
 			~mox=1;
-			~gg=50;
+			~gg=100;
 			~pon=0.05;
 			~sphpan=(992*5).neg;
 			~bband=(992*7).neg;
@@ -552,6 +553,7 @@ m3=m3+1;
 			~qq=0.0000001;
 			~oct=24.neg;
 				~qqq=0;
+			~spirit=0.1;
 		//	thisThread.randSeed = 123;
 
 ~str1 = Routine({
@@ -570,10 +572,10 @@ m3=m3+1;
 					i=0;
 ~detune=1;
 
-	~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,128,\sc,992,//~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
+	~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,512,\sc,992,//~magnitude.lag(0.01).[i].round(1).max(1).asInteger,
 						\low,~pass,\pan,~bband,\mix,~mox,\room,1,\pann,~sphpan,\x,3,\a,1,\spread,~panwidth,
 						\pon,~pon,\pneuma,0,\namp,1,\drone,~oct,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i]
-						,\panx,~drn,\pany,~drn,\panz,~drn,\dron,~tonb,\qq,~qq,\qqq,1.rand,
+						,\panx,~drn,\pany,~drn,\panz,~drn,\dron,~tonb,\qq,~qq,\qqq,1.rand,\spirit,~spirit,
 \xx,~cart.lag(0.01).[i].[0].round(0.00001), \yy,~cart.lag(0.01).[i].[1].round(0.00001),\zz,~cart.lag(0.00001).[i].[2].round(0.00001)]).register;
 
 
