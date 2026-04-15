@@ -61,6 +61,7 @@ s.meter;
 ~el=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad];
 );
 
+
 /*(
 ~a = VBAPSpeakerArray.new(3,
 [[~az.[0],~el.[0]], [~az.[1],~el.[1]], [~az.[2],~el.[2]], [~az.[3],~el.[3]],[~az.[4],~el.[4]],[~az.[5],~el.[5]]]);
@@ -449,7 +450,7 @@ sig3* g_ch3.lag(0.1)*pon3,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/clo
 Out.ar(3,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
 sig3* g_ch4.lag(0.1)*pon4,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/cloud);
-				)
+				);
 
 					Out.ar(0,WhiteNoise.ar(0.00001)!4);
 					///three channel
@@ -509,9 +510,9 @@ Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 
 2.wait;
 
-
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,256,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
+
+~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,512,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
 		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,\pon,0.001,\pneuma,0, \namp,1,
 			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,1,
 			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,1]).register;
@@ -839,7 +840,6 @@ MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
 ~ss1=th
 },25);
 	);
-
 														(
 MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 		var th;
@@ -849,21 +849,22 @@ MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 
 },26);
 	);
+					(
 (
 MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 		var th;
-	th=val.linlin(0,127,pi.neg,pi).round(0.0001);
+	th=val.linlin(0,127,0.01,1).round(0.0001);
 						th.postln;
-						~r=th;
+						~rrr=th;
 },27);
 	);
 
 				(
 MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
 		var th;
-	th=val.linlin(0,127,pi.neg,pi).round(0.0001);
+	th=val.linlin(0,127,0.01,1).round(0.0001);
 								th.postln;
-	~r1=th;
+	~rrr1=th;
 
 },28);
 			);
@@ -871,11 +872,12 @@ MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
 					(
 MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
 		var th;
-	th=val.linlin(0,127,pi.neg,pi).round(0.0001);
+	th=val.linlin(0,127,0.01,1).round(0.0001);
 								th.postln;
-						~r2=th;
+						~rrr2=th;
 },29);
 			);
+					);
 				(
 MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
 		var th;
@@ -900,80 +902,91 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 		var th;
 	th=val.linlin(0,127,1/4,32).round(1/7);
 		th.postln;
-	TempoClock.default.tempo_(th);
+	TempoClock.default.tempo=th;
 },32);
 			));
 		);
+~controlBus = Bus.control(s, 1);
+~controlBus1 = Bus.control(s, 1);
+~controlBus2 = Bus.control(s, 1);
 
-		/////////////sequencer with midi
+(
+			{
+				~tens=Spherical(0.1,pi.rand,0.5pi.rand);
+			Out.kr(~controlBus.index, (SinOsc.kr(~tens.x,mul:pi)));
+			Out.kr(~controlBus1.index, (SinOsc.kr(~tens.y,mul:pi)));
+			Out.kr(~controlBus2.index, (SinOsc.kr(~tens.z,mul:pi)));
+
+			}.play;
+		);
+		/////////////sequencer
 		////rhythm
-({
-			var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=4,time=8.reciprocal,beat=1,r=0;
-			~r=0;		~r1=0;		~r2=0;
-				(
-
-			~dur1=[];~dur2=[];~dur3=[]; ~dx=[];~dy=[]; ~dz=[]; ~durx=[]; ~dury=[]; ~durz=[]; ~dur=[];
-
-					1.do{
-~x=bank.collect{
-m1=m1+1;
-					b=Spherical(beat,~az.[m1],~el.[m1]).rotate(~r).tilt(~r1).tumble(~r2).x.round(0.00001);
-	2.pow(b).round(time);
-};
-~y=bank.collect{
-m2=m2+1;
-	c=Spherical(beat,~az.[m2],~el.[m2]).rotate(~r).tilt(~r1).tumble(~r2).y.round(0.00001);
-	2.pow(c).round(time);
-};
-~z=bank.collect{
-m3=m3+1;
-	d=Spherical(beat,~az.[m3],~el.[m3]).rotate(~r).tilt(~r1).tumble(~r2).z.round(0.00001);
-	2.pow(d).round(time);
-}; m1=1.neg; m2=1.neg; m3=1.neg; ~dx=~dx++~x; ~dy=~dy++~y;  ~dz=~dz++~z;   ~x=[]; ~y=[]; ~z=[];  r=r+90.degrad; };
-
-				bank.do{ ~dur1=~dur1++~dx.[n];n=n+1;};n=0;
-		//	~durx = ~dur1.collect { |x| if (x == 0) { Rest(2) } { x }};
-
-		bank.do{ ~dur2=~dur2++~dy.[n];n=n+1;};n=0;
-			//	~dury = ~dur2.collect { |x| if (x == 0) { Rest(2) } { x }};
-
-		bank.do{ ~dur3=~dur3++~dz.[n];n=n+1;};n=0;
-			//	~durz = ~dur3.collect { |x| if (x == 0) { Rest(2) } { x }};
-
-			~dur=~dur++~dur1++~dur2++~dur3;
-);
-		}.value);
-						//	~seq = Pseq([1] ,inf).asStream;
-		//~seq1= Pseq(~dur1 ,inf).asStream;
-				~seq1= Pseq(~dur ,inf).asStream;
-	///	~seq2= Pseq(~dur2 ,inf).asStream;
-	//	~seq3= Pseq(~dur3 ,inf).asStream;
 ///melody
 
 
 		(
 	~str1= Routine({
-					var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=6,time=1,beat=10,r=0;
+					var m1=1.neg, m2=1.neg, m3=1.neg,b,c,d,n=0,bank=6,time=1,beat=10,r=0;
+					var rm1=1.neg, rm2=1.neg, rm3=1.neg,rb,rc,rd,rn=0r,rbank=4,rtime=8.reciprocal,rbeat=1,rr=0;
 
 				loop{
+
+						(
+
+			~r=~controlBus.getSynchronous/2;		~r1=~controlBus1.getSynchronous/2;	~r2=~controlBus2.getSynchronous/2;
+				(
+
+			~dur1=[];~dur2=[];~dur3=[]; ~dx=[];~dy=[]; ~dz=[]; ~durx=[]; ~dury=[]; ~durz=[]; ~dur=[];
+
+~x=rbank.collect{
+rm1=rm1+1;
+					rb=Spherical(rbeat,~az.[rm1],~el.[rm1]).rotate(~r).tilt(~r1).tumble(~r2).x.round(0.00001);
+	2.pow(rb).round(rtime);
+};
+~y=rbank.collect{
+rm2=rm2+1;
+	rc=Spherical(rbeat,~az.[rm2],~el.[rm2]).rotate(~r).tilt(~r1).tumble(~r2).y.round(0.00001);
+	2.pow(rc).round(rtime);
+};
+~z=rbank.collect{
+rm3=rm3+1;
+	rd=Spherical(rbeat,~az.[rm3],~el.[rm3]).rotate(~r).tilt(~r1).tumble(~r2).z.round(0.00001);
+	2.pow(rd).round(rtime);
+}; rm1=1.neg; rm2=1.neg; rm3=1.neg; ~dx=~dx++~x; ~dy=~dy++~y;  ~dz=~dz++~z;   ~x=[]; ~y=[]; ~z=[];  rr=rr+90.degrad;
+
+				rbank.do{ ~dur1=~dur1++~dx.[n];n=n+1;};n=0;
+		//	~durx = ~dur1.collect { |x| if (x == 0) { Rest(2) } { x }};
+
+		rbank.do{ ~dur2=~dur2++~dy.[n];n=n+1;};n=0;
+			//	~dury = ~dur2.collect { |x| if (x == 0) { Rest(2) } { x }};
+
+		rbank.do{ ~dur3=~dur3++~dz.[n];n=n+1;};n=0;
+			//	~durz = ~dur3.collect { |x| if (x == 0) { Rest(2) } { x }};
+
+			~dur=~dur++~dur1++~dur2++~dur3;
+);
+						);
+							~seq1= Pseq(~dur ,inf).asStream;
+
+									~rr=~controlBus.getSynchronous;		~rr1=~controlBus1.getSynchronous;	~rr2=~controlBus2.getSynchronous;
 
 			~ml1=[];~ml2=[];~ml3=[]; ~mx=[];~my=[]; ~mz=[]; ~lx=[]; ~ly=[]; ~lz=[]; ~ml=[];
 
 		(
 ~lx=bank.collect{
 m1=m1+1;
-					b=Spherical(beat,~azz.[m1],~ell.[m1]).rotate(~r).tilt(~r1).tumble(~r2).x.round(0.00001);
-	b.round(time).abs;
+					b=Spherical(beat,~azz.[m1],~ell.[m1]).rotate(~rr).tilt(~rr1).tumble(~rr2).x.round(0.00001);
+	b.round(time);
 };
 ~ly=bank.collect{
 m2=m2+1;
-	c=Spherical(beat,~azz.[m2],~ell.[m2]).rotate(~r).tilt(~r1).tumble(~r2).y.round(0.00001);
-	c.round(time).abs;
+	c=Spherical(beat,~azz.[m2],~ell.[m2]).rotate(~rr).tilt(~rr1).tumble(~rr2).y.round(0.00001);
+	c.round(time);
 };
 ~lz=bank.collect{
 m3=m3+1;
-	d=Spherical(beat,~azz.[m3],~ell.[m3]).rotate(~r).tilt(~r1).tumble(~r2).z.round(0.00001);
-	d.round(time).abs;
+	d=Spherical(beat,~azz.[m3],~ell.[m3]).rotate(~rr).tilt(~rr1).tumble(~rr2).z.round(0.00001);
+	d.round(time);
 
 }; m1=1.neg; m2=1.neg; m3=1.neg; ~mx=~mx++~lx; ~my=~my++~ly;  ~mz=~mz++~lz;   ~lx=[]; ~ly=[]; ~lz=[];  r=r+90.degrad;
 
@@ -986,7 +999,8 @@ m3=m3+1;
 		bank.do{ ~ml3=~ml3++~mz.[n];n=n+1;};n=0;
 			//	~durz = ~dur3.collect { |x| if (x == 0) { Rest(2) } { x }};
 
-			~ml=~ml++~ml1++~ml2++~ml3;
+
+					~ml	=~ml++~ml1++~ml2++~ml3;
 );
 		~mseqx= Pseq(~ml ,inf).asStream;
 		//~mseqy= Pseq(~ml2 ,inf).asStream;
@@ -1124,7 +1138,7 @@ m3=m3+1;
 
 
 
-		TempoClock.default.tempo_(1/7);
+	//	TempoClock.default.tempo_(1/7);
 
 	});
 	Tdef(\drone).play;
