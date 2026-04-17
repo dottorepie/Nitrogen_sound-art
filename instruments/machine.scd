@@ -88,7 +88,7 @@ s.meter;
 		//oscillator table
 		(
 ~n=1.neg;~array=992.collect{~n=~n+1;2.pow(~n/992)};
-~n=(0-(pi/496)); ~ph=992.collect{~n=~n+(pi/496);};
+~n=(0-(2pi/992)); ~ph=992.collect{~n=~n+(2pi/992);};
 ~bufferSize = 4096*8;
 ~signalSize = 2048*8;
 );
@@ -102,7 +102,7 @@ s.meter;
 
 wt = signal.asWavetable;
 ~w1.loadCollection(wt);
-//signal.plot;
+signal.plot;
 		}.value;
 );
 
