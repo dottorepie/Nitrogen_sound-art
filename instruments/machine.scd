@@ -3,7 +3,7 @@
 s.record;
 )
 ~str1.stop;
-
+Server.killAll
 (
 (
 s.options.numWireBufs = 1024*2;
@@ -327,11 +327,11 @@ ds3=((LPF.ar((Osc.ar(~w1.bufnum,f3,phase:phasez,mul:level).abs*
 					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f3/2,qq,g3*2));*/
 
 ds1=(SinOsc.ar(f1,phase:phasex).range(panx*g1,g1)
-					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f1/2,qq,g1*2));
+					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f1/4,qq,g1*4));
 ds2=(SinOsc.ar(f2,phase:phasey).range(pany*g2,g2)
-					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f2/2,qq,g2*2));
+					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f2/4,qq,g2*4));
 ds3=(SinOsc.ar(f3,phase:phasez).range(panz*g3,g3)
-					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f3/2,qq,g3*2));
+					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f3/4,qq,g3*4));
 
 
 
@@ -524,7 +524,7 @@ Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 
 (
 
-~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,256,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
+~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,512,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
 		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,\pon,0.001,\pneuma,0, \namp,1,
 			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,1,\attack,0.01,\decay,4,\curve,2.neg,\gate,1,
 			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,1]).register;
@@ -547,7 +547,7 @@ MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 				(
 MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
          var low;
-		low=val.linlin(0,127,(992*2).neg,(992*5)).round(1).asInteger;
+		low=val.linlin(0,127,(992*2).neg,(992*3)).round(1).asInteger;
 		low.postln;
 		if(~synth.isPlaying,{~synth.set(\low,low)});
 },2);
@@ -865,8 +865,9 @@ MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 (
 MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 	var spread;
-			spread=val.linlin(0,127,0.01,1).round(0.0001);
+			spread=val.linlin(0,127,0.01,4).round(0.0001);
 		spread.postln;
+							~attacka=spread;
 		if(~synth.isPlaying,{~synth.set(\attack,spread)});
 },27);
 	);
@@ -874,7 +875,7 @@ MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 				(
 MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
 	var spread;
-			spread=val.linlin(0,127,1,8).round(0.0001);
+			spread=val.linlin(0,127,1,32).round(0.0001);
 		spread.postln;
 		if(~synth.isPlaying,{~synth.set(\decay,spread)});
 },28);
@@ -901,7 +902,7 @@ MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
 (
 MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
 		var th;
-	th=val.linlin(0,127,0.000001,0.00001).round(0.0000001);
+	th=val.linlin(0,127,0.000001,0.0001).round(0.0000000001);
 		th.postln;
 	if(~synth.isPlaying,{~synth.set(\qq,th)});
 },31);
@@ -911,7 +912,7 @@ MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 		var th;
-	th=val.linlin(0,127,1/4,8).round(0.007);
+	th=val.linlin(0,127,1/4,8).round(0.007)+0.1.rand;
 		th.postln;
 	TempoClock.default.tempo=th;
 },32);
@@ -922,27 +923,27 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 		/////////////sequencer
 		////rhythm
 ///melody
-
+~attacka=0.01;
 
 		(
 	~str1= Routine({
-			var m1,m2,m3,r1,r2,r3,sphm,sphr,time=1/8;
+			var m1,m2,m3,r1,r2,r3,sphm,sphr,time=1/32;
 
 				loop{
 			//~tens=Spherical(1,~raz,~rel);
 				//~tens1=Spherical(10,~maz,~mel);
 
-							~tens=Spherical(1,pi.rand2,0.5.rand2);
-				~tens1=Spherical(1,pi.rand2,0.5.rand2);
+					~tens=Spherical(2,((1/992)*pi)*992.rand2,((1/496)*pi)*992.rand2);
+					~tens1=Spherical(10,	(0.2pi)*5.rand2,(0.1pi)*5.rand2);
 					r1=2.pow(~tens.x).round(time);  r2=2.pow(~tens.y).round(time);  r3=2.pow(~tens.z).round(time);
 					m1=~tens1.x.round(1);  	m2=~tens1.y.round(1);  	m3=~tens1.z.round(1);
 	sphm=[m1.abs,m2.abs,m3.abs];   sphr=[r1,r2,r3];
 
-
+//~synth.set(\gate,0);
 		~synth.set(\tone1,sphm.[0], \gate,1);
 ~synth.set(\tone2,sphm.[0],\gate,1);
 	~synth.set(\tone3,sphm.[0], \gate,1);
-					0.01.wait;
+				~attacka.wait;
 					~synth.set(\gate,0);
 					sphr.[0].wait;
 
@@ -950,7 +951,7 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 	~synth.set(\tone1,sphm.[1],\gate,1);
 ~synth.set(\tone2,sphm.[1],\gate,1);
 	~synth.set(\tone3,sphm.[1], \gate,1);
-						0.01.wait;
+					~attacka.wait;
 					~synth.set(\gate,0);
 	sphr.[1].wait;
 
@@ -958,102 +959,102 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 	~synth.set(\tone1,sphm.[2], \gate,1);
 ~synth.set(\tone2,sphm.[2], \gate,1);
 	~synth.set(\tone3,sphm.[2],\gate,1);
-						0.01.wait;
+					~attacka.wait;
 					~synth.set(\gate,0);
 	sphr.[2].wait;
 
-				~tens1=Spherical(1,pi.rand2,0.5.rand2);
-					m1=~tens1.x.round(1);  	m2=~tens1.y.round(1);  	m3=~tens1.z.round(1);
-	sphm=[m1.abs,m2.abs,m3.abs];
-
-						~synth.set(\tone1,sphm.[0], \gate,1);
-~synth.set(\tone2,sphm.[0],\gate,1);
-	~synth.set(\tone3,sphm.[0], \gate,1);
-					0.01.wait;
-					~synth.set(\gate,0);
-					sphr.[0].wait;
-
-
-	~synth.set(\tone1,sphm.[1],\gate,1);
-~synth.set(\tone2,sphm.[1],\gate,1);
-	~synth.set(\tone3,sphm.[1], \gate,1);
-						0.01.wait;
-					~synth.set(\gate,0);
-	sphr.[1].wait;
-
-
-	~synth.set(\tone1,sphm.[2], \gate,1);
-~synth.set(\tone2,sphm.[2], \gate,1);
-	~synth.set(\tone3,sphm.[2],\gate,1);
-						0.01.wait;
-					~synth.set(\gate,0);
-	sphr.[2].wait;
-
-		~tens1=Spherical(1,pi.rand2,0.5.rand2);
-					m1=~tens1.x.round(1);  	m2=~tens1.y.round(1);  	m3=~tens1.z.round(1);
-	sphm=[m1.abs,m2.abs,m3.abs];
-
-						~synth.set(\tone1,sphm.[0], \gate,1);
-~synth.set(\tone2,sphm.[0],\gate,1);
-	~synth.set(\tone3,sphm.[0], \gate,1);
-					0.01.wait;
-					~synth.set(\gate,0);
-					sphr.[0].wait;
-
-
-	~synth.set(\tone1,sphm.[1],\gate,1);
-~synth.set(\tone2,sphm.[1],\gate,1);
-	~synth.set(\tone3,sphm.[1], \gate,1);
-						0.01.wait;
-					~synth.set(\gate,0);
-	sphr.[1].wait;
-
-
-	~synth.set(\tone1,sphm.[2], \gate,1);
-~synth.set(\tone2,sphm.[2], \gate,1);
-	~synth.set(\tone3,sphm.[2],\gate,1);
-						0.01.wait;
-					~synth.set(\gate,0);
-	sphr.[2].wait;
-
-			~tens1=Spherical(1,pi.rand2,0.5.rand2);
-					m1=~tens1.x.round(1);  	m2=~tens1.y.round(1);  	m3=~tens1.z.round(1);
-	sphm=[m1.abs,m2.abs,m3.abs];
-
-						~synth.set(\tone1,sphm.[0], \gate,1);
-~synth.set(\tone2,sphm.[0],\gate,1);
-	~synth.set(\tone3,sphm.[0], \gate,1);
-					0.01.wait;
-					~synth.set(\gate,0);
-					sphr.[0].wait;
-
-
-	~synth.set(\tone1,sphm.[1],\gate,1);
-~synth.set(\tone2,sphm.[1],\gate,1);
-	~synth.set(\tone3,sphm.[1], \gate,1);
-						0.01.wait;
-					~synth.set(\gate,0);
-	sphr.[1].wait;
-
-
-	~synth.set(\tone1,sphm.[2], \gate,1);
-~synth.set(\tone2,sphm.[2], \gate,1);
-	~synth.set(\tone3,sphm.[2],\gate,1);
-						0.01.wait;
-					~synth.set(\gate,0);
-	sphr.[2].wait;
-
-			~tens=Spherical(1,pi.rand2,0.5.rand2);
-				~tens1=Spherical(1,pi.rand2,0.5.rand2);
+						~tens=Spherical(2,((1/992)*pi)*992.rand2,((1/496)*pi)*992.rand2);
+					~tens1=Spherical(10,	(0.2pi)*5.rand2,(0.1pi)*5.rand2);
 					r1=2.pow(~tens.x).round(time);  r2=2.pow(~tens.y).round(time);  r3=2.pow(~tens.z).round(time);
 					m1=~tens1.x.round(1);  	m2=~tens1.y.round(1);  	m3=~tens1.z.round(1);
 	sphm=[m1.abs,m2.abs,m3.abs];   sphr=[r1,r2,r3];
 
-						TempoClock.default.tempo=TempoClock.default.tempo+0.1.rand;
+						~synth.set(\tone1,sphm.[0], \gate,1);
+~synth.set(\tone2,sphm.[0],\gate,1);
+	~synth.set(\tone3,sphm.[0], \gate,1);
+				~attacka.wait;
+					~synth.set(\gate,0);
+					sphr.[0].wait;
+
+
+	~synth.set(\tone1,sphm.[1],\gate,1);
+~synth.set(\tone2,sphm.[1],\gate,1);
+	~synth.set(\tone3,sphm.[1], \gate,1);
+					~attacka.wait;
+					~synth.set(\gate,0);
+	sphr.[1].wait;
+
+
+	~synth.set(\tone1,sphm.[2], \gate,1);
+~synth.set(\tone2,sphm.[2], \gate,1);
+	~synth.set(\tone3,sphm.[2],\gate,1);
+					~attacka.wait;
+					~synth.set(\gate,0);
+	sphr.[2].wait;
+
+						~tens=Spherical(2,((1/992)*pi)*992.rand2,((1/496)*pi)*992.rand2);
+					~tens1=Spherical(10,	(0.2pi)*5.rand2,(0.1pi)*5.rand2);
+					r1=2.pow(~tens.x).round(time);  r2=2.pow(~tens.y).round(time);  r3=2.pow(~tens.z).round(time);
+					m1=~tens1.x.round(1);  	m2=~tens1.y.round(1);  	m3=~tens1.z.round(1);
+	sphm=[m1.abs,m2.abs,m3.abs];   sphr=[r1,r2,r3];
+
+						~synth.set(\tone1,sphm.[0], \gate,1);
+~synth.set(\tone2,sphm.[0],\gate,1);
+	~synth.set(\tone3,sphm.[0], \gate,1);
+				~attacka.wait;
+					~synth.set(\gate,0);
+					sphr.[0].wait;
+
+
+	~synth.set(\tone1,sphm.[1],\gate,1);
+~synth.set(\tone2,sphm.[1],\gate,1);
+	~synth.set(\tone3,sphm.[1], \gate,1);
+					~attacka.wait;
+					~synth.set(\gate,0);
+	sphr.[1].wait;
+
+
+	~synth.set(\tone1,sphm.[2], \gate,1);
+~synth.set(\tone2,sphm.[2], \gate,1);
+	~synth.set(\tone3,sphm.[2],\gate,1);
+					~attacka.wait;
+					~synth.set(\gate,0);
+	sphr.[2].wait;
+
+				~tens=Spherical(2,((1/992)*pi)*992.rand2,((1/496)*pi)*992.rand2);
+					~tens1=Spherical(10,	(0.2pi)*5.rand2,(0.1pi)*5.rand2);
+					r1=2.pow(~tens.x).round(time);  r2=2.pow(~tens.y).round(time);  r3=2.pow(~tens.z).round(time);
+					m1=~tens1.x.round(1);  	m2=~tens1.y.round(1);  	m3=~tens1.z.round(1);
+	sphm=[m1.abs,m2.abs,m3.abs];   sphr=[r1,r2,r3];
+
+						~synth.set(\tone1,sphm.[0], \gate,1);
+~synth.set(\tone2,sphm.[0],\gate,1);
+	~synth.set(\tone3,sphm.[0], \gate,1);
+				~attacka.wait;
+					~synth.set(\gate,0);
+					sphr.[0].wait;
+
+
+	~synth.set(\tone1,sphm.[1],\gate,1);
+~synth.set(\tone2,sphm.[1],\gate,1);
+	~synth.set(\tone3,sphm.[1], \gate,1);
+					~attacka.wait;
+					~synth.set(\gate,0);
+	sphr.[1].wait;
+
+
+	~synth.set(\tone1,sphm.[2], \gate,1);
+~synth.set(\tone2,sphm.[2], \gate,1);
+	~synth.set(\tone3,sphm.[2],\gate,1);
+				//~attacka.wait;
+					//~synth.set(\gate,0);
+	sphr.[2].wait;
+
 
 };
-		}))
+		}));
 
+	~str1.play;
 	});
 	Tdef(\drone).play;
 }
