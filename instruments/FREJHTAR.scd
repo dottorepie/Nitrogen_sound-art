@@ -7,8 +7,8 @@ Server.killAll
 (
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=4;
-s.options.numInputBusChannels=0;
+s.options.numOutputBusChannels=8;
+s.options.numInputBusChannels=1;
 s.options.memSize = 8192*4;
 s.options.blockSize = 64;
 s.options.maxNodes = 1024 * 2;
@@ -340,9 +340,9 @@ ds3=((LPF.ar((Osc.ar(~w1.bufnum,f3,phase:phasez,mul:level).abs*
 					+BPF.ar(LPF.ar((SoundIn.ar(0,50)*qq.sqrt.reciprocal),fund*dr),f3*dr,qq,g3/dr));
 				);
 
-ds1 = (tanh((ds1*2.pow(drive/992)).softclip)) / (1 + (tanh((ds1*2.pow(drive/992)).softclip)).abs);
-ds2 =  (tanh((ds2*2.pow(drive/992)).softclip)) / (1 + (tanh((ds2*2.pow(drive/992)).softclip)).abs);
-ds3 =  (tanh((ds3*2.pow(drive/992)).softclip)) / (1 + (tanh((ds3*2.pow(drive/992)).softclip)).abs);
+ds1 = (ds1*2.pow(drive/992)).softclip;
+ds2 =  (ds2*2.pow(drive/992)).softclip;
+ds3 =  (ds3*2.pow(drive/992)).softclip;
 
 				//sig
 sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1).range(panx*amp1,amp1)+(ds1));
@@ -355,6 +355,11 @@ sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:level).abs*SinOsc.ar(freq
 						[sig2,BPF.ar(BRF.ar(sig2,band_osc2.lag(0.1),rq2),band_osc5.lag(0.1),rq5)]);
 	sig3=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
 						[sig3,BPF.ar(BRF.ar(sig3,band_osc3.lag(0.1),rq3),band_osc6.lag(0.1),rq6)]);
+
+sig1 = (sig1*2.pow(drive/992)).softclip;
+sig2 =  (sig2*2.pow(drive/992)).softclip;
+sig3 =  (sig3*2.pow(drive/992)).softclip;
+
 
 threshold1=(((343/0.05)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 threshold2=(((343/0.05)/fund).reciprocal.ampdb/2.sqrt).dbamp;
@@ -426,7 +431,7 @@ pon2=SinOsc.ar(pon*lfon,0.25pi).range(0.0001,1).lag(0.1);
 pon3=SinOsc.ar(pon*lfon,0.5pi).range(0.0001,1).lag(0.1);
 pon4=SinOsc.ar(pon*lfon,0.75pi).range(0.0001,1).lag(0.1);
 
-/*(
+(
 Out.ar(0,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
 	sig1* g_ch1.lag(0.1)*pon1,mix.lag(0.01),room.lag(0.01),mul:gain1)),0.9,0.01)/cloud);
@@ -465,15 +470,23 @@ sig3* g_ch3.lag(0.1)*pon3,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/clo
 Out.ar(3,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
 sig3* g_ch4.lag(0.1)*pon4,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/cloud);
-				)*/
+				);
 
 					Out.ar(0,WhiteNoise.ar(0.00001)!4);
 					///three channel
+					/*(
 Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*mx.lag(0.01))),0.9,0.01),
 						SinOsc.ar(lfon*pon,0)));
 Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*my.lag(0.01))),0.9,0.01),
 						SinOsc.ar(lfon*pon,90.degrad)));
 Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*mz.lag(0.01))),0.9,0.01)!2);
+					)*/
+
+					(
+Out.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*mx.lag(0.01))),0.9,0.01));
+Out.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*my.lag(0.01))),0.9,0.01));
+Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*mz.lag(0.01))),0.9,0.01));
+					);
 
 					////azimuthal multichannel expansion
 
@@ -725,9 +738,9 @@ ds3=((LPF.ar((Osc.ar(~w1.bufnum,f3,phase:phasez,mul:level).abs*
 					+BPF.ar(LPF.ar((SoundIn.ar(0,50)*qq.sqrt.reciprocal),fund*dr),f3*dr,qq,g3/dr));
 				);
 
-ds1 = (tanh((ds1*2.pow(drive/992)).softclip)) / (1 + (tanh((ds1*2.pow(drive/992)).softclip)).abs);
-ds2 =  (tanh((ds2*2.pow(drive/992)).softclip)) / (1 + (tanh((ds2*2.pow(drive/992)).softclip)).abs);
-ds3 =  (tanh((ds3*2.pow(drive/992)).softclip)) / (1 + (tanh((ds3*2.pow(drive/992)).softclip)).abs);
+ds1 = (ds1*2.pow(drive/992)).softclip;
+ds2 =  (ds2*2.pow(drive/992)).softclip;
+ds3 =  (ds3*2.pow(drive/992)).softclip;
 
 				//sig
 sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1).range(panx*amp1,amp1)+(ds1));
@@ -740,6 +753,11 @@ sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:level).abs*SinOsc.ar(freq
 						[sig2,BPF.ar(BRF.ar(sig2,band_osc2.lag(0.1),rq2),band_osc5.lag(0.1),rq5)]);
 	sig3=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
 						[sig3,BPF.ar(BRF.ar(sig3,band_osc3.lag(0.1),rq3),band_osc6.lag(0.1),rq6)]);
+
+
+sig1 = (sig1*2.pow(drive/992)).softclip;
+sig2 =  (sig2*2.pow(drive/992)).softclip;
+sig3 =  (sig3*2.pow(drive/992)).softclip;
 
 threshold1=(((343/0.05)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 threshold2=(((343/0.05)/fund).reciprocal.ampdb/2.sqrt).dbamp;
@@ -851,7 +869,7 @@ sig3* g_ch3.lag(0.1)*pon3,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/clo
 Out.ar(3,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
 sig3* g_ch4.lag(0.1)*pon4,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/cloud);
-				)
+				);
 
 					Out.ar(0,WhiteNoise.ar(0.00001)!4);
 					///three channel
@@ -860,7 +878,11 @@ sig3* g_ch4.lag(0.1)*pon4,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/clo
 					// Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*my.lag(0.01))),0.9,0.01),
 					// SinOsc.ar(lfon*pon,90.degrad)));
 					// Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*mz.lag(0.01))),0.9,0.01)!2);
-
+(
+Out.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*mx.lag(0.01))),0.9,0.01));
+Out.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*my.lag(0.01))),0.9,0.01));
+Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*mz.lag(0.01))),0.9,0.01));
+					);
 					////azimuthal multichannel expansion
 
 //Out.ar(0,PanAz.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*loc1.abs)),0.9,0.01),SinOsc.ar(panx,phasex),width:spread));	//Out.ar(0,PanAz.ar(2,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*loc2.abs)),0.9,0.01),SinOsc.ar(pany,phasey),width:spread));
@@ -1292,6 +1314,7 @@ MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 	gain=val.linlin(0,127,0,4).round(0.0001);
 		gain.postln;
 		if(~synth.isPlaying,{~synth.set(\gain,gain)});
+							if(~synthd.isPlaying,{~synthd.set(\gain,gain)});
 },49);
 			);
 
@@ -1512,47 +1535,8 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 };
 		}));
 ~tempo=1;
-	~str1.play;
-	});
-	Tdef(\drone).play;
-}
-)
-)
 
-	~str1.play;
-
-~str1.stop;
-
-
-~dynth.set(\sc,256);
-
-
-
-		TempoClock.default.tempo_(2);
-
-
-(
-~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,128,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
-		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,\pon,0.001,\pneuma,0, \namp,1,
-			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,1,
-			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,1]).register;
-);
-
-
-s.record(numChannels:4)
-
-//////////////////////////////
-
-
-
-
-
-
-
-
-
-
-////durs
+		////durs
 	({var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=4,time=32.reciprocal,beat=1,r=0;
 
 			~dur1=[];~dur2=[];~dur3=[]; ~dx=[];~dy=[]; ~dz=[]; ~durx=[]; ~dury=[]; ~durz=[]; ~dur=[];
@@ -1586,6 +1570,50 @@ m3=m3+1;
 			~dur=~dur++~dur1++~dur2++~dur3;
 
 }.value;
+		);
+		~seqi= Pseq(~dur ,inf).asStream;
+		(
+	~tempi= Routine({
+				loop{
+				 TempoClock.default.tempo = ~tempo + (~seqi.next);
+			//		~seqi.next.wait;
+					0.01.wait;
+};
+	}));
+	~str1.play;
+			~tempi.play;
+	});
+	Tdef(\drone).play;
+}
+)
+)
+~tempi.stop;
+	~str1.play;
+
+~str1.stop;
+
+
+~dynth.set(\sc,256);
+
+
+
+
+
+
+s.record(numChannels:4)
+
+//////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
 
 ////////////////////////////////////////
 			////sequencer randomness
