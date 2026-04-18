@@ -1,8 +1,11 @@
-(
 	~str1.play;
-s.record;
-)
+			~tempi.play;
+		~rand.play
+
 ~str1.stop;
+~tempi.stop;
+~rand.stop;
+s.record;
 Server.killAll
 (
 (
@@ -165,7 +168,8 @@ ton2=2.pow(tone2.lag(0.01)/16256).round(0.0001)*2.pow(dron.lag(0.01)/992);
 ton3=2.pow(tone3.lag(0.01) /16256).round(0.0001)*2.pow(dron.lag(0.01)/992);
 		//		ton=2.pow((tone.lag(0.01))/56).round(0.0001)*2.pow(dron.lag(0.01)/56);
 
-	env=EnvGen.ar(Env.sine(decay),gate:gate);
+//	env=EnvGen.ar(Env.sine(decay),gate:gate);
+				env=1;
 
 						lfo=2.pow(pan/992);
 				lfon=2.pow(pann/992);
@@ -934,14 +938,14 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 
 		(
 
-~synthd=Synth.new(\synthd,[\gain,1,\drive,992*2,\fu,256,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
+~synthd=Synth.new(\synthd,[\gain,1,\drive,992*2,\fu,128,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
 		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,\pon,0.001,\pneuma,0, \namp,1,
 			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,1,
 			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,1]).register;
 );
 (
 
-~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,1024,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
+~synth=Synth.new(\synth,[\gain,1,\drive,992*2,\fu,512,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
 		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,\pon,0.001,\pneuma,0, \namp,1,
 			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,1,\attack,0.01,\decay,4,\curve,2.neg,\gate,1,
 			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,1]).register;
@@ -1359,18 +1363,22 @@ MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
 					(
 MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
 			var spread;
-			spread=val.linlin(0,127,1.neg,16.neg).round(0.0001);
+			spread=val.linlin(0,127,0,2pi).round(0.0001);
 		spread.postln;
-		if(~synth.isPlaying,{~synth.set(\curve,spread)});
+							~xt=exp(Complex(0,1)*spread).real.abs.postln;
+							~yt=exp(Complex(0,1)*spread).imag.abs.postln;
+							~xt=~xt+1;
+							~yt=~yt+1;
+
 },29);
 			);
 					);
 				(
 MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
-		var th;
-	th=val.linlin(0,127,0,1).round(1);
-		th.postln;
-	if(~synth.isPlaying,{~synth.set(\qqq,th)});
+	var spread;
+			spread=val.linlin(0,127,0.01,32).round(0.0001);
+		spread.postln;
+		if(~synth.isPlaying,{~synth.set(\decay,spread)});
 },30);
 	);
 
@@ -1388,7 +1396,7 @@ MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
 	(
 MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 		var th;
-	th=val.linlin(0,127,1/4,32).round(0.007)+0.1.rand;
+	th=val.linlin(0,127,1/4,128).round(0.007)+0.1.rand;
 		th.postln;
 	~tempo=th;
 							TempoClock.default.tempo=~tempo;
@@ -1399,11 +1407,13 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 		////rhythm
 ///melody
 ~attacka=0.1;
+		~val=1234;
 		(
 	~str1= Routine({
 			var m1,m2,m3,r1,r2,r3,sphm,sphr,time=1/32,melody,rhythm,az,el;
 
 				loop{
+						thisThread.randSeed = ~val;
 		//	rhythm=Spherical(2,((1/992)*pi)*992.rand2,((1/496)*pi)*992.rand2);
 					//melody=Spherical(10,(0.2pi)*5.rand2,(0.1pi)*5.rand2);
 					rhythm=exp(Complex(0,1)*((1/16256)*2pi)*16256.rand2);
@@ -1417,16 +1427,16 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 		~synth.set(\tone1,sphm.[0], \gate,1);
 ~synth.set(\tone2,sphm.[1],\gate,1);
 	~synth.set(\tone3,sphm.[2], \gate,1);
-				~attacka.wait;
-					~synth.set(\gate,0);
+				//~attacka.wait;
+					//~synth.set(\gate,0);
 					sphr.[0].wait;
 
 
 		~synth.set(\tone1,sphm.[0], \gate,1);
 ~synth.set(\tone2,sphm.[1],\gate,1);
 	~synth.set(\tone3,sphm.[2], \gate,1);
-					~attacka.wait;
-					~synth.set(\gate,0);
+					//~attacka.wait;
+					//~synth.set(\gate,0);
 	sphr.[1].wait;
 
 };
@@ -1468,29 +1478,42 @@ m3=m3+1;
 
 }.value;
 		);
-		~seqi= Pseq(~dur/7 ,inf).asStream;
+		~seqi= Pseq(~dur ,inf).asStream;
+				~xt=1;
+							~yt=1;
 		(
 	~tempi= Routine({
 				loop{
-				 TempoClock.default.tempo = ~tempo + (~seqi.next);
+				 TempoClock.default.tempo = ~tempo * (~seqi.next);
 			//		~seqi.next.wait;
-					0.01.wait;
+					(~yt/15).wait;
 };
 	}));
-	//~str1.play;
+		(
+			~rand= Routine({loop{
+~val=1234.rand;
+				(~xt*15).wait;
+};
+});
+	);
+			~str1.play;
 			~tempi.play;
+		~rand.play;
+
 	});
 	Tdef(\drone).play;
 }
 )
 )
-~tempi.stop;
-	~str1.play;
+
+
 
 ~str1.stop;
+~tempi.stop;
+~rand.stop;
 
 
-~dynth.set(\fu,256);
+~synthd.free;
 
 
 
@@ -1503,47 +1526,7 @@ s.record(numChannels:4)
 
 
 
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////
-			////sequencer randomness
-
-	~s= Routine({loop{
-
-	thisThread.randSeed = ~val;
-
-		~val.postln;
-
-	~synth.set(\tone, (56).rand)	;
-
-2.wait
-};
-});
-
-	~s.play;
-/////server based randomes
-(
-~seq = Pseq(~dur, inf).asStream;
-	~s= Routine({loop{
-
-
-	~synth.set(\tone, (56).rand)	;
-
-    ~seq.next.wait;
-};
-});
-)
-
-~s.stop
-
-
+/////dac noise rremoval for generative instalation
 
 Routine({
     loop {
