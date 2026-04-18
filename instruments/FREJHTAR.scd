@@ -165,7 +165,7 @@ ton2=2.pow(tone2.lag(0.01)/16256).round(0.0001)*2.pow(dron.lag(0.01)/992);
 ton3=2.pow(tone3.lag(0.01) /16256).round(0.0001)*2.pow(dron.lag(0.01)/992);
 		//		ton=2.pow((tone.lag(0.01))/56).round(0.0001)*2.pow(dron.lag(0.01)/56);
 
-	env=EnvGen.ar(Env.perc(attack,decay,1,curve),gate:gate);
+	env=EnvGen.ar(Env.sine(decay,1),gate:gate);
 
 						lfo=2.pow(pan/992);
 				lfon=2.pow(pann/992);
@@ -1393,12 +1393,10 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 },32);
 			));
 		);
-
-
 		/////////////sequencer
 		////rhythm
 ///melody
-~attacka=0.01;
+~attacka=0.1;
 		(
 	~str1= Routine({
 			var m1,m2,m3,r1,r2,r3,sphm,sphr,time=1/32,melody,rhythm,az,el;
@@ -1409,7 +1407,7 @@ MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 					rhythm=exp(Complex(0,1)*((1/16256)*2pi)*16256.rand2);
 					az=Complex(1,rhythm.real).theta*4;   el=Complex(1,rhythm.imag).theta*2;
 					melody=Spherical(16256,az,el);
-					r1=2.pow(rhythm.real).round(time);  r2=2.pow(rhythm.imag).round(time); // r3=2.pow(rhythm.z).round(time);
+				r1=2.pow(rhythm.real.abs).round(time);  r2=2.pow(rhythm.imag.abs).round(time); // r3=2.pow(rhythm.z).round(time);
 					m1=melody.x.round(1);  	m2=melody.y.round(1);  	m3=melody.z.round(1);
 					sphm=[m1.abs,m2.abs,m3.abs];   sphr=[r1,r2];
 
