@@ -238,9 +238,9 @@ anglex=(exp(Complex(0,1)*polytope.theta).real*exp(Complex(0,1)*polytope.phi).rea
 angley=(exp(Complex(0,1)*polytope.theta).imag*exp(Complex(0,1)*polytope.phi).real).round(0.00001);
 anglez=(exp(Complex(0,1)*polytope.phi).imag).round(0.00001);
 
-phase1=(Complex(1,anglex).theta+SinOsc.ar(spirit,mul:2pi)).wrap(2pi.neg,2pi);
-phase2=(Complex(1,angley).theta+SinOsc.ar(spirit,mul:2pi)).wrap(2pi.neg,2pi);
-phase3=(Complex(1,anglez).theta+SinOsc.ar(spirit,mul:2pi)).wrap(2pi.neg,2pi);
+phase1=(Complex(1,anglex).theta*4);
+phase2=(Complex(1,angley).theta*4);
+phase3=(Complex(1,anglez).theta*2);
 
 
 //mod_anglex=SinOsc.ar(lfon,phase1).range(pi.neg,pi).lag(0.01);
@@ -289,9 +289,9 @@ cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))))))).rho/(2.sqrt));
 
 loc1=magqx;  loc2=magy;  loc3=magz;
 
-phasex=Complex(1,sph.x).theta;
-phasey=Complex(1,sph.y).theta;
-phasez=Complex(1,sph.z).theta;
+phasex=Complex(1,sph.x).theta*4;
+phasey=Complex(1,sph.y).theta*4;
+phasez=Complex(1,sph.z).theta*2;
 
 
 freq1=(fund*ton1)*b_x.lag(0.0001);
