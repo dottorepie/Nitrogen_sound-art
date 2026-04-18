@@ -191,7 +191,7 @@ ton1=2.pow(Select.kr(tonality.x, Select.kr(qqq.lag(0.01),~sc)) /12).round(0.0001
 ton2=2.pow(Select.kr(tonality.y, Select.kr(qqq.lag(0.01),~sc)) /12).round(0.0001)*2.pow(dron.lag(0.01)/992);
 ton3=2.pow(Select.kr(tonality.z, Select.kr(qqq.lag(0.01),~sc)) /12).round(0.0001)*2.pow(dron.lag(0.01)/992);
 
-	env=EnvGen.ar(Env.sine(decay),doneAction:2);
+	env=EnvGen.ar(Env.sine(decay),gate:gate,doneAction:0);
 			//	env=1;
 
 						lfo=2.pow(pan/992);
@@ -363,9 +363,9 @@ sig2 =  (sig2*2.pow(drive/992)).softclip;
 sig3 =  (sig3*2.pow(drive/992)).softclip;
 
 
-threshold1=(((343/0.05)/fund).reciprocal.ampdb/2.sqrt).dbamp;
-threshold2=(((343/0.05)/fund).reciprocal.ampdb/2.sqrt).dbamp;
-threshold3=(((343/0.05)/fund).reciprocal.ampdb/2.sqrt).dbamp;
+threshold1=(((343/0.15)/fund).reciprocal.ampdb/2.sqrt).dbamp;
+threshold2=(((343/0.15)/fund).reciprocal.ampdb/2.sqrt).dbamp;
+threshold3=(((343/0.15)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 
 		sig1=HPF.ar(sig1,80);
 		sig2=HPF.ar(sig2, 80);
@@ -474,7 +474,7 @@ Limiter.ar(LeakDC.ar(FreeVerb.ar(
 sig3* g_ch4.lag(0.1)*pon4,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/cloud);
 				);
 
-					Out.ar(0,WhiteNoise.ar(0.00001)!4);
+					Out.ar(0,WhiteNoise.ar(0.000001)!4);
 
 					////stereo
 					/*(
@@ -498,7 +498,7 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 
 }).add;);
 
-10.wait;
+2.wait;
 
 
 ////durs
@@ -541,171 +541,131 @@ m3=m3+1;
 		////////2////sequencer
 		(
 
-			~seq= Pseq(~dur, inf).asStream;
-
+////synth parameters
 			~gg=1;
 			~panwidth=1;
-			~feed=0.0000001;
-			~scalar=0;
-			~ton=992*0;
-			~oct=24.neg;
+			~feed=0.00001;
+			~scalar=1;
+			~ton=496*2;
+			~oct=36.neg;
 			~lx=1;
-			~la=1;
-			~drive=992*2;
+			~la=5;
+			~drive=992*1.5;
 			~mox=0.5;
-			~room=1;
-			~panner=0.05;
-			~sphpan=(992*5).neg;
+			~room=1;.
+			~panner=0.1;
+			~sphpan=(992*0);
 			~bband=(992*16).neg;
 			~rect=0;
+			~strech=6;
+			~detune=1;
+
+////music parameters
+			~val=12364.rand;
+					~seq= Pseq(1 *~dur, inf).asStream;
 
 ~str = Routine({
-    var i,m,l;
+    var i=0,m,l,az=0,el=0,expansion;
+	var m1,m2,m3,r1,r2,r3,sphm,sphr,time=1/32,melody,rhythm;
 
-
-    loop {
-
-							TempoClock.default.tempo_(1);
-
-							i= ~cart.lag(0.01).size.rand;
-				//	i=0;
-~detune=1;
-
-	~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,512,
+					~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,64,\decay,~strech,
 						\low,~drive,\pan,~bband,\mix,~mox,\room,~room,\pann,~sphpan,\x,~lx,\a,~la,\spread,~panwidth,
-						\pon,~panner,\pneuma,0,\namp,1,\drone,~oct,\az,~azimuth.lag(0.01).[i],\el,~elevation.lag(0.01).[i],
-						\panx,~rect,\pany,~rect,\panz,~rect,\dron,~ton,\qq,~feed,\qqq,~scalar,
+						\pon,~panner,\pneuma,0,\namp,1,\drone,~oct,\az,az,\el,el,
+						\panx,~rect,\pany,~rect,\panz,~rect,\dron,~ton,\qq,~feed,\qqq,~scalar,\gate,1,
 						\xx,~cart.lag(0.01).[i].[0].round(0.00001),
 				        \yy,~cart.lag(0.01).[i].[1].round(0.00001),
-						\zz,~cart.lag(0.00001).[i].[2].round(0.00001)]).register;
+						\zz,~cart.lag(0.01).[i].[2].round(0.00001)]).register;
 
-        ~seq.next.wait;
+    loop {
+~val=1234.rand;
+								thisThread.randSeed = ~val;
+							i= ~cart.lag(0.01).size.rand;
+				//	i=0;
+	expansion=Cartesian(~cart.lag(0.01).[i].[0].round(0.00001),
+						~cart.lag(0.01).[i].[1].round(0.00001),
+						~cart.lag(0.00001).[i].[2].round(0.00001));
+					rhythm=Spherical(1/8,expansion.theta,expansion.phi);
+					melody=Spherical(5,expansion.theta,expansion.phi);
+				r1=2.pow(rhythm.x.abs).round(time);
+				r2=2.pow(rhythm.y.abs).round(time);
+				r3=2.pow(rhythm.z.abs).round(time);
+					m1=melody.x.round(1);
+					m2=melody.y.round(1);
+				    m3=melody.z.round(1);
+					sphm=[m1,m2,m3];
+					sphr=[r1,r2,r3];
+
+~synth.set(\tone1,sphm.[0],
+						\xx,~cart.lag(0.01).[i].[0].round(0.00001),
+				        \yy,~cart.lag(0.01).[i].[1].round(0.00001),
+						\zz,~cart.lag(0.01).[i].[2].round(0.00001),\gate,1);
+~synth.set(\tone2,sphm.[1],
+						\xx,~cart.lag(0.01).[i].[0].round(0.00001),
+				        \yy,~cart.lag(0.01).[i].[1].round(0.00001),
+						\zz,~cart.lag(0.01).[i].[2].round(0.00001),\gate,1);
+~synth.set(\tone3,sphm.[2],
+						\xx,~cart.lag(0.01).[i].[0].round(0.00001),
+				        \yy,~cart.lag(0.01).[i].[1].round(0.00001),
+						\zz,~cart.lag(0.01).[i].[2].round(0.00001),\gate,1);
+				0.01.wait;
+		~synth.set(\gate,0);
+	sphr.[0].wait;
 
     }
 		});
 
-
+/*(
+	~temp= Routine({
+					   var i=0,expansion,matter;
+				loop{
+						i= ~cart.lag(0.01).size.rand;
+	expansion=Cartesian(~cart.lag(0.01).[i].[0].round(0.00001),
+						~cart.lag(0.01).[i].[1].round(0.00001),
+						~cart.lag(0.00001).[i].[2].round(0.00001));
+						matter=Spherical(12,expansion.theta,expansion.phi).x;
+				 TempoClock.default.tempo =  (~seq.next);
+					(matter).wait;
+};
+	}))*/
 		) ;
-
-
-	});
-	Tdef(\drone).play;
-}
-)
-)
-
-
-~attacka=0.1;
-		~val=1234;
-		(
-	~str1= Routine({
-			var m1,m2,m3,r1,r2,r3,sphm,sphr,time=1/4,melody,rhythm,az,el;
-
+/*(
+			~rand= Routine({
+						   var i=0,expansion,matter;
 				loop{
-						thisThread.randSeed = ~val;
-		//	rhythm=Spherical(2,((1/992)*pi)*992.rand2,((1/496)*pi)*992.rand2);
-					//melody=Spherical(10,(0.2pi)*5.rand2,(0.1pi)*5.rand2);
-					rhythm=exp(Complex(0,1)*((1/992)*2pi)*992.rand);
-					az=Complex(1,rhythm.real).theta*4;   el=Complex(1,rhythm.imag).theta*2;
-					//melody=Spherical(16256,az,el);
-					melody=Spherical(5,az,el);
-				r1=2.pow(rhythm.real.abs).round(time);  r2=2.pow(rhythm.imag.abs).round(time); // r3=2.pow(rhythm.z).round(time);
-					m1=melody.x.round(1);  	m2=melody.y.round(1);  	m3=melody.z.round(1);
-					sphm=[m1.abs,m2.abs,m3.abs];   sphr=[r1,r2];
-
-//~synth.set(\gate,0);
-		~synth.set(\tone1,sphm.[0], \gate,1);
-~synth.set(\tone2,sphm.[1],\gate,1);
-	~synth.set(\tone3,sphm.[2], \gate,1);
-				0.01.wait;
-					~synth.set(\gate,0);
-					sphr.[0].wait;
-
-
-		~synth.set(\tone1,sphm.[0], \gate,1);
-~synth.set(\tone2,sphm.[1],\gate,1);
-	~synth.set(\tone3,sphm.[2], \gate,1);
-					0.01.wait;
-					~synth.set(\gate,0);
-	sphr.[1].wait;
-
-};
-		}));
-~tempo=1;
-
-		////durs
-	({var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=4,time=32.reciprocal,beat=1,r=0;
-
-			~dur1=[];~dur2=[];~dur3=[]; ~dx=[];~dy=[]; ~dz=[]; ~durx=[]; ~dury=[]; ~durz=[]; ~dur=[];
-
-					1.do{
-~x=bank.collect{
-m1=m1+1;
-					b=Spherical(beat,~az.[m1],~el.[m1]).rotate(r).tilt(r).tumble(r).x.round(0.00001);
-	2.pow(b).round(time);
-};
-~y=bank.collect{
-m2=m2+1;
-	c=Spherical(beat,~az.[m2],~el.[m2]).rotate(r).tilt(r).tumble(r).y.round(0.00001);
-	2.pow(c).round(time);
-};
-~z=bank.collect{
-m3=m3+1;
-	d=Spherical(beat,~az.[m3],~el.[m3]).rotate(r).tilt(r).tumble(r).z.round(0.00001);
-	2.pow(d).round(time);
-}; m1=1.neg; m2=1.neg; m3=1.neg; ~dx=~dx++~x; ~dy=~dy++~y;  ~dz=~dz++~z;   ~x=[]; ~y=[]; ~z=[];  r=r+90.degrad; };
-
-				bank.do{ ~dur1=~dur1++~dx.[n];n=n+1;};n=0;
-		//	~durx = ~dur1.collect { |x| if (x == 0) { Rest(2) } { x }};
-
-		bank.do{ ~dur2=~dur2++~dy.[n];n=n+1;};n=0;
-			//	~dury = ~dur2.collect { |x| if (x == 0) { Rest(2) } { x }};
-
-		bank.do{ ~dur3=~dur3++~dz.[n];n=n+1;};n=0;
-			//	~durz = ~dur3.collect { |x| if (x == 0) { Rest(2) } { x }};
-
-			~dur=~dur++~dur1++~dur2++~dur3;
-
-}.value;
-		);
-		~seqi= Pseq(~dur ,inf).asStream;
-				~xt=1;
-							~yt=1;
-		(
-	~tempi= Routine({
-				loop{
-				 TempoClock.default.tempo = ~tempo + (~seqi.next);
-			//		~seqi.next.wait;
-					(~yt/15).wait;
-};
-	}));
-		(
-			~rand= Routine({loop{
+					i= ~cart.lag(0.01).size.rand;
+						expansion=Cartesian(~cart.lag(0.01).[i].[0].round(0.00001),
+						~cart.lag(0.01).[i].[1].round(0.00001),
+						~cart.lag(0.00001).[i].[2].round(0.00001));
+						matter=Spherical(20,expansion.theta,expansion.phi).y;
 ~val=1234.rand;
-				(~xt*15).wait;
+				(matter).wait;
 };
 });
-	);
-			~str1.play;
-			~tempi.play;
-		~rand.play;
-
+	)*/
 	});
 	Tdef(\drone).play;
 }
 )
 )
 
+(
+			~str.play;
+		//	~temp.play;
+	//	~rand.play;
+)
+
+TempoClock.default.tempo =  (1);
 
 
-~str1.stop;
-~tempi.stop;
+
+~str.stop;
+~temp.stop;
 ~rand.stop;
 
 
-~synthd.free;
-~synthd.set(\fu,256);
-~synth.set(\fu,256);
+~synth.free;
+~synth.set(\fu,64);
+
 
 
 
