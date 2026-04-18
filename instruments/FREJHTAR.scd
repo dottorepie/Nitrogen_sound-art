@@ -165,7 +165,7 @@ ton2=2.pow(tone2.lag(0.01)/16256).round(0.0001)*2.pow(dron.lag(0.01)/992);
 ton3=2.pow(tone3.lag(0.01) /16256).round(0.0001)*2.pow(dron.lag(0.01)/992);
 		//		ton=2.pow((tone.lag(0.01))/56).round(0.0001)*2.pow(dron.lag(0.01)/56);
 
-	env=EnvGen.ar(Env.sine(decay,1),gate:gate);
+	env=EnvGen.ar(Env.sine(decay),gate:gate);
 
 						lfo=2.pow(pan/992);
 				lfon=2.pow(pann/992);
@@ -955,10 +955,12 @@ MIDIIn.connectAll;
 					(
 MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 		var drive;
-		drive=val.linlin(0,127,(992*1).neg,(992*6)).round(1).asInteger;
+		drive=val.linlin(0,127,(992*1).neg,(992*3)).round(1).asInteger;
 		drive.postln;
 		if(~synth.isPlaying,{~synth.set(\drive,drive)});
 			if(~synthd.isPlaying,{~synthd.set(\drive,drive)});
+								if(~synth.isPlaying,{~synth.set(\low,drive)});
+					if(~synthd.isPlaying,{~synthd.set(\low,drive)});
 },1);
 						);
 
@@ -1348,7 +1350,7 @@ MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 				(
 MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
 	var spread;
-			spread=val.linlin(0,127,1,32).round(0.0001);
+			spread=val.linlin(0,127,0.01,32).round(0.0001);
 		spread.postln;
 		if(~synth.isPlaying,{~synth.set(\decay,spread)});
 },28);
