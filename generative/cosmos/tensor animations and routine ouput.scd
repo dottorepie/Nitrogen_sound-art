@@ -6,7 +6,7 @@ s.options.numInputBusChannels=1;
 s.options.memSize = 8192*16;
 s.options.blockSize = 64;
 s.options.maxNodes = 8192*2;
-s.makeGui(w);
+s.makeGui;
 s.waitForBoot{
 Buffer.freeAll;
 ~controlBus = Bus.control(s, 1);
@@ -31,7 +31,7 @@ Buffer.freeAll;
 {
 var signal,wt;
 	//signal=Env([1,100],[3],[8]);
-		signal=Env([1,2000],[3],[10]);
+		signal=Env([1,1000],[3],[10]);
 	wt = signal.asSignal(1024).asWavetable;
 ~scale2.loadCollection(wt);
 //signal.plot;
@@ -39,7 +39,7 @@ var signal,wt;
 		{
 var signal,wt;
 //	signal=Env([1,10000],[3],[12]);
-			signal=Env([1,1000],[3],[16]);
+			signal=Env([1,500],[3],[16]);
 	wt = signal.asSignal(1024).asWavetable;
 ~scale1.loadCollection(wt);
 //signal.plot;
@@ -90,18 +90,18 @@ var signal,wt;
 (
 SynthDef.new(\player,{
 
-	Out.kr(~controlBus.index, (Osc.kr(~scale.bufnum,(1/100)).abs));
-	Out.kr(~controlBus1.index, (Osc.kr(~scale1.bufnum,(1/100)).abs));
-	Out.kr(~controlBus4.index, (Osc.kr(~scale2.bufnum,(1/100)).abs));
-	Out.kr(~controlBus2.index, (Osc.kr(~rotation.bufnum,(1/100)).abs));
-    Out.kr(~controlBus3.index, (Osc.kr(~harm.bufnum,(1/100)).abs));
+	Out.kr(~controlBus.index, (Osc.kr(~scale.bufnum,(1/30)).abs));
+	Out.kr(~controlBus1.index, (Osc.kr(~scale1.bufnum,(1/30)).abs));
+	Out.kr(~controlBus4.index, (Osc.kr(~scale2.bufnum,(1/30)).abs));
+	Out.kr(~controlBus2.index, (Osc.kr(~rotation.bufnum,(1/30)).abs));
+    Out.kr(~controlBus3.index, (Osc.kr(~harm.bufnum,(1/30)).abs));
 	Out.kr(~controlBus5.index, (LFNoise1.kr(1/100).range(pi.neg,pi)));
-	Out.kr(~controlBus6.index, (Osc.kr(~temp.bufnum,(1/100)).abs));
-	Out.kr(~controlBus7.index, (Osc.kr(~space.bufnum,(1/100)).abs));
+	Out.kr(~controlBus6.index, (Osc.kr(~temp.bufnum,(1/30)).abs));
+	Out.kr(~controlBus7.index, (Osc.kr(~space.bufnum,(1/30)).abs));
 
 
 }).add;
-	);~count=[2,2,2,2,2,2];
+	);~count=[2,2,2,3,2,4];
 }
 )
 
@@ -133,6 +133,10 @@ var azimuth,elevation,magnitudex,magnitudey,magnitudez,magnitudeqx;
 var magx,magy,magz,magqx,rotation;
 var angle=0,angle1=0,angle11=0;
 var g=((1+5.sqrt)/2),s=(1+2.sqrt),ott=pi.rand2,temp,space;
+var waveSpeed = 1/2;
+var waveFreq = 3;
+var amp=2;
+var theta,phi ,wave;
 
 	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[]; ~cart=[];      ~detune=1;
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
@@ -569,13 +573,20 @@ az6=0;el6=0;
 };
 }.value;
 );
+						~magxb = ~magx.collect { |val, i|
+
+	 theta = ~az[i];
+     phi = ~el[i];
+	wave = amp*sin((waveFreq * theta) + (waveFreq * phi )- waveSpeed);
+    val * wave;
+};
 
 	dota=(~count.[0]*~count.[1]*~count.[2]*~count.[3]*~count.[4]*~count.[5]).collect{
 
 	az=~az.[pla];
 	el=~el.[pla];
 	//mag=1000;
-			mag=(Cartesian(~magx.[pla],~magy.[pla],~magz.[pla]).rho)/2.sqrt;
+			mag=(Cartesian(~magxb.[pla],~magy.[pla],~magz.[pla]).rho)/2.sqrt;
 	//	mag=mag+(Cartesian(~magqx.[pla],0,0).rho);
 	pla=pla+1;
 			//mk=(mk+(1-(1/1.6180339887499))).wrap(0,1);
@@ -594,7 +605,7 @@ az6=0;el6=0;
 			~v.background_(Color(space,space,space));
             ~v.refresh;
           //  0;               // keep AppClock loop going
-        }); /*~cart.postln;*/ (1/8).wait;
+        }); /*~cart.postln;*/ (1/4).wait;
 };};
 
 );
