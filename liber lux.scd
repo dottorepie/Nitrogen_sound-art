@@ -25,35 +25,34 @@ green = ~controlBus1.getSynchronous;
 
 (
 var win,amp1 = 0,amp2 = 0,amp3 = 0;
-
+Window.closeAll;
     win = Window("RGB Audio Visualizer", Rect(100, 100, 400, 400));
 ~v = UserView(win, Rect(0, 0, 400, 400)).front;
-(
+
 a = {
-	var amp1 = Amplitude.ar(InFeedback.ar(4,1),mul:100);
-	var amp2 = Amplitude.ar(InFeedback.ar(5,1),mul:100);
-	var amp3 = Amplitude.ar(InFeedback.ar(6,1),mul:100);
+	var amp1 = Amplitude.ar(InFeedback.ar(4,1),mul:10);
+	var amp2 = Amplitude.ar(InFeedback.ar(5,1),mul:10);
+	var amp3 = Amplitude.ar(InFeedback.ar(6,1),mul:10);
 	SendReply.ar(Impulse.ar(25), '/amp1', amp1);
 		SendReply.ar(Impulse.ar(25), '/amp2', amp2);
 		SendReply.ar(Impulse.ar(25), '/amp3', amp3);
 }.play;
 
-OSCdef(\amp, { |msg|
+OSCdef(\ampt1, { |msg|
 	~amp1 = msg[3];
 	defer { ~v.refresh };
 }, '/amp1', s.addr);
 
-OSCdef(\amp, { |msg|
+OSCdef(\ampt2, { |msg|
 	~amp2 = msg[3];
 	defer { ~v.refresh };
 }, '/amp2', s.addr);
 
-OSCdef(\amp, { |msg|
+OSCdef(\ampt3, { |msg|
 	~amp3 = msg[3];
 	defer { ~v.refresh };
 }, '/amp3', s.addr);
 
-).asStream;
 
 ~v.drawFunc=({ |view|
 	    Pen.fillColor = Color(~amp1, ~amp2, ~amp3);
