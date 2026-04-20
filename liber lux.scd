@@ -22,9 +22,9 @@ green = ~controlBus1.getSynchronous;
     win.front;
 
 )*/
-
+a.free
 (
-var win;
+var win,wx=0.wy=0;
 Window.closeAll;
 
 ~amp1 = 0;
@@ -62,14 +62,11 @@ OSCdef(\ampt3, { |msg|
 
 // ONE drawFunc
 ~v1.drawFunc = {
-	Pen.fillColor = Color(~amp1, ~amp1, ~amp1);
-	Pen.fillRect(Rect(0,0,300,300));
+	1.do{
 
-	Pen.fillColor = Color(~amp2, ~amp2, ~amp2);
-	Pen.fillRect(Rect(300,0,300,300));
-
-	Pen.fillColor = Color(~amp3, ~amp3, ~amp3);
-	Pen.fillRect(Rect(600,0,300,300));
+	Pen.fillColor = Color(~amp1, ~amp2, ~amp3);
+	Pen.fillRect(Rect(wx,wy,300,300));
+	}
 };
 
 win.front;
