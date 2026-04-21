@@ -22,7 +22,8 @@ green = ~controlBus1.getSynchronous;
     win.front;
 
 )*/
-a.free
+~a = Synth(\painting);
+~a.free
 (
 var win,wx=0,wy=0;
 //Window.closeAll;
@@ -31,21 +32,30 @@ var win,wx=0,wy=0;
 ~amp2 = 0;
 ~amp3 = 0;
 ~amp4= 0;
+~amp5 = 0;
+~amp6= 0;
+~amp7= 0;
 
-win = Window("RGB Audio Visualizer", Rect(10, 10, 900, 900));
-~v1 = UserView(win, Rect(0,0,1200,1200));
+win = Window("RGB Audio Visualizer", Rect(10, 10, 600, 600));
+~v1 = UserView(win, Rect(0,0,600,600)).background_(Color.black);
 
-a = {
-	var amp1 = Amplitude.kr(In.kr(3,100));
-	var amp2 = Amplitude.kr(In.kr(4,100));
-	var amp3 = Amplitude.kr(In.kr(5,100));
-	var amp4 = Amplitude.kr(In.kr(6,100));
+SynthDef(\painting, {
+	var amp1 = (InFeedback.ar(2).abs);
+	var amp2 = (InFeedback.ar(3).abs);
+	var amp3 = (InFeedback.ar(4).abs);
+	var amp4 = (InFeedback.ar(0)*100);
+	var amp5 = (InFeedback.ar(1)*100);
+	//var amp6 = Amplitude.ar(InFeedback.ar(2,100));
+	//var amp7 = Amplitude.ar(InFeedback.ar(3,100));
 
 	SendReply.ar(Impulse.ar(60), '/amp1', amp1);
 	SendReply.ar(Impulse.ar(60), '/amp2', amp2);
 	SendReply.ar(Impulse.ar(60), '/amp3', amp3);
 	SendReply.ar(Impulse.ar(60), '/amp4', amp4);
-}.play;
+	SendReply.ar(Impulse.ar(60), '/amp5', amp5);
+	//SendReply.ar(Impulse.ar(60), '/amp6', amp6);
+	//SendReply.ar(Impulse.ar(60), '/amp7', amp7);
+}).add;
 
 // OSC
 OSCdef(\ampt1, { |msg|
@@ -68,19 +78,34 @@ OSCdef(\ampt4, { |msg|
 	defer { ~v1.refresh };
 }, '/amp4');
 
+OSCdef(\ampt5, { |msg|
+	~amp5 = msg[3];
+	defer { ~v1.refresh };
+}, '/amp5');
+
+//OSCdef(\ampt6, { |msg|
+//	~amp6 = msg[3];
+//	defer { ~v1.refresh };
+//}, '/amp6');
+
+//OSCdef(\ampt7, { |msg|
+//	~amp7 = msg[3];
+//	defer { ~v1.refresh };
+//}, '/amp7');
+
 // ONE drawFunc
 ~v1.drawFunc = {
 	1.do{
 
-		Pen.translate(150,150);
-	Pen.fillColor = Color(0, 0, 0,~amp1);
-	Pen.fillRect(Rect(wx+0,wy+0,300,300));
-	Pen.fillColor = Color(1, 1, 1, ~amp2);
-	Pen.fillRect(Rect(wx+300,wy+0,300,300));
-	Pen.fillColor = Color(0, 0, 0, ~amp4);
-	Pen.fillRect(Rect(wx+0,wy+300,300,300));
-	Pen.fillColor = Color(0, 0, 0, ~amp3);
-	Pen.fillRect(Rect(wx+300,wy+300,300,300));
+		Pen.translate(10,10);
+	Pen.fillColor = Color(~amp1, ~amp2, ~amp3);
+	Pen.fillRect(Rect(wx+~amp4,wy+~amp5,500,500));
+	//Pen.fillColor = Color(1, 1, 1, ~amp2);
+	//Pen.fillRect(Rect(wx+300,wy+0,300,300));
+	//Pen.fillColor = Color(0, 0, 0, ~amp4);
+	//Pen.fillRect(Rect(wx+0,wy+300,300,300));
+	//Pen.fillColor = Color(0, 0, 0, ~amp3);
+	//Pen.fillRect(Rect(wx+300,wy+300,300,300));
 	}
 };
 
