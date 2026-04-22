@@ -22,7 +22,41 @@ green = ~controlBus1.getSynchronous;
     win.front;
 
 )*/
-~a = Synth(\painting);
+(
+~a = Synth(\painting).register;
+//MIDIClient.init;
+//MIDIIn.connectAll;
+
+					(
+MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
+		var k;
+			k=val.linlin(0,127,1,100).round(0.00001);
+		k.postln;
+		if(~a.isPlaying,{~a.set(\gain1,k)});
+
+},1);
+						);
+
+				(
+MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
+         var k;
+		k=val.linlin(0,127,0.0001,10).round(0.00001);
+		k.postln;
+		if(~a.isPlaying,{~a.set(\lag,k)});
+
+},2);
+	);
+				(
+MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
+		var k;
+			k=val.linlin(0,127,1,10000).round(0.00001);
+		k.postln;
+		if(~a.isPlaying,{~a.set(\gain2,k)});
+},3);
+	)
+)
+~a.set(\gain2,1000)
+~a.set(\lag,0.1)
 ~a.free
 (
 var win,wx=0,wy=0;
@@ -36,15 +70,16 @@ var win,wx=0,wy=0;
 ~amp6= 0;
 ~amp7= 0;
 
-win = Window("RGB Audio Visualizer", Rect(10, 10, 600, 600));
-~v1 = UserView(win, Rect(0,0,600,600)).background_(Color.black);
+win = Window("RGB Audio Visualizer", Rect(10, 10, 1200, 1200));
+~v1 = UserView(win, Rect(0,0,1200,1200)).background_(Color.black);
 
 SynthDef(\painting, {
-	var amp1 = (InFeedback.ar(2).abs);
-	var amp2 = (InFeedback.ar(3).abs);
-	var amp3 = (InFeedback.ar(4).abs);
-	var amp4 = (InFeedback.ar(0)*100);
-	var amp5 = (InFeedback.ar(1)*100);
+	arg lag=0.1,gain1=5,gain2=100;
+	var amp1 = (InFeedback.ar(4).abs*gain1).lag(lag);
+	var amp2 = (InFeedback.ar(5).abs*gain1).lag(lag);
+	var amp3 = (InFeedback.ar(6).abs*gain1).lag(lag);
+	var amp4 = (InFeedback.ar(0)*gain2).lag(lag);
+	var amp5 = (InFeedback.ar(1)*gain2).lag(lag);
 	//var amp6 = Amplitude.ar(InFeedback.ar(2,100));
 	//var amp7 = Amplitude.ar(InFeedback.ar(3,100));
 
@@ -97,7 +132,7 @@ OSCdef(\ampt5, { |msg|
 ~v1.drawFunc = {
 	1.do{
 
-		Pen.translate(10,10);
+		Pen.translate(300,300);
 	Pen.fillColor = Color(~amp1, ~amp2, ~amp3);
 	Pen.fillRect(Rect(wx+~amp4,wy+~amp5,500,500));
 	//Pen.fillColor = Color(1, 1, 1, ~amp2);
@@ -110,6 +145,7 @@ OSCdef(\ampt5, { |msg|
 };
 
 win.front;
+
 )
 
 
