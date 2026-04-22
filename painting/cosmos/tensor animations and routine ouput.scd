@@ -1,7 +1,7 @@
 
 (
 s.options.numWireBufs = 1024*4;
-s.options.numOutputBusChannels=16;
+s.options.numOutputBusChannels=8;
 s.options.numInputBusChannels=1;
 s.options.memSize = 8192*16;
 s.options.blockSize = 64;
