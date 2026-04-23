@@ -158,7 +158,7 @@ wt = signal.asWavetable;
 (
 SynthDef.new(\synth,{
 
-	arg gain=1,low=992,tone1=0,tone2=0,tone3=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,pon=1,
+	arg gain=1,low=992,tone1=0,tone2=0,tone3=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,pon=1,cmp=50,
 				fu=32,drive=1,spread=1,drone_amp=1,pann=0,az=0,el=0,azr=0,dron=0,drone=1,theta=0,rx=0,ry=0,rz=0,
 				pneuma1=0,pneuma2=0,pneuma3=0,namp1=1,namp2=1,namp3=1,qq=0.0000001,qqq=0,spirit=0,
 				attack=0.01,decay=4,curve=2.neg,gate=1,xx=1,yy=1,zz=1;
@@ -333,13 +333,13 @@ ds3=((LPF.ar((Osc.ar(~w1.bufnum,f3,phase:phasez,mul:level).abs*
 				(
 ds1=((LPF.ar((Osc.ar(~w1.bufnum,f1,phase:phasex,mul:level).abs*
 					SinOsc.ar(f1,phase:phasex)),f1*2.pow(low.lag(0.01)/992),g1)).range(panx*g1,g1)
-					+BPF.ar(LPF.ar((SoundIn.ar(0,50)*qq.sqrt.reciprocal),fund*dr),f1*dr,qq,g1/dr));
+					+BPF.ar(LPF.ar((SoundIn.ar(0,cmp)*qq.sqrt.reciprocal),fund*dr),f1*dr,qq,g1/dr));
 ds2=((LPF.ar((Osc.ar(~w1.bufnum,f2,phase:phasey,mul:level).abs*
 					SinOsc.ar(f2,phase:phasey)),f2*2.pow(low.lag(0.01)/992),g2)).range(pany*g2,g2)
-					+BPF.ar(LPF.ar((SoundIn.ar(0,50)*qq.sqrt.reciprocal),fund*dr),f2*dr,qq,g2/dr));
+					+BPF.ar(LPF.ar((SoundIn.ar(0,cmp)*qq.sqrt.reciprocal),fund*dr),f2*dr,qq,g2/dr));
 ds3=((LPF.ar((Osc.ar(~w1.bufnum,f3,phase:phasez,mul:level).abs*
 					SinOsc.ar(f3,phase:phasez)),f3*2.pow(low.lag(0.01)/992),g3)).range(panz*g3,g3)
-					+BPF.ar(LPF.ar((SoundIn.ar(0,50)*qq.sqrt.reciprocal),fund*dr),f3*dr,qq,g3/dr));
+					+BPF.ar(LPF.ar((SoundIn.ar(0,cmp)*qq.sqrt.reciprocal),fund*dr),f3*dr,qq,g3/dr));
 				);
 
 ds1 = (ds1*2.pow(drive/992)).softclip;
@@ -366,6 +366,10 @@ sig3 =  (sig3*2.pow(drive/992)).softclip;
 threshold1=(((343/0.15)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 threshold2=(((343/0.15)/fund).reciprocal.ampdb/2.sqrt).dbamp;
 threshold3=(((343/0.15)/fund).reciprocal.ampdb/2.sqrt).dbamp;
+
+				sig1=AllpassC.ar(sig1,2.sqrt,mx,decay*mx);
+		sig2=AllpassC.ar(sig2,2.sqrt,my,decay*my);
+		sig3=AllpassC.ar(sig3,2.sqrt,mz,decay*mz);
 
 		sig1=HPF.ar(sig1,80);
 		sig2=HPF.ar(sig2, 80);
@@ -569,6 +573,7 @@ m3=m3+1;
 			~rect=0;
 			~strech=12;
 			~detune=1;
+			~cmp=50
 
 			(
 MIDIClient.init;
@@ -717,15 +722,14 @@ MIDIdef.cc(\midi_seq_pot2,{ |val, num, chan, src|
 				~strech=decay;
 },18);
 	);
-			/*(
+			(
 MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 		var gain;
-	gain=val.linlin(0,127,0.00001,1).round(0.00001);
+	gain=val.linlin(0,127,0.01,100).round(0.00001);
 		gain.postln;
-		if(~synth.isPlaying,{~synth.set(\gain,gain)});
-							if(~synthd.isPlaying,{~synthd.set(\gain,gain)});
+	~cmp=gain;
 },49);
-			)*/
+			)
 	);
 );
 
@@ -760,7 +764,7 @@ MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 		~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,32,\decay,~strech,
 						\low,~drive,\pan,~bband,\mix,~mox,\room,~room,\pann,~sphpan,\x,~lx,\a,~la,\spread,~panwidth,
 						\pon,~panner,\pneuma,0,\namp,1,\drone,~oct,\az,az,\el,el,
-						\panx,~rect,\pany,~rect,\panz,~rect,\dron,~ton,\qq,~feed,\qqq,~scalar,\gate,1,
+						\panx,~rect,\pany,~rect,\panz,~rect,\dron,~ton,\qq,~feed,\qqq,~scalar,\gate,1,\cmp,~cmp,
 						\xx,~cart.lag(0.01).[i].[0].round(0.00001),
 				        \yy,~cart.lag(0.01).[i].[1].round(0.00001),
 						\zz,~cart.lag(0.01).[i].[2].round(0.00001)]).register;
@@ -769,7 +773,7 @@ MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 		~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,32,\decay,~strech,
 						\low,~drive,\pan,~bband,\mix,~mox,\room,~room,\pann,~sphpan,\x,~lx,\a,~la,\spread,~panwidth,
 						\pon,~panner,\pneuma,0,\namp,1,\drone,~oct,\az,az,\el,el,
-						\panx,~rect,\pany,~rect,\panz,~rect,\dron,~ton,\qq,~feed,\qqq,~scalar,\gate,1,
+						\panx,~rect,\pany,~rect,\panz,~rect,\dron,~ton,\qq,~feed,\qqq,~scalar,\gate,1,\cmp,~cmp,
 						\xx,~cart.lag(0.01).[i].[0].round(0.00001),
 				        \yy,~cart.lag(0.01).[i].[1].round(0.00001),
 						\zz,~cart.lag(0.01).[i].[2].round(0.00001)]).register;
@@ -778,7 +782,7 @@ MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 		~synth=Synth.new(\synth,[\gain,~gg,\drive,~drive,\fu,32,\decay,~strech,
 						\low,~drive,\pan,~bband,\mix,~mox,\room,~room,\pann,~sphpan,\x,~lx,\a,~la,\spread,~panwidth,
 						\pon,~panner,\pneuma,0,\namp,1,\drone,~oct,\az,az,\el,el,
-						\panx,~rect,\pany,~rect,\panz,~rect,\dron,~ton,\qq,~feed,\qqq,~scalar,\gate,1,
+						\panx,~rect,\pany,~rect,\panz,~rect,\dron,~ton,\qq,~feed,\qqq,~scalar,\gate,1,\cmp,~cmp,
 						\xx,~cart.lag(0.01).[i].[0].round(0.00001),
 				        \yy,~cart.lag(0.01).[i].[1].round(0.00001),
 						\zz,~cart.lag(0.01).[i].[2].round(0.00001)]).register;
