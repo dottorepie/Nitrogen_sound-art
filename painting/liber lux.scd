@@ -55,7 +55,9 @@ MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 },3);
 	)
 )
+~a.set(\gain1,5)
 ~a.set(\gain2,1000)
+~a.set(\lag,0.1)
 ~a.set(\lag,0.1)
 ~a.free
 (
@@ -130,18 +132,17 @@ OSCdef(\ampt5, { |msg|
 
 // ONE drawFunc
 ~v1.drawFunc = {
-	1.do{
+    Pen.translate(25, 25);
 
-		Pen.translate(150,150);
-	Pen.fillColor = Color(~amp1, ~amp2, ~amp3);
-	Pen.fillRect(Rect(wx+~amp4,wy+~amp5,300,300));
-	//Pen.fillColor = Color(1, 1, 1, ~amp2);
-	//Pen.fillRect(Rect(wx+300,wy+0,300,300));
-	//Pen.fillColor = Color(0, 0, 0, ~amp4);
-	//Pen.fillRect(Rect(wx+0,wy+300,300,300));
-	//Pen.fillColor = Color(0, 0, 0, ~amp3);
-	//Pen.fillRect(Rect(wx+300,wy+300,300,300));
-	}
+    100.do { |y|
+        100.do { |x|
+            var xPos = x * 5 + (~amp4 * 0.9.rand);  // small offset
+            var yPos = y * 5 + (~amp5 * 0.9.rand);
+
+            Pen.fillColor = Color(~amp1* 1.1.rand, ~amp2* 1.1.rand, ~amp3* 1.1.rand);
+            Pen.fillRect(Rect(xPos, yPos, 5, 5));
+        };
+    };
 };
 
 win.front;
