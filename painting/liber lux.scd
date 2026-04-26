@@ -38,52 +38,18 @@ s.boot;
 s.meter;
 )
 (
-{Out.ar(2,WhiteNoise.ar(1)!2)}.play;
-{Out.ar(4,WhiteNoise.ar(1)!3)}.play;
+{Out.ar(2,WhiteNoise.ar(1/10))}.play;
+{Out.ar(3,WhiteNoise.ar(1/10))}.play;
+{Out.ar(4,WhiteNoise.ar(1/10))}.play;
+{Out.ar(5,WhiteNoise.ar(1/10))}.play;
+{Out.ar(6,WhiteNoise.ar(1/10))}.play;
 )
 
 
 ////////////////////////////////////////////painter
+
 (
-~a = Synth(\painting).register;
-MIDIClient.init;
-MIDIIn.connectAll;
-
-					(
-MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
-		var k;
-			k=val.linlin(0,127,1,100).round(0.00001);
-		k.postln;
-		if(~a.isPlaying,{~a.set(\gain1,k)});
-
-},1);
-						);
-
-				(
-MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
-         var k;
-		k=val.linlin(0,127,0.0001,10).round(0.00001);
-		k.postln;
-		if(~a.isPlaying,{~a.set(\lag,k)});
-
-},2);
-	);
-				(
-MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
-		var k;
-			k=val.linlin(0,127,1,10000).round(0.00001);
-		k.postln;
-		if(~a.isPlaying,{~a.set(\gain2,k)});
-},3);
-	)
-)
-~a.set(\gain1,5)
-~a.set(\gain2,1000)
-~a.set(\lag,0.1)
-~a.set(\lag,0.1)
-~a.free
-(
-var win,wx=0,wy=0;
+var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt), posit=0;
 //Window.closeAll;
 
 ~amp1 = 0;
@@ -95,7 +61,7 @@ var win,wx=0,wy=0;
 ~amp7= 0;
 
 win = Window("RGB Audio Visualizer", Rect(10, 10, 700, 700));
-~v1 = UserView(win, Rect(0,0,600,600)).background_(Color.black);
+~v1 = UserView(win, Rect(0,0,700,700)).background_(Color.black);
 
 SynthDef(\painting, {
 	arg lag=0.1,gain1=5,gain2=100;
@@ -156,13 +122,15 @@ OSCdef(\ampt5, { |msg|
 ~v1.drawFunc = {
     Pen.translate(25, 25);
 
-    50.do { |y|
-        50.do { |x|
-            var xPos = x * 10 + (~amp4 * 0.9.rand);  // small offset
-            var yPos = y * 10 + (~amp5 * 0.9.rand);
+    25.do { |y|
+        25.do { |x|
+			var xPos = x * 20 + (~amp4 * posit.linlin(0,2pi,1,2));  // small offset
+            var yPos = y * 20 + (~amp5 * posit.linlin(0,2pi,1,2));
 
-            Pen.fillColor = Color(~amp1* 1.1.rand, ~amp2* 1.1.rand, ~amp3* 1.1.rand);
-            Pen.fillRect(Rect(xPos, yPos, 10, 10));
+Pen.fillColor = Color(~amp1* posit.linlin(0,2pi,0,1), ~amp2* posit.linlin(0,2pi,0,1),~amp3* posit.linlin(0,2pi,0,1));
+            Pen.fillRect(Rect(xPos, yPos, 20, 20));
+
+						posit = (posit+(2pi-(2pi/g))).wrap(0,2pi);
         };
     };
 };
@@ -171,18 +139,44 @@ win.front;
 
 )
 
-
-TempoClock.default.tempo_(120/20);
-
-
-// edit: forgot loading the buffer
-b = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01.wav");
-
+~a.set(\gain1,5)
+~a.set(\gain2,1000)
+~a.set(\lag,0.1)
+~a.set(\lag,0.1)
+~a.free
 
 
+(
+~a = Synth(\painting).register;
+MIDIClient.init;
+MIDIIn.connectAll;
 
+					(
+MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
+		var k;
+			k=val.linlin(0,127,1,100).round(0.00001);
+		k.postln;
+		if(~a.isPlaying,{~a.set(\gain1,k)});
 
-///////////////
+},1);
+						);
 
+				(
+MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
+         var k;
+		k=val.linlin(0,127,0.0001,10).round(0.00001);
+		k.postln;
+		if(~a.isPlaying,{~a.set(\lag,k)});
 
+},2);
+	);
+				(
+MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
+		var k;
+			k=val.linlin(0,127,1,10000).round(0.00001);
+		k.postln;
+		if(~a.isPlaying,{~a.set(\gain2,k)});
+},3);
+	)
+)
 
