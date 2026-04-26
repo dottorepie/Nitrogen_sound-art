@@ -1,6 +1,6 @@
 
 (
-~time=60;
+~time=120;
 s.options.numWireBufs = 1024*4;
 s.options.numOutputBusChannels=8;
 s.options.numInputBusChannels=1;

@@ -158,7 +158,7 @@ wt = signal.asWavetable;
 (
 SynthDef.new(\synth,{
 
-	arg gain=1,low=992,tone1=0,tone2=0,tone3=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,pon=1,cmp=50,limit=1,
+	arg gain=1,low=992,tone1=0,tone2=0,tone3=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,pon=1,cmp=50,limit=1,
 				fu=32,drive=1,spread=1,drone_amp=1,pann=0,az=0,el=0,azr=0,dron=0,drone=1,theta=0,rx=0,ry=0,rz=0,
 				pneuma1=0,pneuma2=0,pneuma3=0,namp1=1,namp2=1,namp3=1,qq=0.0000001,qqq=0,spirit=0,
 				attack=0.01,decay=4,curve=2.neg,gate=1,xx=1,yy=1,zz=1;
@@ -175,7 +175,7 @@ SynthDef.new(\synth,{
 	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=200,spx,spy,spz;
 	var g_ch1,g_ch2,g_ch3,g_ch4,chan=~chan;
 	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis,sp,spl,g11,g22,g33,g44;
-	var pon1,pon2,pon3,pon4,tonality;
+	var pon1,pon2,pon3,pon4,tonality,m=2;
 
 fund=fu*(9/8);
 lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
@@ -197,6 +197,7 @@ ton3=2.pow(Select.kr(tonality.z, Select.kr(qqq.lag(0.01),~sc)) /12).round(0.0001
 						lfo=2.pow(pan/992);
 				lfon=2.pow(pann/992);
 					band=pan;
+m=~controlBus3.getSynchronous.round(1);
 
 				mq=(m.lag(0.01)+1);
 	spr=Cartesian(xx.max(0.01).lag(0.01),yy.max(0.01).lag(0.01),zz.max(0.01).lag(0.01));
@@ -822,7 +823,8 @@ MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
 				(matter).wait;
 };
 });
-	)
+	);
+			~str.play;
 	});
 	Tdef(\drone).play;
 }
