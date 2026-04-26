@@ -23,9 +23,31 @@ green = ~controlBus1.getSynchronous;
 
 )*/
 (
+s.options.numWireBufs = 1024*2;
+s.options.numOutputBusChannels=8;
+s.options.numInputBusChannels=1;
+s.options.memSize = 8192*4;
+s.options.blockSize = 64;
+s.options.maxNodes = 1024 * 2;
+//s.makeGui(w);
+//s.options.sampleRate= 44100;
+//s.recHeaderFormat="aiff";
+//s.recSampleFormat ="int16";
+//s.recChannels = 8;
+s.boot;
+s.meter;
+)
+(
+{Out.ar(2,WhiteNoise.ar(1)!2)}.play;
+{Out.ar(4,WhiteNoise.ar(1)!3)}.play;
+)
+
+
+////////////////////////////////////////////painter
+(
 ~a = Synth(\painting).register;
-//MIDIClient.init;
-//MIDIIn.connectAll;
+MIDIClient.init;
+MIDIIn.connectAll;
 
 					(
 MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
@@ -72,7 +94,7 @@ var win,wx=0,wy=0;
 ~amp6= 0;
 ~amp7= 0;
 
-win = Window("RGB Audio Visualizer", Rect(10, 10, 600, 600));
+win = Window("RGB Audio Visualizer", Rect(10, 10, 700, 700));
 ~v1 = UserView(win, Rect(0,0,600,600)).background_(Color.black);
 
 SynthDef(\painting, {
@@ -80,8 +102,8 @@ SynthDef(\painting, {
 	var amp1 = (InFeedback.ar(4).abs*gain1).lag(lag);
 	var amp2 = (InFeedback.ar(5).abs*gain1).lag(lag);
 	var amp3 = (InFeedback.ar(6).abs*gain1).lag(lag);
-	var amp4 = (InFeedback.ar(0)*gain2).lag(lag);
-	var amp5 = (InFeedback.ar(1)*gain2).lag(lag);
+	var amp4 = (InFeedback.ar(2)*gain2).lag(lag);
+	var amp5 = (InFeedback.ar(3)*gain2).lag(lag);
 	//var amp6 = Amplitude.ar(InFeedback.ar(2,100));
 	//var amp7 = Amplitude.ar(InFeedback.ar(3,100));
 
@@ -134,13 +156,13 @@ OSCdef(\ampt5, { |msg|
 ~v1.drawFunc = {
     Pen.translate(25, 25);
 
-    100.do { |y|
-        100.do { |x|
-            var xPos = x * 5 + (~amp4 * 0.9.rand);  // small offset
-            var yPos = y * 5 + (~amp5 * 0.9.rand);
+    50.do { |y|
+        50.do { |x|
+            var xPos = x * 10 + (~amp4 * 0.9.rand);  // small offset
+            var yPos = y * 10 + (~amp5 * 0.9.rand);
 
             Pen.fillColor = Color(~amp1* 1.1.rand, ~amp2* 1.1.rand, ~amp3* 1.1.rand);
-            Pen.fillRect(Rect(xPos, yPos, 5, 5));
+            Pen.fillRect(Rect(xPos, yPos, 10, 10));
         };
     };
 };
