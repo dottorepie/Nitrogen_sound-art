@@ -63,18 +63,18 @@ var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt), posit=0;
 ~amp6= 0;
 ~amp7= 0;
 
-win = Window("RGB Audio Visualizer", Rect(10, 10, 700, 700));
-~v1 = UserView(win, Rect(0,0,700,700)).background_(Color.black);
+win = Window("RGB Audio Visualizer", Rect(10, 10, 1000, 1000));
+~v1 = UserView(win, Rect(0,0,1000,1000)).background_(Color.black);
 
 SynthDef(\painting, {
 	arg lag=0.1,gain1=5,gain2=100;
-	var amp1 = ((InFeedback.ar(2).abs)*gain1).lag(lag);
-	var amp2 = ((InFeedback.ar(3).abs)*gain1).lag(lag);
-	var amp3 = ((InFeedback.ar(4).abs)*gain1).lag(lag);
-	var amp4 = ((InFeedback.ar(5).abs)*gain1).lag(lag);
+	var amp1 = (((InFeedback.ar(2).abs)/1)*gain1).lag(lag);
+	var amp2 = (((InFeedback.ar(3).abs)/1)*gain1).lag(lag);
+	var amp3 = (((InFeedback.ar(4).abs)/1)*gain1).lag(lag);
+	var amp4 = (((InFeedback.ar(5).abs)/1)*gain1).lag(lag);
 	var amp5 = (InFeedback.ar(6)*gain2).lag(lag);
 	var amp6 = (InFeedback.ar(7)*gain2).lag(lag);
-    var amp7 = ((InFeedback.ar(8).abs)*gain2).lag(lag);
+	var amp7 = (InFeedback.ar(8).abs*gain2).lag(lag);
 
 	SendReply.ar(Impulse.ar(60), '/amp1', amp1);
 	SendReply.ar(Impulse.ar(60), '/amp2', amp2);
@@ -125,15 +125,15 @@ OSCdef(\ampt7, { |msg|
 ~v1.drawFunc = {
     Pen.translate(100, 100);
 
-    25.do { |y|
-        25.do { |x|
-			var xPos = x * 20 + (~amp5 * posit.linlin(0,2pi,1,2));  // small offset
-            var yPos = y * 20 + (~amp6 * posit.linlin(0,2pi,1,2));
+    100.do { |y|
+        100.do { |x|
+			var xPos = x * 5 + (~amp5 * posit.linlin(0,2pi,1,2));  // small offset
+            var yPos = y * 5 + (~amp6 * posit.linlin(0,2pi,1,2));
 
 Pen.fillColor = Color(~amp1* posit.linlin(0,2pi,0,1), ~amp2* posit.linlin(0,2pi,0,1),~amp3* posit.linlin(0,2pi,0,1),
-				~amp4* posit.linlin(0,2pi,0,1)
+				1
 			);
-            Pen.fillRect(Rect(xPos, yPos,~amp7*20, ~amp7*20));
+            Pen.fillRect(Rect(xPos, yPos,~amp7*5, ~amp7*5));
 
 						posit = (posit+(2pi-(2pi/g))).wrap(0,2pi);
         };
@@ -178,7 +178,7 @@ MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
 				(
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 		var k;
-			k=val.linlin(0,127,1,1000).round(0.00001);
+			k=val.linlin(0,127,0.1,1000).round(0.00001);
 		k.postln;
 		if(~a.isPlaying,{~a.set(\gain2,k)});
 },3);
