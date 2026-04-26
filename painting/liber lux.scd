@@ -73,7 +73,7 @@ SynthDef(\painting, {
 	var amp4 = (InFeedback.ar(5).abs*gain1).lag(lag);
 	var amp5 = (InFeedback.ar(6)*gain2).lag(lag);
 	var amp6 = (InFeedback.ar(7)*gain2).lag(lag);
-    var amp7 = (InFeedback.ar(8)*gain2).lag(lag);
+    var amp7 = (InFeedback.ar(8).abs*gain2).lag(lag);
 
 	SendReply.ar(Impulse.ar(60), '/amp1', amp1);
 	SendReply.ar(Impulse.ar(60), '/amp2', amp2);
@@ -158,7 +158,7 @@ MIDIIn.connectAll;
 					(
 MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 		var k;
-			k=val.linlin(0,127,1,100).round(0.00001);
+			k=val.linlin(0,127,1,1000).round(0.00001);
 		k.postln;
 		if(~a.isPlaying,{~a.set(\gain1,k)});
 
@@ -177,7 +177,7 @@ MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
 				(
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 		var k;
-			k=val.linlin(0,127,1,10000).round(0.00001);
+			k=val.linlin(0,127,1,1000).round(0.00001);
 		k.postln;
 		if(~a.isPlaying,{~a.set(\gain2,k)});
 },3);
