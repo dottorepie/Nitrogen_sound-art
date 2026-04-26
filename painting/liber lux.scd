@@ -24,7 +24,7 @@ green = ~controlBus1.getSynchronous;
 )*/
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=8;
+s.options.numOutputBusChannels=10;
 s.options.numInputBusChannels=1;
 s.options.memSize = 8192*4;
 s.options.blockSize = 64;
@@ -43,6 +43,8 @@ s.meter;
 {Out.ar(4,WhiteNoise.ar(1/10))}.play;
 {Out.ar(5,WhiteNoise.ar(1/10))}.play;
 {Out.ar(6,WhiteNoise.ar(1/10))}.play;
+{Out.ar(7,WhiteNoise.ar(1/10))}.play;
+{Out.ar(8,WhiteNoise.ar(1/10))}.play;
 )
 
 
@@ -65,21 +67,21 @@ win = Window("RGB Audio Visualizer", Rect(10, 10, 700, 700));
 
 SynthDef(\painting, {
 	arg lag=0.1,gain1=5,gain2=100;
-	var amp1 = (InFeedback.ar(4).abs*gain1).lag(lag);
-	var amp2 = (InFeedback.ar(5).abs*gain1).lag(lag);
-	var amp3 = (InFeedback.ar(6).abs*gain1).lag(lag);
-	var amp4 = (InFeedback.ar(2)*gain2).lag(lag);
-	var amp5 = (InFeedback.ar(3)*gain2).lag(lag);
-	//var amp6 = Amplitude.ar(InFeedback.ar(2,100));
-	//var amp7 = Amplitude.ar(InFeedback.ar(3,100));
+	var amp1 = (InFeedback.ar(2).abs*gain1).lag(lag);
+	var amp2 = (InFeedback.ar(3).abs*gain1).lag(lag);
+	var amp3 = (InFeedback.ar(4).abs*gain1).lag(lag);
+	var amp4 = (InFeedback.ar(5).abs*gain1).lag(lag);
+	var amp5 = (InFeedback.ar(6)*gain2).lag(lag);
+	var amp6 = (InFeedback.ar(7)*gain2).lag(lag);
+    var amp7 = (InFeedback.ar(8)*gain2).lag(lag);
 
 	SendReply.ar(Impulse.ar(60), '/amp1', amp1);
 	SendReply.ar(Impulse.ar(60), '/amp2', amp2);
 	SendReply.ar(Impulse.ar(60), '/amp3', amp3);
 	SendReply.ar(Impulse.ar(60), '/amp4', amp4);
 	SendReply.ar(Impulse.ar(60), '/amp5', amp5);
-	//SendReply.ar(Impulse.ar(60), '/amp6', amp6);
-	//SendReply.ar(Impulse.ar(60), '/amp7', amp7);
+	SendReply.ar(Impulse.ar(60), '/amp6', amp6);
+	SendReply.ar(Impulse.ar(60), '/amp7', amp7);
 }).add;
 
 // OSC
@@ -108,15 +110,15 @@ OSCdef(\ampt5, { |msg|
 	defer { ~v1.refresh };
 }, '/amp5');
 
-//OSCdef(\ampt6, { |msg|
-//	~amp6 = msg[3];
-//	defer { ~v1.refresh };
-//}, '/amp6');
+OSCdef(\ampt6, { |msg|
+	~amp6 = msg[3];
+	defer { ~v1.refresh };
+}, '/amp6');
 
-//OSCdef(\ampt7, { |msg|
-//	~amp7 = msg[3];
-//	defer { ~v1.refresh };
-//}, '/amp7');
+OSCdef(\ampt7, { |msg|
+	~amp7 = msg[3];
+	defer { ~v1.refresh };
+}, '/amp7');
 
 // ONE drawFunc
 ~v1.drawFunc = {
@@ -124,11 +126,13 @@ OSCdef(\ampt5, { |msg|
 
     25.do { |y|
         25.do { |x|
-			var xPos = x * 20 + (~amp4 * posit.linlin(0,2pi,1,2));  // small offset
-            var yPos = y * 20 + (~amp5 * posit.linlin(0,2pi,1,2));
+			var xPos = x * 20 + (~amp5 * posit.linlin(0,2pi,1,2));  // small offset
+            var yPos = y * 20 + (~amp6 * posit.linlin(0,2pi,1,2));
 
-Pen.fillColor = Color(~amp1* posit.linlin(0,2pi,0,1), ~amp2* posit.linlin(0,2pi,0,1),~amp3* posit.linlin(0,2pi,0,1));
-            Pen.fillRect(Rect(xPos, yPos, 20, 20));
+Pen.fillColor = Color(~amp1* posit.linlin(0,2pi,0,1), ~amp2* posit.linlin(0,2pi,0,1),~amp3* posit.linlin(0,2pi,0,1),
+				~amp4* posit.linlin(0,2pi,0,1)
+			);
+            Pen.fillRect(Rect(xPos, yPos,~amp7*20, ~amp7*20));
 
 						posit = (posit+(2pi-(2pi/g))).wrap(0,2pi);
         };
