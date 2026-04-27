@@ -39,20 +39,21 @@ s.meter;
 
 )
 (
-{Out.ar(2,WhiteNoise.ar(1/10))}.play;
-{Out.ar(3,WhiteNoise.ar(1/10))}.play;
-{Out.ar(4,WhiteNoise.ar(1/10))}.play;
-{Out.ar(5,WhiteNoise.ar(1/10))}.play;
-{Out.ar(6,WhiteNoise.ar(1/10))}.play;
-{Out.ar(7,WhiteNoise.ar(1/10))}.play;
-{Out.ar(8,WhiteNoise.ar(1/10))}.play;
+{Out.ar(2,LFNoise1.ar(28))}.play;
+{Out.ar(3,LFNoise1.ar(28))}.play;
+{Out.ar(4,LFNoise1.ar(28))}.play;
+{Out.ar(5,LFNoise1.ar(28))}.play;
+{Out.ar(6,LFNoise1.ar((28)))}.play;
+{Out.ar(7,LFNoise1.ar(28))}.play;
+{Out.ar(8,LFNoise1.ar(28))}.play;
 )
 
 
 ////////////////////////////////////////////painter
 
 (
-var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt), posit=0;
+var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt), posit=0,size=500,scale=100;
+var xPos,yPos, ax,ay;
 //Window.closeAll;
 
 ~amp1 = 0;
@@ -63,15 +64,15 @@ var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt), posit=0;
 ~amp6= 0;
 ~amp7= 0;
 
-win = Window("RGB Audio Visualizer", Rect(10, 10, 1000, 1000));
-~v1 = UserView(win, Rect(0,0,1000,1000)).background_(Color.black);
+win = Window("RGB Audio Visualizer", Rect(10, 10, size, size));
+~v1 = UserView(win, Rect(0,0,size,size)).background_(Color.black);
 
 SynthDef(\painting, {
 	arg lag=0.1,gain1=5,gain2=100;
-	var amp1 = (((InFeedback.ar(2).abs)/1)*gain1).lag(lag);
-	var amp2 = (((InFeedback.ar(3).abs)/1)*gain1).lag(lag);
-	var amp3 = (((InFeedback.ar(4).abs)/1)*gain1).lag(lag);
-	var amp4 = (((InFeedback.ar(5).abs)/1)*gain1).lag(lag);
+	var amp1 = (InFeedback.ar(2).abs*gain1).lag(lag);
+	var amp2 = (InFeedback.ar(3).abs*gain1).lag(lag);
+	var amp3 = (InFeedback.ar(4).abs*gain1).lag(lag);
+	var amp4 = (InFeedback.ar(5).abs*gain1).lag(lag);
 	var amp5 = (InFeedback.ar(6)*gain2).lag(lag);
 	var amp6 = (InFeedback.ar(7)*gain2).lag(lag);
 	var amp7 = (InFeedback.ar(8).abs*gain2).lag(lag);
@@ -123,20 +124,27 @@ OSCdef(\ampt7, { |msg|
 
 // ONE drawFunc
 ~v1.drawFunc = {
-    Pen.translate(100, 100);
+    Pen.translate(size/2, size/2);
 
-    100.do { |y|
-        100.do { |x|
-			var xPos = x * 5 + (~amp5 * posit.linlin(0,2pi,1,2));  // small offset
-            var yPos = y * 5 + (~amp6 * posit.linlin(0,2pi,1,2));
+    250.do { |y|
+     //   1.do { |x|
+			ax=exp(Complex(0,1)*posit).real;
+			ay=exp(Complex(0,1)*posit).imag;
 
-Pen.fillColor = Color(~amp1* posit.linlin(0,2pi,0,1), ~amp2* posit.linlin(0,2pi,0,1),~amp3* posit.linlin(0,2pi,0,1),
-				1
-			);
-            Pen.fillRect(Rect(xPos, yPos,~amp7*5, ~amp7*5));
+		xPos = ((y/2)*ax) * (size/scale) + (~amp5);
+	yPos = ((y/2)*ay) * (size/scale) + (~amp6);
+
+Pen.fillColor = Color(2.pow(~amp1/992.neg),
+			2.pow(~amp2/992.neg),2.pow(~amp3/992.neg),1);
+
+     Pen.fillOval(Rect.aboutPoint(xPos @ yPos,
+				//2.pow(~amp7/12.neg)*(size/scale/2),
+			(size/scale),
+				//2.pow(~amp7/12.neg)*(size/scale/2)));
+			(size/scale)));
 
 						posit = (posit+(2pi-(2pi/g))).wrap(0,2pi);
-        };
+      //  };
     };
 };
 
@@ -159,7 +167,7 @@ MIDIIn.connectAll;
 					(
 MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 		var k;
-			k=val.linlin(0,127,1,1000).round(0.00001);
+			k=val.linlin(0,127,1,992*2).round(0.00001);
 		k.postln;
 		if(~a.isPlaying,{~a.set(\gain1,k)});
 
@@ -178,7 +186,7 @@ MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
 				(
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 		var k;
-			k=val.linlin(0,127,0.1,1000).round(0.00001);
+			k=val.linlin(0,127,1,1000).round(0.00001);
 		k.postln;
 		if(~a.isPlaying,{~a.set(\gain2,k)});
 },3);
