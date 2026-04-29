@@ -6,7 +6,7 @@ s.options.numWireBufs = 1024*2;
 s.options.numOutputBusChannels=10;
 s.options.numInputBusChannels=1;
 s.options.memSize = 8192*32;
-s.options.blockSize = 64;
+s.options.blockSize = 128;
 s.options.maxNodes = 1024 * 2;
 //s.makeGui(w);
 //s.options.sampleRate= 44100;
@@ -348,9 +348,9 @@ ds2 =  (ds2*2.pow(drive/992)).softclip;
 ds3 =  (ds3*2.pow(drive/992)).softclip;
 
 				//sig
-sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1).range(panx*amp1,amp1)+(ds1));
-sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:level).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2).range(pany*amp2,amp2)+(ds2));
-sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:level).abs*SinOsc.ar(freq3,phase:phasez)),freq3*2.pow(low.lag(0.01)/992),amp3).range(panz*amp3,amp3)+(ds3));
+sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1).range(panx*amp1,amp1)*(ds1));
+sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:level).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2).range(pany*amp2,amp2)*(ds2));
+sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:level).abs*SinOsc.ar(freq3,phase:phasez)),freq3*2.pow(low.lag(0.01)/992),amp3).range(panz*amp3,amp3)*(ds3));
 
 	sig1=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
 						[sig1,BPF.ar(BRF.ar(sig1,band_osc1.lag(0.1),rq1),band_osc4.lag(0.1),rq4)]);
@@ -580,7 +580,7 @@ MIDIIn.connectAll;
 												(
 MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
 		var gain;
-			gain=val.linlin(0,127,0.001,1).round(0.0001);
+			gain=val.linlin(0,127,0.001,5).round(0.0001);
 		gain.postln;
 		~gg=gain;
 },4);
@@ -589,7 +589,7 @@ MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
 														(
 MIDIdef.cc(\midi_pot5,{ |val, num, chan, src|
 		var feed;
-			feed=val.linlin(0,127,0.00000001,0.0001).round(0.00000001);
+			feed=val.linlin(0,127,0.000001,0.001).round(0.00000001);
 		feed.postln;
 		~feed=0.000001;
 },5);
@@ -742,7 +742,7 @@ MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
 ////music parameters
 			~val=12364.rand;
 					~seq= Pseq(1 *~dur, inf).asStream;
-			~speed=10;
+			~speed=2;
 
 ~str = Routine({
     var i=0,m,l,az=0,el=0,expansion;

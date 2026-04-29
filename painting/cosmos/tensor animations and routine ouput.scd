@@ -2,10 +2,10 @@
 (
 ~time=120;
 s.options.numWireBufs = 1024*4;
-s.options.numOutputBusChannels=8;
+s.options.numOutputBusChannels=10;
 s.options.numInputBusChannels=1;
 s.options.memSize = 8192*32;
-s.options.blockSize = 64;
+s.options.blockSize = 128;
 s.options.maxNodes = 8192*2;
 s.makeGui;
 s.waitForBoot{
@@ -90,15 +90,16 @@ var signal,wt;
 
 (
 SynthDef.new(\player,{
+			arg hz=1/100;
 
-	Out.kr(~controlBus.index, (Osc.kr(~scale.bufnum,(1/~time)).abs));
-	Out.kr(~controlBus1.index, (Osc.kr(~scale1.bufnum,(1/~time)).abs));
-	Out.kr(~controlBus4.index, (Osc.kr(~scale2.bufnum,(1/~time)).abs));
-	Out.kr(~controlBus2.index, (Osc.kr(~rotation.bufnum,(1/~time)).abs));
-    Out.kr(~controlBus3.index, (Osc.kr(~harm.bufnum,(1/~time)).abs));
-	Out.kr(~controlBus5.index, (LFNoise2.kr(1/~time).range(pi.neg,pi)));
-	Out.kr(~controlBus6.index, (Osc.kr(~temp.bufnum,(1/~time)).abs));
-	Out.kr(~controlBus7.index, (Osc.kr(~space.bufnum,(1/~time)).abs));
+	Out.kr(~controlBus.index, (Osc.kr(~scale.bufnum,hz).abs));
+	Out.kr(~controlBus1.index, (Osc.kr(~scale1.bufnum,hz).abs));
+	Out.kr(~controlBus4.index, (Osc.kr(~scale2.bufnum,hz).abs));
+	Out.kr(~controlBus2.index, (Osc.kr(~rotation.bufnum,hz).abs));
+    Out.kr(~controlBus3.index, (Osc.kr(~harm.bufnum,hz).abs));
+	Out.kr(~controlBus5.index, (LFNoise2.kr(hz).range(pi.neg,pi)));
+	Out.kr(~controlBus6.index, (Osc.kr(~temp.bufnum,hz).abs));
+	Out.kr(~controlBus7.index, (Osc.kr(~space.bufnum,hz).abs));
 
 
 }).add;
@@ -111,6 +112,7 @@ SynthDef.new(\player,{
 }
 )
 
+~hz.set(\hz,0.1);
 
 //Server.freeAll
 //smoothing
@@ -145,7 +147,7 @@ var theta,phi ,wave;
 
 	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[]; ~cart=[];      ~detune=1;
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
-Synth.new(\player);
+~hz=Synth.new(\player);
 data = [];
 Window.free;
 ~w = Window.new("3D Scatterplot", Rect(40,40, 2000, 1200)).front;
