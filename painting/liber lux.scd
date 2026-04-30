@@ -27,7 +27,7 @@ s.options.numWireBufs = 1024*2;
 s.options.numOutputBusChannels=10;
 s.options.numInputBusChannels=1;
 s.options.memSize = 8192*4;
-s.options.blockSize = 64;
+s.options.blockSize = 128;
 s.options.maxNodes = 1024 * 2;
 //s.makeGui(w);
 //s.options.sampleRate= 44100;
@@ -53,7 +53,7 @@ s.meter;
 
 (
 var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt), posit=0,size=500,scale=150;
-var xPos,yPos, ax,ay;
+var xPos,yPos, ax,ay,ofset;
 //Window.closeAll;
 
 ~amp1 = 0;
@@ -122,17 +122,20 @@ OSCdef(\ampt7, { |msg|
 	defer { ~v1.refresh };
 }, '/amp7');
 
-// ONE drawFunc
+//  drawFunc
+/*(
 ~v1.drawFunc = {
     Pen.translate(size/2, size/2);
+
+ofset=0.01.rand;
 
     992.do { |y|
      //   1.do { |x|
 			ax=exp(Complex(0,1)*posit).real;
 			ay=exp(Complex(0,1)*posit).imag;
 
-		xPos = ((y/15)*ax) * (size/scale) + (~amp5.rand);
-	yPos = ((y/15)*ay) * (size/scale) + (~amp6.rand);
+		xPos = ((y/15)*ax) * (size/scale) + (~amp5.lag(ofset));
+	yPos = ((y/15)*ay) * (size/scale) + (~amp6.lag(ofset));
 
 Pen.fillColor = Color(2.pow(~amp1/992.neg),
 			2.pow(~amp2/992.neg),2.pow(~amp3/992.neg),2.pow(~amp4/992.neg));
@@ -148,7 +151,30 @@ Pen.fillColor = Color(2.pow(~amp1/992.neg),
       //  };
     };
 };
+);*/
+(
+~v1.drawFunc = {
+    Pen.translate(size/2, size/2);
 
+    10.do {
+ofset=0.1.rand;
+		xPos =  0+ (~amp5.lag(ofset));
+	yPos = 0 + (~amp6.lag(ofset));
+
+		Pen.fillColor = Color(2.pow(~amp1/992.neg).lag(0.01.rand),
+			2.pow(~amp2/992.neg).lag(ofset),
+			2.pow(~amp3/992.neg).lag(ofset),
+			2.pow(~amp4/992.neg).lag(ofset));
+
+     Pen.fillRect(Rect.aboutPoint(xPos @ yPos,
+			~amp7.pow(0.1).lag(ofset)*(size/scale)*50,
+			//(size/scale),
+				~amp7.pow(0.1).lag(ofset)*(size/scale)*50));
+			//(size/scale)));
+
+    };
+};
+);
 win.front;
 
 )

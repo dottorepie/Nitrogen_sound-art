@@ -60,6 +60,23 @@ wt = signal.asWavetable;
 		}.value;
 );
 
+		/////scales
+
+(
+			{
+				var nn=1.neg;
+		~scalee=10.collect{nn=nn+1;Scale.majorPentatonic.performDegreeToKey(nn,12)};
+			}.value;
+		);
+
+		(
+			{
+				var nn=1.neg;
+		~scaleee=10.collect{nn=nn+1;Scale.minorPentatonic.performDegreeToKey(nn,12)};
+			}.value;
+		);
+
+		~sc=[~scalee,~scaleee];
 
 		////sound
 (
@@ -67,7 +84,7 @@ SynthDef.new(\synthd,{
 
 	arg gain=1,low=992,tone1=0,tone2=0,tone3=0,x=1,pan=1,mix=0.3,a=1,panx=1,pany=1,panz=1,room=0.5,m=2,pon=1,
 				fu=32,drive=1,spread=1,drone_amp=1,pann=0,az=0,el=0,azr=0,dron=0,drone=1,theta=0,rx=0,ry=0,rz=0,	pneuma1=0,pneuma2=0,pneuma3=0,namp1=1,namp2=1,namp3=1,sc=14,qq=0.0000001,qqq=0,
-spirit=0,amp=1,waveFreq=1,waveSpeed=1;
+spirit=0,amp=1,waveFreq=1,waveSpeed=1,rlx=1,rla1=1,rla2=1,rph=0;
 
 	var rq=1,cloud=1,attack,decay,curve,band,azf=0,elf=0,q,r1,r2,r3,sq1,sq2,sq3,rotationx,rotationy,rotationz,core=(9/8).rand;
 	var lamdoma,freq1,freq2,freq3,fund,amp1,amp2,amp3,alpha,cell_az,cell_el,x_pos,y_pos,control1,control2,control3;
@@ -79,16 +96,16 @@ spirit=0,amp=1,waveFreq=1,waveSpeed=1;
 	var amb_w,amb_x,amb_y,amb_z,out,amb_sig1,amb_sig2,amb_sig3,axisx,axisy,axisz,cx,cy,cz;
 	var axi1,axi2,axi3,ds1,ds2,ds3,f1,f2,f3,g1,g2,g3,sph_object,lfon,axis;
 	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=200,spx,spy,spz;
-	var g_ch1,g_ch2,g_ch3,g_ch4,chan=4;
+	var g_ch1,g_ch2,g_ch3,g_ch4,chan=4,dr1,dr2;
 	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis,sp,spl,g11,g22,g33,g44;
 	var pon1,pon2,pon3,pon4,wave,angphi,angtheta;
 
 fund=fu*(9/8);
 lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
 
-ton1=2.pow(dron.lag(0.001)/992);
-ton2=2.pow(dron.lag(0.001)/992);
-ton3=2.pow(dron.lag(0.001)/992);
+ton1=2.pow(Select.kr(tone1, Select.kr(qqq.lag(0.01),~sc)) /12).round(0.0001)*2.pow(dron.lag(0.01)/992);
+ton2=2.pow(Select.kr(tone2, Select.kr(qqq.lag(0.01),~sc)) /12).round(0.0001)*2.pow(dron.lag(0.01)/992);
+ton3=2.pow(Select.kr(tone3, Select.kr(qqq.lag(0.01),~sc)) /12).round(0.0001)*2.pow(dron.lag(0.01)/992);
 
 
 						lfo=2.pow(pan/992);
@@ -220,28 +237,23 @@ control3=SinOsc.ar(freq3,phase:phasez,mul:amp3);
 
 
 				//rectifier mod
-				/*(
-ds1=((LPF.ar((Osc.ar(~w1.bufnum,f1,phase:phasex,mul:level).abs*
-					SinOsc.ar(f1,phase:phasex)),f1*2.pow(low.lag(0.01)/992),g1)).range(panx*g1,g1)
-					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f1*dr,qq,g1/dr));
-ds2=((LPF.ar((Osc.ar(~w1.bufnum,f2,phase:phasey,mul:level).abs*
-					SinOsc.ar(f2,phase:phasey)),f2*2.pow(low.lag(0.01)/992),g2)).range(pany*g2,g2)
-					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f2*dr,qq,g2/dr));
-ds3=((LPF.ar((Osc.ar(~w1.bufnum,f3,phase:phasez,mul:level).abs*
-					SinOsc.ar(f3,phase:phasez)),f3*2.pow(low.lag(0.01)/992),g3)).range(panz*g3,g3)
-					+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f3*dr,qq,g3/dr));
+				/*
+BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f1*dr,qq,g1/dr));
 				)*/
 
+				dr1=(rlx+rla1)/rlx;
+				dr2= (rlx+rla2)/rlx;
+
 				(
-ds1=((LPF.ar((Osc.ar(~w1.bufnum,f1,phase:phasex,mul:level).abs*
-					SinOsc.ar(f1,phase:phasex)),f1*2.pow(low.lag(0.01)/992),g1)).range(panx*g1,g1)
-					+BPF.ar(LPF.ar((SoundIn.ar(0,50)*qq.sqrt.reciprocal),fund*dr),f1*dr,qq,g1/dr));
-ds2=((LPF.ar((Osc.ar(~w1.bufnum,f2,phase:phasey,mul:level).abs*
-					SinOsc.ar(f2,phase:phasey)),f2*2.pow(low.lag(0.01)/992),g2)).range(pany*g2,g2)
-					+BPF.ar(LPF.ar((SoundIn.ar(0,50)*qq.sqrt.reciprocal),fund*dr),f2*dr,qq,g2/dr));
-ds3=((LPF.ar((Osc.ar(~w1.bufnum,f3,phase:phasez,mul:level).abs*
-					SinOsc.ar(f3,phase:phasez)),f3*2.pow(low.lag(0.01)/992),g3)).range(panz*g3,g3)
-					+BPF.ar(LPF.ar((SoundIn.ar(0,50)*qq.sqrt.reciprocal),fund*dr),f3*dr,qq,g3/dr));
+ds1=((LPF.ar((Osc.ar(~w1.bufnum,f1*dr1.reciprocal,phase:phasex+rph,mul:level).abs*
+					SinOsc.ar(f1*dr1.reciprocal,phase:phasex+rph)),f1*dr1.reciprocal*2.pow(low.lag(0.01)/992),g1*dr1)).abs
+					*BPF.ar((SoundIn.ar(0,gain)*qq.sqrt.reciprocal),f1*dr2.reciprocal,qq,g1*dr2));
+ds2=((LPF.ar((Osc.ar(~w1.bufnum,f2*dr1.reciprocal,phase:phasey+rph,mul:level).abs*
+						SinOsc.ar(f2*dr1.reciprocal,phase:phasey+rph)),f2*dr1.reciprocal*2.pow(low.lag(0.01)/992),g2*dr1)).abs
+					*BPF.ar((SoundIn.ar(0,gain)*qq.sqrt.reciprocal),f2*dr2.reciprocal,qq,g2*dr2));
+ds3=((LPF.ar((Osc.ar(~w1.bufnum,f3*dr1.reciprocal,phase:phasez+rph,mul:level).abs*
+					SinOsc.ar(f3*dr1.reciprocal,phase:phasez+rph)),f3*dr1.reciprocal*2.pow(low.lag(0.01)/992),g3*dr1)).abs
+					*BPF.ar((SoundIn.ar(0,gain)*qq.sqrt.reciprocal),f3*dr2.reciprocal,qq,g3*dr2));
 				);
 
 ds1 = (ds1*2.pow(drive/992)).softclip;
@@ -249,9 +261,9 @@ ds2 =  (ds2*2.pow(drive/992)).softclip;
 ds3 =  (ds3*2.pow(drive/992)).softclip;
 
 				//sig
-sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1).range(panx*amp1,amp1)*(ds1));
-sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:level).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2).range(pany*amp2,amp2)*(ds2));
-sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:level).abs*SinOsc.ar(freq3,phase:phasez)),freq3*2.pow(low.lag(0.01)/992),amp3).range(panz*amp3,amp3)*(ds3));
+sig1=(LPF.ar((Osc.ar(~w1.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex)),freq1*2.pow(low.lag(0.01)/992),amp1).abs*(ds1));
+sig2=(LPF.ar((Osc.ar(~w1.bufnum,freq2,phase:phasey,mul:level).abs*SinOsc.ar(freq2,phase:phasey)),freq2*2.pow(low.lag(0.01)/992),amp2).abs*(ds2));
+sig3=(LPF.ar((Osc.ar(~w1.bufnum,freq3,phase:phasez,mul:level).abs*SinOsc.ar(freq3,phase:phasez)),freq3*2.pow(low.lag(0.01)/992),amp3).abs*(ds3));
 
 	sig1=Select.ar(band.linlin((992*16).neg,((992*16).neg+1),0,1).round(1).asInteger,
 						[sig1,BPF.ar(BRF.ar(sig1,band_osc1.lag(0.1),rq1),band_osc4.lag(0.1),rq4)]);
@@ -336,7 +348,7 @@ pon2=SinOsc.ar(pon,0.25pi).range(0.0001,1).lag(0.1);
 pon3=SinOsc.ar(pon,0.5pi).range(0.0001,1).lag(0.1);
 pon4=SinOsc.ar(pon,0.75pi).range(0.0001,1).lag(0.1);
 
-/*(
+/(
 Out.ar(0,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
 	sig1* g_ch1.lag(0.1)*pon1,mix.lag(0.01),room.lag(0.01),mul:gain1)),0.9,0.01)/cloud);
@@ -375,17 +387,17 @@ sig3* g_ch3.lag(0.1)*pon3,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/clo
 Out.ar(3,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(
 sig3* g_ch4.lag(0.1)*pon4,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/cloud);
-				)*/
+				);
 
 					Out.ar(0,WhiteNoise.ar(0.00001)!4);
 			////stereo
-					(
+					/*(
 Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*mx.lag(0.01))),0.9,0.01),
 						SinOsc.ar(pon,0)));
 Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*my.lag(0.01))),0.9,0.01),
 						SinOsc.ar(pon,90.degrad)));
 Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*mz.lag(0.01))),0.9,0.01)!2);
-					);
+					)*/
 
 	///three channel
 					/*(
@@ -432,8 +444,8 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 
 		(
 
-~synthd=Synth.new(\synthd,[\gain,1,\drive,992*2,\fu,32,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
-		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,\pon,0.001,\pneuma,0, \namp,1,
+~synthd=Synth.new(\synthd,[\gain,3,\drive,992*2,\fu,16,\tone1,0,\tone2,0,\tone3,0,\low,992*0,\pan,(992*16).neg,
+		\mix,0.3,\drone_amp,1,\room,0.5,\m,1,\pann,(992*16).neg,\pon,0.001,\pneuma,0, \namp,1,\rph,0,\rlx,1,\rla1,1,\rla2,3,
 			\x,1,\a,1,\panx,0.01,\pany,0.01,\panz,0.01,\spread,1,
 			\az,pi/4,\el,pi/8,\azr,992,\dron,0,\drone,1,\sc,1]).register;
 );
@@ -520,18 +532,18 @@ MIDIdef.cc(\midi_pot8,{ |val, num, chan, src|
 												(
 MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 		var panx;
-			panx=val.linlin(0,127,1.neg,0).round(0.0001);
+			panx=val.linlin(0,127,0,10).round(1).asInteger;
 		panx.postln;
-						if(~synthd.isPlaying,{~synthd.set(\panx,panx)});
+						if(~synthd.isPlaying,{~synthd.set(\tone1,panx)});
 },9);
 	);
 
 													(
 MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
 		var pany;
-			pany=val.linlin(0,127,1.neg,0).round(0.0001);
+			pany=val.linlin(0,127,0,10).round(1).asInteger;
 		pany.postln;
-								if(~synthd.isPlaying,{~synthd.set(\pany,pany)});
+								if(~synthd.isPlaying,{~synthd.set(\tone2,pany)});
 
 },10);
 	);
@@ -539,9 +551,9 @@ MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
 														(
 MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
 		var panz;
-			panz=val.linlin(0,127,1.neg,0).round(0.0001);
+			panz=val.linlin(0,127,0,10).round(1).asInteger;
 		panz.postln;
-								if(~synthd.isPlaying,{~synthd.set(\panz,panz)});
+								if(~synthd.isPlaying,{~synthd.set(\tone3,panz)});
 
 },11);
 	);
@@ -680,7 +692,7 @@ a.postln;
 	(
 MIDIdef.cc(\midi_switch9,{ |val, num, chan, src|
 			var a;
-					if(val>0,a=12.neg);
+					if(val>0,a=0.neg);
 a.postln;
 							if(~synthd.isPlaying,{~synthd.set(\drone,a)});
 
@@ -691,7 +703,7 @@ a.postln;
 	(
 MIDIdef.cc(\midi_switch10,{ |val, num, chan, src|
          	var a;
-				if(val>0,a=24.neg);
+				if(val>0,a=12.neg);
 a.postln;
 								if(~synthd.isPlaying,{~synthd.set(\drone,a)});
 },42);
@@ -700,7 +712,7 @@ a.postln;
 					(
 MIDIdef.cc(\midi_switch11,{ |val, num, chan, src|
 		var a;
-				if(val>0,a=36.neg);
+				if(val>0,a=24.neg);
 a.postln;
 							if(~synthd.isPlaying,{~synthd.set(\drone,a)});
 },43);
@@ -709,7 +721,7 @@ a.postln;
 	(
 MIDIdef.cc(\midi_switch12,{ |val, num, chan, src|
 		 var a;
-					if(val>0,a=48.neg);
+					if(val>0,a=36.neg);
 a.postln;
 							if(~synthd.isPlaying,{~synthd.set(\drone,a)});
 },44);
@@ -769,10 +781,39 @@ MIDIdef.cc(\midi_seq_pot2,{ |val, num, chan, src|
 			if(~synthd.isPlaying,{~synthd.set(\waveFreq,s2)});
 },18);
 	);
+
+									(
+MIDIdef.cc(\midi_seq_pot3,{ |val, num, chan, src|
+		var s3;
+			s3=val.linlin(0,127,1,11).round(1).asInteger;
+		s3.postln;
+		if(~synthd.isPlaying,{~synthd.set(\rlx,s3)});
+},19);
+	);
+
+												(
+MIDIdef.cc(\midi_seq_pot4,{ |val, num, chan, src|
+		var s4;
+			s4=val.linlin(0,127,0,10).round(1).asInteger;
+		s4.postln;
+		if(~synthd.isPlaying,{~synthd.set(\rla1,s4)});
+},20);
+	);
+
+														(
+MIDIdef.cc(\midi_seq_pot5,{ |val, num, chan, src|
+		var s5;
+			s5=val.linlin(0,127,1,11).round(1).asInteger;
+		s5.postln;
+		if(~synthd.isPlaying,{~synthd.set(\rla2,s5)});
+},21);
+	);
+
+
 			(
 MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 		var gain;
-	gain=val.linlin(0,127,0,1).round(0.00001);
+	gain=val.linlin(0,127,0,100).round(0.00001);
 		gain.postln;
 							if(~synthd.isPlaying,{~synthd.set(\gain,gain)});
 },49);
@@ -786,6 +827,24 @@ MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
 		if(~synthd.isPlaying,{~synthd.set(\amp,th)});
 },25);
 
+	);
+
+					(
+MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
+			var spread;
+			spread=val.linlin(0,0,0,1).round(1).asInteger;
+		spread.postln;
+					if(~synthd.isPlaying,{~synthd.set(\qqq,spread)});
+
+},29);
+			);
+							(
+MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
+	var spread;
+			spread=val.linlin(0,127,0,137.5.degrad).round(0.00001);
+		spread.postln;
+		if(~synth.isPlaying,{~synthd.set(\rph,spread)});
+},30);
 	);
 
 (
