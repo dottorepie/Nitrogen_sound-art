@@ -175,7 +175,7 @@ SynthDef.new(\synth,{
 	var r_axis, r_v, r, axisr,spr,rot,i,j,k,level=200,spx,spy,spz;
 	var g_ch1,g_ch2,g_ch3,g_ch4,chan=~chan;
 	var gn ,g_sum,g_avg ,ton1,ton2,ton3,laxis,sp,spl,g11,g22,g33,g44;
-	var pon1,pon2,pon3,pon4,pon5,pon6,tonality,m=2;
+	var pon1,pon2,pon3,pon4,pon5,pon6,tonality,m=2,dr2,dr1;
 
 fund=fu*(9/8);
 lamdoma=(x.lag(0.01)+a.lag(0.01))/x.lag(0.01);
@@ -319,6 +319,8 @@ control3=SinOsc.ar(freq3,phase:phasez,mul:amp3);
 
 
 				//rectifier mod
+					dr1=(rlx+rla1)/rlx;
+				dr2= (rlx+rla2)/rlx;
 				/*(
 ds1=((LPF.ar((Osc.ar(~w1.bufnum,f1,phase:phasex,mul:level).abs*
 					SinOsc.ar(f1,phase:phasex)),f1*2.pow(low.lag(0.01)/992),g1)).range(panx*g1,g1)
@@ -505,20 +507,20 @@ sig3* g_ch4.lag(0.1)*pon4,mix.lag(0.01),room.lag(0.01),mul:gain3)),0.9,0.01)/clo
 					Out.ar(0,WhiteNoise.ar(0.000001)!4);
 
 					////stereo
-					(
+					/*(
 Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*mx.lag(0.01))),limit,0.01),
 						SinOsc.ar(pon,0)));
 Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*my.lag(0.01))),limit,0.01),
 						SinOsc.ar(pon,90.degrad)));
 Out.ar(0,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*mz.lag(0.01))),limit,0.01)!2);
-					);
+					)*/
 
 	///three channel
-					(
+					/*(
 Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*mx.lag(0.01))),limit,0.01));
 Out.ar(7,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*my.lag(0.01))),limit,0.01));
 Out.ar(8,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*mz.lag(0.01))),limit,0.01));
-					);
+					)*/
 
 										/*(
 Out.ar(0,PanAz.ar(3,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*mx.lag(0.01))),0.9,0.01),
@@ -755,7 +757,7 @@ MIDIdef.cc(\midi_seq_pot3,{ |val, num, chan, src|
 		var s3;
 			s3=val.linlin(0,127,1,11).round(1).asInteger;
 		s3.postln;
-		~rlx=se3
+		~rlx=s3
 },19);
 	);
 
