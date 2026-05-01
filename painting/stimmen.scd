@@ -19,8 +19,8 @@ s.options.maxNodes = 1024 * 2;
 //
 (
 s.waitForBoot{
-s.freqscope;
-s.scope;
+//s.freqscope;
+//s.scope;
 //s.makeWindow;
 s.meter;
 	Tdef(\drone, {
@@ -52,7 +52,7 @@ s.meter;
 ~w1= Buffer.alloc(s,~bufferSize);
 		{
 	var signal,wt;
-	signal=Signal.sineFill(~signalSize,~array,~ph);
+signal=Signal.sineFill(~signalSize,~array,[0],~ph);
 
 wt = signal.asWavetable;
 ~w1.loadCollection(wt);
@@ -244,7 +244,7 @@ BPF.ar(BrownNoise.ar(qq.sqrt.reciprocal),f1*dr,qq,g1/dr));
 				dr1=(rlx+rla1)/rlx;
 				dr2= (rlx+rla2)/rlx;
 
-				/*(
+				(
 ds1=((LPF.ar(
 (Osc.ar(~w1.bufnum,(f1*dr1.reciprocal),phase:phasex+rph,mul:level).abs*
 SinOsc.ar((f1*dr1.reciprocal),phase:phasex+rph)),(f1*dr1.reciprocal)*2.pow(low.lag(0.01)/992),(g1*dr1))).abs
@@ -259,9 +259,9 @@ ds3=((LPF.ar(
 (Osc.ar(~w1.bufnum,(f3*dr1.reciprocal),phase:phasez+rph,mul:level).abs*
 SinOsc.ar((f3*dr1.reciprocal),phase:phasez+rph)),(f3*dr1.reciprocal)*2.pow(low.lag(0.01)/992),(g3*dr1))).abs
 *BPF.ar((SoundIn.ar(0,gain)*qq.sqrt.reciprocal),(f3*dr2.reciprocal),qq,(g3*dr2)));
-				)*/
+				);
 
-				(
+				/*(
 ds1=((LPF.ar(
 (Osc.ar(~w1.bufnum,(f1*dr1.reciprocal)+SinOsc.ar(dr1,phasex+rph,dr1.reciprocal),phase:phasex+rph,mul:level).abs*
 SinOsc.ar((f1*dr1.reciprocal)+SinOsc.ar(dr1,phasex+rph,dr1.reciprocal),phase:phasex+rph)),
@@ -279,7 +279,7 @@ ds3=((LPF.ar(
 SinOsc.ar((f3*dr1.reciprocal)+SinOsc.ar(dr1,phasez+rph,dr1.reciprocal),phase:phasez+rph)),
 						(f3*dr1.reciprocal)*2.pow(low.lag(0.01)/992)+SinOsc.ar(dr1,phasez+rph,dr1.reciprocal),(g3*dr1))).abs
 *BPF.ar((SoundIn.ar(0,gain)*qq.sqrt.reciprocal),(f3*dr2.reciprocal)+SinOsc.ar(dr2,phasez+rph,dr2.reciprocal),qq,(g3*dr2)));
-				);
+				)*/
 
 
 
